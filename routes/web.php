@@ -14,3 +14,18 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Auth::routes(['register' => false, 'verified' => true]);
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/password', 'UserController@showPassword')->name('password.change');
+Route::patch('/password', 'UserController@savePassword')->name('password.save');
+
+Route::get('/socios', 'UserController@index')->name('users.index');
+Route::get('/socios/create', 'UserController@create')->name('users.create');
+Route::post('/socios/create', 'UserController@store')->name('users.store');
+Route::get('/socios/{id}/edit', 'UserController@edit')->name('users.edit');
+Route::put('/socios/{id}/edit', 'UserController@update')->name('users.update');
+Route::delete('/socios/{id}', 'UserController@destroy')->name('users.destroy');
