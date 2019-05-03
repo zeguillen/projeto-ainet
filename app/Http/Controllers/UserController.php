@@ -48,6 +48,12 @@ class UserController extends Controller
                 'name.regex' => 'Fullname should only contain letters and spaces'
             ]
         );
+        $user = new User;
+        $user->fill($request->all());
+        $user->password = Hash::make($user->password);
+        $user->save();
+        
+        return redirect()->route('users.index')->with('success', "User successfully created");
     }
 
     /**
@@ -69,7 +75,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -81,7 +88,21 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
+                'email' => 'required|email',
+                'type' => 'required|in:0,1,2',
+            ],
+            [
+                'name.regex' => 'Fullname should only contain letters and spaces'
+            ]
+        );
+        $user = User::findOrFail($id);
+        $user->fill($request->except('password'));
+        $user->save();
+
+        return redirect()->route('users.index')->with('success',"User successfully updated");
     }
 
     /**
@@ -92,6 +113,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->route('users.index')->with('success',"User successfully deleted");
     }
 }
