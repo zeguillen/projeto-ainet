@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Welcome')
+@section('title','Welcome to the Flight Club')
 
 @section('content')
 

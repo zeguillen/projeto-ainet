@@ -19,10 +19,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post('/password/email', 'UserController@emailReset')->name('email');
 
-/*
+
 Auth::routes(['register' => false, 'verified' => true]);
-
-
 
 Route::get('/password', 'UserController@showPassword')->name('password.change');
 Route::patch('/password', 'UserController@savePassword')->name('password.save');
@@ -32,4 +30,6 @@ Route::get('/socios/create', 'UserController@create')->name('users.create');
 Route::post('/socios/create', 'UserController@store')->name('users.store');
 Route::get('/socios/{id}/edit', 'UserController@edit')->name('users.edit');
 Route::put('/socios/{id}/edit', 'UserController@update')->name('users.update');
-Route::delete('/socios/{id}', 'UserController@destroy')->name('users.destroy');*/
+Route::delete('/socios/{id}', 'UserController@destroy')->name('users.destroy');
+
+// Route::resource('socios', 'UserController')->show();
