@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -15,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $user = User::paginate(5);
+        $users = User::paginate(5);
         return view('users.list', compact('users'));
     }
 
@@ -36,24 +37,18 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserStorageRequest $request)
     {
-        $request->validate(
-            [
-                'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
-                'email' => 'required|email',
-                'type' => 'required|in:0,1,2',
-                'password' => 'required|min:8|confirmed'
-            ],
-            [
-                'name.regex' => 'Fullname should only contain letters and spaces'
-            ]
-        );
+        $validated = $request->validated();
+
         $user = new User;
         $user->fill($request->all());
         $user->password = Hash::make($user->password);
         $user->save();
-        
+
+        // Enviar email para activação
+        Mail::to($request->user())->send(new UserActivation($num_socio));
+
         return redirect()->route('users.index')->with('success', "User successfully created");
     }
 
