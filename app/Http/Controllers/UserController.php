@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
@@ -112,5 +113,43 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return redirect()->route('users.index')->with('success',"User successfully deleted");
+    }
+
+    public function changePassword(Request $request)
+    {
+        $id = Auth::user()->id;
+        $user = User::findOrFail($id);
+        return view('users.changePassword', compact('user'));
+    }
+
+    public function profile(Request $id)
+    {
+        $user = User::findOrFail($id);
+        return view('users.profile', compact('user'));
+    }
+
+    public function savePassword(Request $request)
+    {
+        //TODO falta validator
+
+        if (!(Hash::check($request->old_password, Auth::user()->password))) {
+            return response()->json(['errors' => ['Old password missmatch']], 400);
+        }
+
+        if ($request->password == $request->old_password ) {
+            return response()->json(['errors' => ['You can not use the same password']], 400);
+        }
+
+        if ($request->password != $request->password_confirmation) {
+            return response()->json(['errors' => ['Confirmation password missmatch']], 400);
+        }
+
+        $request_data = $request->All();
+        $user_id = Auth::User()->id;                       
+        $obj_user = User::find($user_id);
+        $obj_user->password = Hash::make($request_data['password']);;
+        $obj_user->save(); 
+
+        return redirect()->route('home')->with('success',"Password updated");
     }
 }
