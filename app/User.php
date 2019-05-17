@@ -52,4 +52,16 @@ class User extends Authenticatable
 
         return 'Unknown';
     }
+
+    public function sexToStr()
+    {
+        switch ($this->sexo) {
+            case 'F':
+                return 'Feminino';
+            case 'M':
+                return 'Masculino';
+        }
+
+        return 'Unknown';
+    }
 }
