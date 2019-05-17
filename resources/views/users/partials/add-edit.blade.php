@@ -14,9 +14,9 @@
     <select name="type" id="inputType" class="form-control">
         <?=$user->type?>
         <option disabled selected> -- select an option -- </option>
-        <option value="0" {{ strval(old('type',$user->type)) == '0' ? "selected" : "" }}>Administrator</option>
-        <option value="1" {{ strval(old('type',$user->type)) == '1' ? "selected" : "" }}>Publisher</option>
-        <option value="2" {{ strval(old('type',$user->type)) == '2' ? "selected" : "" }}>Client</option>
+        <option value="0" {{ old('type', $user->tipo_socio) == 0 ? "selected" : "" }}>Piloto</option>
+        <option value="1" {{ old('type', $user->tipo_socio) == 1 ? "selected" : "" }}>Não Piloto</option>
+        <option value="2" {{ old('type', $user->tipo_socio) == 2 ? "selected" : "" }}>Direcção</option>
     </select>
 </div>
 <div class="form-group">

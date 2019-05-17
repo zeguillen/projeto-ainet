@@ -70,9 +70,9 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(Request $user)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($user->id);
         return view('users.edit', compact('user'));
     }
 
@@ -108,9 +108,9 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(Request $user)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($user->id);
         $user->delete();
         return redirect()->route('users.index')->with('success',"User successfully deleted");
     }
