@@ -55,12 +55,13 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('profile') }}"
+                                    <a class="dropdown-item" href="{{route('users.edit',['id'=>Auth::user()
+                                        ->id])}}"
                                        onclick="event.preventDefault();
-                                                     document.getElementById('profile-form').submit();">
-                                        {{ __('Profile') }}
+                                                     document.getElementById('usersedit-form').submit();">
+                                        {{ __('Edit Profile') }}
                                     </a>
-                                    <form id="profile-form" action="{{ route('profile') }}" method="GET" style="display: none;">
+                                    <form id="usersedit-form" action="{{route('users.edit',['id'=>Auth::user()->id])}}" method="GET" style="display: none;">
                                         @csrf
                                     </form>
 
