@@ -122,12 +122,6 @@ class UserController extends Controller
         return view('users.changePassword', compact('user'));
     }
 
-    public function profile(Request $id)
-    {
-        $user = User::findOrFail($id);
-        return view('users.profile', compact('user'));
-    }
-
     public function savePassword(Request $request)
     {
         //TODO falta validator
