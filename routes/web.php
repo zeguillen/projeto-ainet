@@ -34,4 +34,7 @@ Route::get('/socios/{id}/edit', 'UserController@edit')->name('users.edit');
 Route::put('/socios/{id}/edit', 'UserController@update')->name('users.update');
 Route::delete('/socios/{id}', 'UserController@destroy')->name('users.destroy');
 
+
+Route::patch('/socios/{id}/quota', 'UserController@changeQuota')->name('quota.change');
+
 // Route::resource('socios', 'UserController')->show();

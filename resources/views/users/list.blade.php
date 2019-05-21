@@ -12,6 +12,7 @@
             <th>Registered At</th>
             <th>Type</th>
             <th>Actions</th>
+            <th>Quotas</th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +33,20 @@
                     <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
                 </form>
             </td>
+
+            <td> 
+                <form  action=" {{route('quota.change', ['id'=>$user->id])}} " method="post">
+                    @csrf
+                    @method('PATCH')
+
+                    @if ($user->quota_paga)
+                        <input class="btn btn-success btn-sm" type="submit" value="Pagas"/>
+                    @else
+                        <input class="btn btn-danger btn-sm" type="submit" value="Por pagar"/>
+                    @endif
+                </form>
+            </td>
+
         </tr>
     @endforeach
     </table>

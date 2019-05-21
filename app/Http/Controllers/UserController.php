@@ -152,4 +152,22 @@ class UserController extends Controller
 
         return redirect()->route('home')->with('success',"Password updated");
     }
+
+
+    public function changeQuota(Request $user)
+    {
+        $user = User::findOrFail($user->id);
+
+        switch($user->quota_paga) {
+            case 1:
+                $user->quota_paga = 0;
+                break;
+            case 0:
+                $user->quota_paga = 1;
+        }
+
+        $user->save();
+        
+        return redirect()->route('users.index')->with('success',"Quota atualizada");
+    }
 }
