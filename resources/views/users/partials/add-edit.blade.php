@@ -1,3 +1,26 @@
+<label>Número de Sócio:</label><p>{{old('>NumSocio',$user->num_socio)}}</p>
+<br>
+<label>Tipo de Sócio:</label>
+    <p>
+    @switch(old('TipoSocio',$user->tipo_socio))
+    @case('P')
+        Piloto
+        @break
+
+    @case('NP')
+        Não Piloto
+        @break
+
+    @case('A')
+        Aeromodelista
+        @break
+    @endswitch
+    </p>
+<br>
+
+<!--       'num_socio', 'nome_informal', 'name', 'sexo', 'data_nascimento', 'email', 'foto', 'nif', 'telefone', 
+        'endereco', 'tipo_socio', 'quota_paga', 'ativo', 'password_inicial', 'password','direcao'-->
+
 <div class="form-group">
     <label for="inputNomeInformal">Nome Informal</label>
     <input
@@ -21,6 +44,23 @@
         title="Fullname must only contain letters and numbers"
     />
 </div>
+
+<label>Sexo:</label>
+    <p>
+    @switch(old('Sexo',$user->sexo))
+    @case('F')
+        Feminino
+        @break
+
+    @case('M')
+        Masculino
+        @break
+
+    @default
+        Indiferenciado
+    @endswitch
+    </p>
+<br>
 
 <!--<div class="form-group">
     <label for="inputType">Type</label>
