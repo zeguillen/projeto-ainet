@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\DB;
+
 class UserController extends Controller
 {
     /**
@@ -163,5 +165,34 @@ class UserController extends Controller
         $user->save();
         
         return redirect()->route('users.index')->with('success',"Quota atualizada");
+    }
+
+    public function resetQuotas() {
+        DB::table('users')->update(['quota_paga' => 0]);
+
+        return redirect()->route('users.index')->with('success',"As quotas dos sócios encontram-se todas por pagar");
+    }
+
+    public function changeAtivo(Request $user)
+    {
+        $user = User::findOrFail($user->id);
+
+        switch($user->ativo) {
+            case 1:
+                $user->ativo = 0;
+                break;
+            case 0:
+                $user->ativo = 1;
+        }
+
+        $user->save();
+        
+        return redirect()->route('users.index')->with('success',"Estado atualizado");
+    }
+
+    public function desativarUsersSemQuotas() {
+        DB::table('users')->where('quota_paga', '0')->update(['ativo' => 0]);
+
+        return redirect()->route('users.index')->with('success',"Os sócios que tinham as quotas por pagar encontram-se agora desativos");
     }
 }

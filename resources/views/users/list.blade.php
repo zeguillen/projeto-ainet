@@ -2,7 +2,20 @@
 @section('title','List Users')
 @section('content')
 
-<div><a class="btn btn-primary" href="{{route('users.create')}}">Add user</a></div>
+<div>
+    <a class="btn btn-primary" href="{{route('users.create')}}">Add user</a>
+    <form action="{{route('quotas.reset')}}" method="post" class="inline">
+            @csrf
+            @method('PATCH')
+            <input class="btn btn-danger" type="submit" value="Reset quotas"/>
+    </form>
+    <form action="{{route('users.desativar')}}" method="post" class="inline">
+            @csrf
+            @method('PATCH')
+            <input class="btn btn-danger" type="submit" value="Desativar sócios com quotas por pagar"/>
+    </form>
+</div>
+
 @if (count($users))
     <table class="table table-striped">
     <thead>
@@ -13,6 +26,7 @@
             <th>Type</th>
             <th>Actions</th>
             <th>Quotas</th>
+            <th>Estado</th>
         </tr>
     </thead>
     <tbody>
@@ -47,6 +61,18 @@
                 </form>
             </td>
 
+            <td> 
+                <form  action=" {{route('ativo.change', ['id'=>$user->id])}} " method="post">
+                    @csrf
+                    @method('PATCH')
+
+                    @if ($user->ativo)
+                        <input class="btn btn-success btn-sm" type="submit" value="Ativo"/>
+                    @else
+                        <input class="btn btn-danger btn-sm" type="submit" value="Não Ativo"/>
+                    @endif
+                </form>
+            </td>
         </tr>
     @endforeach
     </table>
