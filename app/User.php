@@ -50,4 +50,9 @@ class User extends Authenticatable
 
         return 'Unknown';
     }
+
+    public function movimentos()
+    {
+        return $this->hasMany(Movimento::class);
+    }
 }
