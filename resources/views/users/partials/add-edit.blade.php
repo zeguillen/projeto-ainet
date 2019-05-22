@@ -57,8 +57,15 @@
     </p>
 <br>
 
-<label>Data de Nascimento:</label><p>{{old('>DataNascimento',$user->data_nascimento)}}</p>
-<br>
+<div class="form-group">
+    <label for="inputDataNascimento">Data Nascimento</label>
+    <input
+        type="date" class="form-control"
+        name="DataNascimento" id="inputDataNascimento"
+        placeholder="Email address" value="{{old('DataNascimento',$user->data_nascimento)}}"
+        required
+    />
+</div>
 
 <!--<div class="form-group">
     <label for="inputType">Type</label>
@@ -71,6 +78,7 @@
     </select>
 </div>-->
 
+<!--https://www.w3schools.com/tags/att_input_pattern.asp-->
 
 <div class="form-group">
     <label for="inputEmail">Email</label>
@@ -96,14 +104,39 @@
     <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="10%">
 </div>
 
-<label>NIF:</label><p>{{old('Nif',$user->nif)}}</p>
-<br>
+<div class="form-group">
+    <label for="inputNIF">NIF</label>
+    <input
+        type="number" class="form-control"
+        name="nif" id="inputNIF"
+        placeholder="NIF" value="{{old('nif',$user->nif)}}"
+        required
+        title="NIF must only contain lnumbers"
+    />
+</div>
 
-<label>Telefone:</label><p>{{old('Telefone',$user->telefone)}}</p>
-<br>
+<div class="form-group">
+    <label for="inputTelefone">Telefone</label>
+    <input
+        type="tel" class="form-control"
+        name="telefone" id="inputTelefone"
+        placeholder="Telefone" value="{{old('telefone',$user->telefone)}}"
+        required
+        title="Phone number must only contain numbers"
+    />
+</div>
 
-<label>Endereço:</label><p>{{old('Endereço',$user->endereco)}}</p>
-<br>
+<div class="form-group">
+    <label for="inputEndereco">Endereço</label>
+    <input
+        type="text" class="form-control"
+        name="endereco" id="inputEndereco"
+        placeholder="Endereço" value="{{old('endereco',$user->nome_informal)}}"
+        required
+        pattern="^[a-zA-Z\s]*$"
+        title="Address must only contain letters and numbers"
+    />
+</div>
 
 <label>Estado das quotas:</label><p>{{old('Quotas',$user->quota_paga) == 1 ? 'Em dia' : 'Não pagas'}}</p>
 <br>

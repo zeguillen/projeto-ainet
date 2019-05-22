@@ -4,24 +4,52 @@
 
 <div><a class="btn btn-primary" href="{{route('users.create')}}">Add user</a></div>
 @if (count($users))
+    <div class="form-group">
+        <form action="{{route('users.index')}}" method="get" class="form-group">
+            @csrf
+            <input type="text" name="num_socio" id="inputNumSocio" placeholder="Número de Sócio"/>
+            <input type="text" name="nome_informal" id="inputNumSocio" placeholder="Nome Informal"/>
+            <select name="tipo_socio" id="inputType">
+              <option value="none"></option>  
+              <option value="piloto">Piloto</option>
+              <option value="nao_piloto">Não Piloto</option>
+              <option value="aeromodelista">Aeromodelista</option>
+            </select>
+            <label>Direção</label>
+            <input type="checkbox" id="direcao" name="direcao" checked>
+            <button type="submit" class="btn btn-success">Filtrar</button>
+        </form>
+    </div>
     <table class="table table-striped">
     <thead>
         <tr>
+            <th>Número Sócio</th>
+            <th>Nome Informal</th>
             <th>Email</th>
-            <th>Fullname</th>
-            <th>Registered At</th>
-            <th>Type</th>
-            <th>Actions</th>
+            <th>Telefone</th>
+            <th>Tipo de Sócio</th>
+            <th>Número Licença</th>
+            <td>Membro da direção</td>
+            <th>Profile Picture</th>
+            <th></th>
             <th>Quotas</th>
         </tr>
     </thead>
     <tbody>
     @foreach ($users as $user)
         <tr>
-            <td> {{$user->email}}</td>
-            <td> {{$user->name}} </td>
-            <td> {{$user->created_at}} </td>
-            <td> {{$user->typeToStr()}} </td>
+            <td>{{$user->num_socio}}</td>
+            <td>{{$user->nome_informal}}</td>
+            <td>{{$user->email}}</td>
+            <td>{{$user->telefone}}</td>
+            <td>{{$user->typeToStr()}}</td>
+            @if ($user->typeToStr() == "Piloto")
+                <td>{{$user->num_licenca}}</td>
+            @else
+                <td>Sem licença</td>
+            @endif
+            <td>{{$user->direcao == 1 ? 'Sim' : 'Não'}}</td>
+            <td><img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%"></td>
             <td>
             <!-- fill with edit and delete actions -->
                 <a class="btn btn-primary btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">
