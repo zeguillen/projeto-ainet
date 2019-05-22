@@ -18,10 +18,12 @@ Route::get('/', function () {
 Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes(['register' => false, 'verified' => true]);
 
+//password
 Route::get('/password', 'UserController@changePassword')->name('password.change');
 Route::patch('/password', 'UserController@savePassword')->name('password.save');
 Route::post('/password/email', 'UserController@emailReset')->name('email');
 
+//socios
 Route::get('/socios', 'UserController@index')->name('users.index');
 Route::get('/socios/create', 'UserController@create')->name('users.create');
 Route::post('/socios/create', 'UserController@store')->name('users.store');
@@ -34,8 +36,9 @@ Route::patch('/socios/{id}/quota', 'UserController@changeQuota')->name('quota.ch
 Route::patch('/socios/reset_quotas', 'UserController@resetQuotas')->name('quotas.reset');
 
 //27
-Route::patch('/socios/{id}/ativo', 'UserController@changeAtivo')->name('ativo.change');
 Route::patch('/socios/desativar_sem_quotas', 'UserController@desativarUsersSemQuotas')->name('users.desativar');
-
-// Route::resource('socios', 'UserController')->show();
+Route::patch('/socios/{id}/ativo', 'UserController@changeAtivo')->name('ativo.change');
+//aeronaves 
 Route::get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');
+Route::get('/aeronaves/create', 'AeronaveController@create')->name('aeronaves.create');
+Route::post('/aeronaves/create', 'AeronaveController@store')->name('aeronaves.store');
