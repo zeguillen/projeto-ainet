@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-//use SoftDeletes;
+use SoftDeletes;
 
 class Aeronave extends Model
 {
