@@ -14,7 +14,8 @@ class AeronaveController extends Controller
      */
     public function index()
     {
-        //
+        $aeronave = Aeronave::paginate(5);
+        return view('aeronave.list', compact('aeronave'));
     }
 
     /**
