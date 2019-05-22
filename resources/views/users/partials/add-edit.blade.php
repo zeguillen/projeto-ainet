@@ -1,5 +1,6 @@
 <label>Número de Sócio:</label><p>{{old('>NumSocio',$user->num_socio)}}</p>
 <br>
+
 <label>Tipo de Sócio:</label>
     <p>
     @switch(old('TipoSocio',$user->tipo_socio))
@@ -17,9 +18,6 @@
     @endswitch
     </p>
 <br>
-
-<!--       'num_socio', 'nome_informal', 'name', 'sexo', 'data_nascimento', 'email', 'foto', 'nif', 'telefone', 
-        'endereco', 'tipo_socio', 'quota_paga', 'ativo', 'password_inicial', 'password','direcao'-->
 
 <div class="form-group">
     <label for="inputNomeInformal">Nome Informal</label>
@@ -55,11 +53,11 @@
     @case('M')
         Masculino
         @break
-
-    @default
-        Indiferenciado
     @endswitch
     </p>
+<br>
+
+<label>Data de Nascimento:</label><p>{{old('>DataNascimento',$user->data_nascimento)}}</p>
 <br>
 
 <!--<div class="form-group">
@@ -97,3 +95,21 @@
 <div class="form-group">
     <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="10%">
 </div>
+
+<label>NIF:</label><p>{{old('Nif',$user->nif)}}</p>
+<br>
+
+<label>Telefone:</label><p>{{old('Telefone',$user->telefone)}}</p>
+<br>
+
+<label>Endereço:</label><p>{{old('Endereço',$user->endereco)}}</p>
+<br>
+
+<label>Estado das quotas:</label><p>{{old('Quotas',$user->quota_paga) == 1 ? 'Em dia' : 'Não pagas'}}</p>
+<br>
+
+<label>Sócio Ativo?</label><p>{{old('Ativacao',$user->ativo) == 1 ? 'Sim' : 'Não'}}</p>
+<br>
+
+<label>Pertence á direção?</label><p>{{old('Direcao',$user->direcao) == 1 ? 'Sim' : 'Não'}}</p>
+<br>
