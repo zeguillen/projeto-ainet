@@ -32,13 +32,13 @@
     <tbody>
     @foreach ($movimentos as $movimento)
         <tr>
-            <td>{{$movimento->aeronave->matricula}}</td>
+            <td>{{$movimento->aeronave}}</td>
             <td>{{$movimento->data}}</td>
             <td>{{$movimento->hora_descolagem}}</td>
             <td>{{$movimento->hora_aterragem}}</td>
             <td>{{$movimento->tempo_voo}}</td>
             <td>{{$movimento->naturezaToStr()}}</td>
-            <td>{{$movimento->users->nome_informal}}</td>
+            <td>{{$movimento->user->nome_informal}}</td>
             <td>{{$movimento->aerodromo_partida}}</td>
             <td>{{$movimento->aerodromo_chegada}}</td>
             <td>{{$movimento->num_aterragens}}</td>

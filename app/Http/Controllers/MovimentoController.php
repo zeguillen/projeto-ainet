@@ -9,7 +9,7 @@ class MovimentoController extends Controller
 {
     public function index()
     {
-        $movimentos = Movimento::with('user', 'aeronave')->Paginate(5);
+        $movimentos = Movimento::with('user')->Paginate(5);
         return view('movimentos.list', compact('movimentos'));
     }
 
