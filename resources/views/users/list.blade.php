@@ -28,8 +28,9 @@
               <option value="nao_piloto">Não Piloto</option>
               <option value="aeromodelista">Aeromodelista</option>
             </select>
-            <label>Direção</label>
-            <input type="checkbox" id="direcao" name="direcao" checked>
+            <label>Pertece á Direção?</label>
+            <input type="radio" name="direcao" value="true">Sim
+            <input type="radio" name="direcao" value="false">Não
             <button type="submit" class="btn btn-success">Filtrar</button>
         </form>
     </div>
@@ -104,7 +105,7 @@
         </tr>
     @endforeach
     </table>
-    {{$users->links()}} <!--Paginate-->
+    {{$users->appends(request()->input())->links()}} <!--Paginate-->
 @else
     <h2>No users found</h2>
 @endif
