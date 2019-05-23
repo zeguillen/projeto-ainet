@@ -76,9 +76,10 @@ class MovimentoController extends Controller
         //
     }
 
-    public function edit(Movimento $movimento)
+    public function edit(Request $movimento)
     {
-        //
+        $movimento = Movimento::findOrFail($movimento->id);
+        return view('movimentos.edit', compact('movimento'));
     }
 
     public function update(Request $request, Movimento $movimento)

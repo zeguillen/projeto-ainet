@@ -76,6 +76,17 @@
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado}}</td>
             <td>{{$movimento->observacoes}}</td>
+            <td>
+                @if($movimento->confirmado)
+                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}" disabled>
+                        Edit
+                    </a>
+                @else
+                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
+                        Edit
+                    </a>
+                @endif
+            </td>
             <td>    
                 <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="inline">
                     @csrf
