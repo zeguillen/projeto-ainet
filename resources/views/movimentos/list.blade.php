@@ -11,6 +11,7 @@
             <input type="text" name="aeronave" id="inputAeronave" placeholder="Matricula da Aeronave"/>
             <input type="text" name="piloto" id="inputPiloto" placeholder="Nome do piloto"/>
             <input type="text" name="instrutor" id="inputInstrutor" placeholder="Nome do instrutor"/>
+            <label>Data entre:</label>
             <input type="date" name="data_inf" id="inputDataInicio" placeholder="Data Inicio"/>
             <input type="date" name="data_sup" id="inputDataFim" placeholder="Data Fim"/>
             <select name="natureza" id="inputType">

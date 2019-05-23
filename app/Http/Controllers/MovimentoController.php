@@ -26,7 +26,13 @@ class MovimentoController extends Controller
             $query->whereIn('instrutor_id', $ids);
         }
         if(($request->filled('data_inf')) && ($request->filled('data_sup')))  {
-           
+            $query->where('data', '>=', $request->data_inf)->where('data', '<=', $request->data_sup);
+        }
+        if(!($request->filled('data_inf')) && ($request->filled('data_sup')))  {
+            $query->where('data', '<=', $request->data_sup);
+        }
+        if(($request->filled('data_inf')) && !($request->filled('data_sup')))  {
+            $query->where('data', '>=', $request->data_inf);
         }
         if($request->filled('confirmado')) {
             if($request->confirmado == "true") {
