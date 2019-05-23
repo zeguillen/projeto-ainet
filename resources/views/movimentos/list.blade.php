@@ -76,6 +76,17 @@
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado}}</td>
             <td>{{$movimento->observacoes}}</td>
+            <td>    
+                <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    @if($movimento->confirmado)
+                        <input class="btn btn-danger btn-sm" type="submit" value="Delete" disabled/>
+                    @else
+                        <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
+                    @endif
+                </form>
+            </td>
         </tr>
     @endforeach
     </table>

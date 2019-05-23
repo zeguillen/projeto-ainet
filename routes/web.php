@@ -45,3 +45,4 @@ Route::post('/aeronaves/create', 'AeronaveController@store')->name('aeronaves.st
 Route::get('/movimentos', 'MovimentoController@index')->name('movimentos.index');
 Route::get('/movimentos/create', 'MovimentoController@create')->name('movimentos.create');
 Route::post('/movimentos/create', 'MovimentoController@store')->name('movimentos.store');
+Route::delete('/movimentos/{id}', 'MovimentoController@destroy')->name('movimentos.destroy');

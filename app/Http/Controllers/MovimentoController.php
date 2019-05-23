@@ -86,8 +86,15 @@ class MovimentoController extends Controller
         //
     }
 
-    public function destroy(Movimento $movimento)
+    public function destroy(Request $movimento)
     {
-        //
+        $movimento = Movimento::findOrFail($movimento->id);
+        
+        if($movimento->confirmado) {
+            return redirect()->route('movimentos.index')->with('errors',"Movimento já confirmado! Não é possivel eliminar");
+        }
+        
+        $movimento->delete();
+        return redirect()->route('movimentos.index')->with('success',"Movimento eliminado com sucesso");
     }
 }
