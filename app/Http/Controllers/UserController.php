@@ -19,40 +19,36 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if(($request->has("num_socio")) && ($request->has("nome_informal")) && ($request->has("tipo_socio"))) {
-
-            $query = User::query();
-            if($request->filled('num_socio')) {
-                $query->where('num_socio', $request->num_socio);
+        $query = User::query();
+        if($request->filled('num_socio')) {
+            $query->where('num_socio', $request->num_socio);
+        }
+        if($request->filled('nome_informal')) {
+            $query->where('nome_informal', 'LIKE', $request->nome_informal . '%');
+        }
+        if(($request->tipo_socio != "none") && ($request->filled('tipo_socio'))) {
+            switch ($request->tipo_socio) {
+                case 'piloto':
+                    $type = "P";
+                    break;
+                case 'nao_piloto':
+                    $type = "NP";
+                    break;
+                case 'aeromodelista':
+                    $type = "A";
+                    break;
             }
-            if($request->filled('nome_informal')) {
-                $query->where('nome_informal', 'LIKE', $request->nome_informal . '%');
-            }
-            if($request->tipo_socio != "none") {
-                switch ($request->tipo_socio) {
-                    case 'piloto':
-                        $type = "P";
-                        break;
-                    case 'nao_piloto':
-                        $type = "NP";
-                        break;
-                    case 'aeromodelista':
-                        $type = "A";
-                        break;
-                }
-                $query->where('tipo_socio', $type);
-            }
-            if($request->filled('direcao')) {
+            $query->where('tipo_socio', $type);
+        }
+        if($request->filled('direcao')) {
+            if($request->direcao == "true") {
                 $query->where('direcao', 1);
             } else {
                 $query->where('direcao', 0);
-            }
-
-            $users = $query->paginate(5);
-            return view('users.list', compact('users'));
+            }      
         }
 
-        $users = User::paginate(5);
+        $users = $query->orderBy('id', 'asc')->paginate(5);
         return view('users.list', compact('users'));
     }
 

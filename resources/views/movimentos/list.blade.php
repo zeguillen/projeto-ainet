@@ -4,9 +4,31 @@
 
 <div><a class="btn btn-primary" href="{{route('movimentos.create')}}">Add movimento</a></div>
 @if (count($movimentos))
+    <div class="form-group">
+        <form action="{{route('movimentos.index')}}" method="get" class="form-group">
+            @csrf
+            <input type="text" name="id" id="inputId" placeholder="ID do movimento"/>
+            <input type="text" name="aeronave" id="inputAeronave" placeholder="Matricula da Aeronave"/>
+            <input type="text" name="piloto" id="inputPiloto" placeholder="Nome do piloto"/>
+            <input type="text" name="instrutor" id="inputInstrutor" placeholder="Nome do instrutor"/>
+            <input type="date" name="data_inf" id="inputDataInicio" placeholder="Data Inicio"/>
+            <input type="date" name="data_sup" id="inputDataFim" placeholder="Data Fim"/>
+            <select name="natureza" id="inputType">
+              <option value="none"></option>  
+              <option value="treino">Treino</option>
+              <option value="instrucao">Instrução</option>
+              <option value="especial">Especial</option>
+            </select>
+            <label>Confirmados:</label>
+            <input type="radio" name="confirmado" value="true">Sim
+            <input type="radio" name="confirmado" value="false">Não
+            <button type="submit" class="btn btn-success">Filtrar</button>
+        </form>
+    </div>
     <table class="table table-striped">
     <thead>
         <tr>
+            <th>ID do Movimento</th>
             <th>Aeronave</th>
             <th>Data</th>
             <th>Hora Descolagem</th>
@@ -32,6 +54,7 @@
     <tbody>
     @foreach ($movimentos as $movimento)
         <tr>
+            <td>{{$movimento->id}}</td>
             <td>{{$movimento->aeronave}}</td>
             <td>{{$movimento->data}}</td>
             <td>{{$movimento->hora_descolagem}}</td>
@@ -55,7 +78,7 @@
         </tr>
     @endforeach
     </table>
-    {{$movimentos->links()}} <!--Paginate-->
+    {{$movimentos->appends(request()->input())->links()}} <!--Paginate-->
 @else
     <h2>No aeroplane found</h2>
 @endif
