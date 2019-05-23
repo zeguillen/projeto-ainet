@@ -116,20 +116,12 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $request->validate(
-            [
-                'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
-                'email' => 'required|email',
-                'type' => 'required|in:0,1,2',
-            ],
-            [
-                'name.regex' => 'Fullname should only contain letters and spaces'
-            ]
-        );
-        $user = User::findOrFail($id);
+        $user = User::findOrFail(Auth::User()->id);
         $user->fill($request->except('password'));
         $user->save();
-
+         if($request->has("email")) {
+            
+        }
         return redirect()->route('users.index')->with('success',"User successfully updated");
     }
 

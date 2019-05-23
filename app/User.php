@@ -8,7 +8,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use SoftDeletes;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmails
 {
     use Notifiable;
 

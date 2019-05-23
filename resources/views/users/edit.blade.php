@@ -5,7 +5,7 @@
 @if ($errors->any())
     @include('common.errors')
 @endif
-<form action="{{route('users.update',['id'=>$user->id])}}" method="post" class="form-group">
+<form action="{{route('users.update',['id'=>$user->id])}}" method="post" class="form-group" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     @include('users.partials.add-edit')
