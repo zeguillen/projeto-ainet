@@ -51,8 +51,8 @@ class User extends Authenticatable
         return 'Unknown';
     }
 
-    public function movimentos()
+    public function movimento()
     {
-        return $this->hasMany(Movimento::class);
+      return $this->hasMany('App\Movimento');
     }
 }

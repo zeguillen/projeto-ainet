@@ -39,3 +39,8 @@ Route::patch('/socios/{id}/ativo', 'UserController@changeAtivo')->name('ativo.ch
 Route::get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');
 Route::get('/aeronaves/create', 'AeronaveController@create')->name('aeronaves.create');
 Route::post('/aeronaves/create', 'AeronaveController@store')->name('aeronaves.store');
+
+//movimentos
+Route::get('/movimentos', 'MovimentoController@index')->name('movimentos.index');
+Route::get('/movimentos/create', 'MovimentoController@create')->name('movimentos.create');
+Route::post('/movimentos/create', 'MovimentoController@store')->name('movimentos.store');

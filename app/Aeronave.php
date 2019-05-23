@@ -14,8 +14,9 @@ class Aeronave extends Model
         'matricula', 'marca', 'modelo', 'num_lugares', 'conta_horas', 'preco_hora'
     ];
 
-    public function movimentos()
+    public function movimento()
     {
-        return $this->hasMany(Movimento::class);
+      return $this->hasMany('App\Movimento');
     }
+
 }
