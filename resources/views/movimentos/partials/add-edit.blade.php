@@ -178,7 +178,7 @@
         <option value="0" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'N' ? "selected" : "" }}>Numerário</option>
         <option value="1" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'M' ? "selected" : "" }}>Multibanco</option>
         <option value="2" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'T' ? "selected" : "" }}>Transferência</option>
-        <option value="3" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'P' ? "selected" : "" }}>Paco de horas</option>
+        <option value="3" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'P' ? "selected" : "" }}>Pacote de horas</option>
     </select>
 </div>
 

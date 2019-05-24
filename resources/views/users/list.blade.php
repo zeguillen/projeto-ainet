@@ -2,14 +2,14 @@
 @section('title','List Users')
 @section('content')
 
-<div>
-    <a class="btn btn-primary" href="{{route('users.create')}}">Add user</a>
-    <form action="{{route('quotas.reset')}}" method="post" class="inline">
+<div class="action-buttons">
+    <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Add user</a>
+    <form action="{{route('quotas.reset')}}" method="post" class="form-inline float-left mr-2">
             @csrf
             @method('PATCH')
             <input class="btn btn-danger" type="submit" value="Reset quotas"/>
     </form>
-    <form action="{{route('users.desativar')}}" method="post" class="inline">
+    <form action="{{route('users.desativar')}}" method="post" class="form-inline float-left mr-2">
             @csrf
             @method('PATCH')
             <input class="btn btn-danger" type="submit" value="Desativar sócios com quotas por pagar"/>
@@ -17,21 +17,34 @@
 </div>
 
 @if (count($users))
-    <div class="form-group">
+    <div class="form-group float-right mb-0">
         <form action="{{route('users.index')}}" method="get" class="form-group">
             @csrf
-            <input type="text" name="num_socio" id="inputNumSocio" placeholder="Número de Sócio"/>
-            <input type="text" name="nome_informal" id="inputNumSocio" placeholder="Nome Informal"/>
-            <select name="tipo_socio" id="inputType">
-              <option value="none"></option>  
-              <option value="piloto">Piloto</option>
-              <option value="nao_piloto">Não Piloto</option>
-              <option value="aeromodelista">Aeromodelista</option>
-            </select>
-            <label>Pertece á Direção?</label>
-            <input type="radio" name="direcao" value="true">Sim
-            <input type="radio" name="direcao" value="false">Não
-            <button type="submit" class="btn btn-success">Filtrar</button>
+            <div class="form-row form-inline  align-items-center">
+                <div class="form-group col-auto">
+                    <input type="text" name="num_socio" class="form-control" id="inputNumSocio" placeholder="Número de Sócio"/>
+                </div>
+                <div class="form-group col-auto">
+                    <input type="text" name="nome_informal" class="form-control" id="inputNumSocio" placeholder="Nome Informal"/>
+                </div>
+                <div class="form-group col-auto mr-2">
+                    <select name="tipo_socio" class="form-control" id="inputType">
+                        <option value="none" disabled selected>Tipo de sócio</option>  
+                        <option value="piloto">Piloto</option>
+                        <option value="nao_piloto">Não Piloto</option>
+                        <option value="aeromodelista">Aeromodelista</option>
+                    </select>
+                </div>
+                <div class="form-group form-check form-check-inline col-auto">
+                    <label class="mr-2">Pertece á Direção?</label>
+                    <input type="radio" name="direcao" class="form-check-input" id="inputEDirecaoSim" value="true"><label for="inputEDirecaoSim" class="mr-2">Sim</label>
+                    <input type="radio" name="direcao" class="form-check-input" id="inputEDirecaoNao" value="false"><label for="inputEDirecaoNao">Não</label>
+                </div>
+                <div class="form-group col-auto">
+                    <button type="submit" class="btn btn-success">Filtrar</button>
+                </div>
+            
+            </div>
         </form>
     </div>
     <table class="table table-striped">
@@ -43,7 +56,7 @@
             <th>Telefone</th>
             <th>Tipo de Sócio</th>
             <th>Número Licença</th>
-            <td>Membro da direção</td>
+            <th>Membro da direção</th>
             <th>Profile Picture</th>
             <th></th>
             <th>Quotas</th>

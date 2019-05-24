@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+        <nav class="navbar navbar-expand-md mb-3 navbar-light navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -41,9 +41,24 @@
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="btn btn-outline-primary" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link p-2" href="/socios">
+                                    Socios
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link p-2" href="/aeronaves">
+                                    Aeronaves
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link p-2" href="/movimentos">
+                                    Movimentos
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -83,7 +98,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="container-fluid">
             @yield('content')
         </main>
     </div>

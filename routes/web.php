@@ -21,7 +21,6 @@ Auth::routes(['verify' => true, 'register' => false]);
 //password
 Route::get('/password', 'UserController@changePassword')->name('password.change');
 Route::patch('/password', 'UserController@savePassword')->name('password.save');
-Route::post('/password/email', 'UserController@emailReset')->name('email');
 
 //socios
 Route::get('/socios', 'UserController@index')->name('users.index');

@@ -1,32 +1,53 @@
-@extends('layouts.master')
+@extends('layouts.app')
 @section('title','List Movimentos')
 @section('content')
 
-<div><a class="btn btn-primary" href="{{route('movimentos.create')}}">Add movimento</a></div>
+<div class="mb-3"><a class="btn btn-primary" href="{{route('movimentos.create')}}">Add movimento</a></div>
 @if (count($movimentos))
-    <div class="form-group">
-        <form action="{{route('movimentos.index')}}" method="get" class="form-group">
+    <div class="form">
+        <form action="{{route('movimentos.index')}}" method="get">
             @csrf
-            <input type="text" name="id" id="inputId" placeholder="ID do movimento"/>
-            <input type="text" name="aeronave" id="inputAeronave" placeholder="Matricula da Aeronave"/>
-            <input type="text" name="piloto" id="inputPiloto" placeholder="Nome do piloto"/>
-            <input type="text" name="instrutor" id="inputInstrutor" placeholder="Nome do instrutor"/>
-            <label>Data entre:</label>
-            <input type="date" name="data_inf" id="inputDataInicio" placeholder="Data Inicio"/>
-            <input type="date" name="data_sup" id="inputDataFim" placeholder="Data Fim"/>
-            <select name="natureza" id="inputType">
-              <option value="none"></option>  
-              <option value="treino">Treino</option>
-              <option value="instrucao">Instrução</option>
-              <option value="especial">Especial</option>
-            </select>
-            <label>Confirmados:</label>
-            <input type="radio" name="confirmado" value="true">Sim
-            <input type="radio" name="confirmado" value="false">Não
-            <button type="submit" class="btn btn-success">Filtrar</button>
+            <div class="form-row align-items-center">
+                <div class="form-group col-auto">
+                    <input class="form-control" type="text" name="id" id="inputId" placeholder="ID do movimento"/>
+                </div>
+                <div class="form-group col-auto">
+                    <input class="form-control" type="text" name="aeronave" id="inputAeronave" placeholder="Matricula da Aeronave"/>
+                </div>
+                <div class="form-group col-auto">
+                    <input class="form-control" type="text" name="piloto" id="inputPiloto" placeholder="Nome do piloto"/>
+                </div>
+                <div class="form-group col-auto">
+                    <input class="form-control" type="text" name="instrutor" id="inputInstrutor" placeholder="Nome do instrutor"/>
+                </div>
+
+                <div class="form-group form-inline col-auto">
+                    <label for="inputDataInicio" class="mr-1">Data entre</label>
+                    <input class="form-control mr-1" type="date" name="data_inf" id="inputDataInicio" placeholder="Data Inicio"/>
+                    <input class="form-control mr-1" type="date" name="data_sup" id="inputDataFim" placeholder="Data Fim"/>
+                </div>
+                <div class="form-group col-auto">
+                    <select class="form-control" name="natureza" id="inputType">
+                        <option value="none" disabled selected>Tipo de voo</option>  
+                        <option value="treino">Treino</option>
+                        <option value="instrucao">Instrução</option>
+                        <option value="especial">Especial</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row align-items-center">
+                <div class="form-group form-check form-check-inline col-auto">
+                    <label class="mr-2">Confirmados:</label>
+                    <input class="form-check-input" type="radio" name="confirmado" value="true" id="confirmadoSim"><label class="form-check-label mr-2" for="confirmadoSim">Sim</label>
+                    <input class="form-check-input" type="radio" name="confirmado" value="false" id="confirmadoNao"><label class="form-check-label" for="confirmadoNao">Não</label>
+                </div>
+                <div class="form-group col-auto">
+                    <button type="submit" class="btn btn-success">Filtrar</button>
+                </div>
+            </div>
         </form>
     </div>
-    <table class="table table-striped">
+    <table class="table table-striped table-responsive">
     <thead>
         <tr>
             <th>ID do Movimento</th>
@@ -49,7 +70,6 @@
             <th>Tipo Instrucao</th>
             <th>Instrutor</th>
             <th>Confirmado</th>
-            <th>Observações</th>
         </tr>
     </thead>
     <tbody>
@@ -75,7 +95,6 @@
             <td>{{$movimento->tipo_instrucao}}</td>
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado}}</td>
-            <td>{{$movimento->observacoes}}</td>
             <td>
                 @if($movimento->confirmado)
                     <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}" disabled>

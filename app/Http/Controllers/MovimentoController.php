@@ -67,9 +67,15 @@ class MovimentoController extends Controller
         return view('movimentos.add', compact('movimentos'));
     }
 
-    public function store(Request $request)
+    public function store(MovimentoStorageRequest $request)
     {
-        
+        $validated = $request->validated();
+
+        $movimento = new Movimento;
+        $movimento->fill($request->all());
+        $movimento->save();
+
+        return redirect()->route('movimentos.index')->with('success', "Movimento criado com sucesso");
     }
 
     public function show(Movimento $movimento)
