@@ -2,7 +2,7 @@
 @section('title','Listagem de Pilotos')
 @section('content')
 
-
+<a class="btn btn-primary" href="{{route('aeronaves.index')}}">Aeronaves</a>
 <h3>Aeronave: {{$pilotos[0]->matricula}}</h3>
 @if (count($pilotos))
     <table class="table table-striped">
