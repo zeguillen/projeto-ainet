@@ -25,7 +25,7 @@
             <td>{{$aeronave->conta_horas}}</td>
             <td>{{$aeronave->preco_hora}}</td>
             <td>
-               <a class="btn btn-primary" href="{{route('aeronaves.pilotos', ['matricula'=>$aeronave->matricula])}}">Autorizados</a> 
+               <a class="btn btn-primary" href="{{route('aeronaves.pilotos', ['matricula'=>$aeronave->matricula])}}">Pilotos Autorizados</a> 
             </td>
         </tr>
     @endforeach

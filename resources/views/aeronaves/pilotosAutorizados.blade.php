@@ -2,7 +2,7 @@
 @section('title','Listagem de Pilotos')
 @section('content')
 
-
+<a class="btn btn-primary" href="{{route('aeronaves.index')}}">Aeronaves</a>
 <h3>Aeronave: {{$pilotos[0]->matricula}}</h3>
 @if (count($pilotos))
     <table class="table table-striped">
@@ -23,6 +23,13 @@
             <td>{{$piloto->user->email}}</td>
             <td>{{$piloto->user->telefone}}</td>
             <td>{{$piloto->user->num_licenca}}</td>
+            <td>
+                <form action="{{route('piloto.naoautorizar',['matricula'=>$piloto->matricula, 'piloto'=>$piloto->user->id])}}" method="post" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <input class="btn btn-danger btn-sm" type="submit" value="Não Autorizar"/>
+                </form>
+            </td>
             
         </tr>
     @endforeach

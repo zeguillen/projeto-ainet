@@ -40,6 +40,7 @@ Route::get('/aeronaves/create', 'AeronaveController@create')->name('aeronaves.cr
 Route::post('/aeronaves/create', 'AeronaveController@store')->name('aeronaves.store');
 
 Route::get('/aeronaves/{matricula}/pilotos', 'AeronaveController@pilotosAutorizados')->name('aeronaves.pilotos');
+Route::delete('/aeronaves/{matricula}/pilotos/{piloto}', 'AeronaveController@naoAutorizarPiloto')->name('piloto.naoautorizar');
 
 //movimentos
 Route::get('/movimentos', 'MovimentoController@index')->name('movimentos.index');
