@@ -57,6 +57,7 @@ class MovimentoController extends Controller
         }
 
         $movimentos = $query->orderBy('id', 'asc')->paginate(5);
+        
         return view('movimentos.list', compact('movimentos'));
     }
 
@@ -68,7 +69,7 @@ class MovimentoController extends Controller
 
     public function store(Request $request)
     {
-        //
+        
     }
 
     public function show(Movimento $movimento)
@@ -84,7 +85,7 @@ class MovimentoController extends Controller
 
     public function update(Request $request, Movimento $movimento)
     {
-        //
+        return redirect()->route('movimentos.index')->with('success', "Movimento successfully updated!");
     }
 
     public function destroy(Request $movimento)

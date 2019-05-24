@@ -1,148 +1,213 @@
-<label>Número de Sócio:</label><p>{{old('>NumSocio',$user->num_socio)}}</p>
-<br>
-
-<label>Tipo de Sócio:</label>
-    <p>
-    @switch(old('TipoSocio',$user->tipo_socio))
-    @case('P')
-        Piloto
-        @break
-
-    @case('NP')
-        Não Piloto
-        @break
-
-    @case('A')
-        Aeromodelista
-        @break
-    @endswitch
-    </p>
-<br>
 
 <div class="form-group">
-    <label for="inputNomeInformal">Nome Informal</label>
-    <input
-        type="text" class="form-control"
-        name="nomeinformal" id="inputNomeInformal"
-        placeholder="Nome Informal" value="{{old('nomeinformal',$user->nome_informal)}}"
-        required
-        pattern="^[a-zA-Z\s]*$"
-        title="Fullname must only contain letters and numbers"
-    />
-</div>
-
-<div class="form-group">
-    <label for="inputFullname">Fullname</label>
-    <input
-        type="text" class="form-control"
-        name="fullname" id="inputFullname"
-        placeholder="Fullname" value="{{old('fullname',$user->name)}}"
-        required
-        pattern="^[a-zA-Z\s]*$"
-        title="Fullname must only contain letters and numbers"
-    />
-</div>
-
-<label>Sexo:</label>
-    <p>
-    @switch(old('Sexo',$user->sexo))
-    @case('F')
-        Feminino
-        @break
-
-    @case('M')
-        Masculino
-        @break
-    @endswitch
-    </p>
-<br>
-
-<div class="form-group">
-    <label for="inputDataNascimento">Data Nascimento</label>
+    <label for="inputDataVoo">Data do voo</label>
     <input
         type="date" class="form-control"
-        name="DataNascimento" id="inputDataNascimento"
-        placeholder="Email address" value="{{old('DataNascimento',$user->data_nascimento)}}"
+        name="DataVoo" id="inputDataVoo"
+        placeholder="Dia do voo" value="{{old('data',$movimento->data)}}"
         required
     />
 </div>
 
-<!--<div class="form-group">
-    <label for="inputType">Type</label>
-    <select name="type" id="inputType" class="form-control">
-        <?=$user->type?>
-        <option disabled selected> -- select an option -- </option>
-        <option value="0" {{ old('type', $user->tipo_socio) == 0 ? "selected" : "" }}>Piloto</option>
-        <option value="1" {{ old('type', $user->tipo_socio) == 1 ? "selected" : "" }}>Não Piloto</option>
-        <option value="2" {{ old('type', $user->tipo_socio) == 2 ? "selected" : "" }}>Direcção</option>
-    </select>
-</div>-->
-
-<!--https://www.w3schools.com/tags/att_input_pattern.asp-->
-
 <div class="form-group">
-    <label for="inputEmail">Email</label>
+    <label for="inputHoraDescolagem">Hora descolagem</label>
     <input
-        type="email" class="form-control"
-        name="email" id="inputEmail"
-        placeholder="Email address" value="{{old('email',$user->email)}}"
+        type="time" class="form-control"
+        name="horaDescolagem" id="inputhoraDescolagem"
+        value="{{old('hora_descolagem',$movimento->hora_descolagem)}}"
         required
-        pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
-        title="Email must be valid"
     />
 </div>
 
 <div class="form-group">
-    <label for="inputImage">Profile Picture</label>
+    <label for="inputHoraAterragem">Hora aterragem</label>
     <input
-        type="file" class="form-control"
-        name="Image" id="inputImage"
-    />
-</div>
-
-<div class="form-group">
-    <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="10%">
-</div>
-
-<div class="form-group">
-    <label for="inputNIF">NIF</label>
-    <input
-        type="number" class="form-control"
-        name="nif" id="inputNIF"
-        placeholder="NIF" value="{{old('nif',$user->nif)}}"
+        type="time" class="form-control"
+        name="horaAterragem" id="inputhoraAterragem"
+        value="{{old('hora_aterragem',$movimento->hora_aterragem)}}"
         required
-        title="NIF must only contain lnumbers"
     />
 </div>
 
 <div class="form-group">
-    <label for="inputTelefone">Telefone</label>
-    <input
-        type="tel" class="form-control"
-        name="telefone" id="inputTelefone"
-        placeholder="Telefone" value="{{old('telefone',$user->telefone)}}"
-        required
-        title="Phone number must only contain numbers"
-    />
-</div>
-
-<div class="form-group">
-    <label for="inputEndereco">Endereço</label>
+    <label for="inputAeronave">Aeronave</label>
     <input
         type="text" class="form-control"
-        name="endereco" id="inputEndereco"
-        placeholder="Endereço" value="{{old('endereco',$user->nome_informal)}}"
+        name="aeronave" id="inputAeronave"
+        value="{{old('aeronave',$movimento->aeronave)}}"
         required
-        pattern="^[a-zA-Z\s]*$"
-        title="Address must only contain letters and numbers"
     />
 </div>
 
-<label>Estado das quotas:</label><p>{{old('Quotas',$user->quota_paga) == 1 ? 'Em dia' : 'Não pagas'}}</p>
-<br>
+<div class="form-group">
+    <label for="inputNumDiario">Nº diario</label>
+    <input
+        type="text" class="form-control"
+        name="numDiario" id="inputNumDiario"
+        value="{{old('num_diario',$movimento->num_diario)}}"
+        required
+    />
+</div>
 
-<label>Sócio Ativo?</label><p>{{old('Ativacao',$user->ativo) == 1 ? 'Sim' : 'Não'}}</p>
-<br>
+<div class="form-group">
+    <label for="inputNumServico">Nº servico</label>
+    <input
+        type="text" class="form-control"
+        name="numServico" id="inputNumServico"
+        value="{{old('num_servico',$movimento->num_servico)}}"
+        required
+    />
+</div>
 
-<label>Pertence á direção?</label><p>{{old('Direcao',$user->direcao) == 1 ? 'Sim' : 'Não'}}</p>
-<br>
+<div class="form-group">
+    <label for="InputPilotoId">Piloto</label>
+    <input
+        type="text" class="form-control"
+        name="pilotoId" id="inputPilotoId"
+        value="{{ Auth::user()->id }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputNatureza">Natureza do voo</label>
+    <select name="type" id="inputNatureza" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        <option value="0" {{ old('natureza', $movimento->natureza) == 'T' ? "selected" : "" }}>Treino</option>
+        <option value="1" {{ old('natureza', $movimento->natureza) == 'I' ? "selected" : "" }}>Instrução</option>
+        <option value="2" {{ old('natureza', $movimento->natureza) == 'E' ? "selected" : "" }}>Especial</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="inputAerodromoPartida">Aerodromo de Partida</label><br>
+    <span>{{ old('aerodromo_partida', $movimento->aerodromoPartida->nome) }}</span>
+    <input
+        type="text" class="form-control"
+        name="aerodromoPartida" id="inputAerodromoPartida"
+        value="{{ old('aerodromo_partida', $movimento->aerodromo_partida) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputAerodromoChegada">Aerodromo de Chegada</label><br>
+    <span>{{ old('aerodromo_partida', $movimento->aerodromoChegada->nome) }}</span>
+    <input
+        type="text" class="form-control"
+        name="aerodromoChegada" id="inputAerodromoChegada"
+        value="{{ old('aerodromo_chegada', $movimento->aerodromo_chegada) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputNumAterragens">Numero de aterragens</label>
+    <input
+        type="number" class="form-control"
+        name="numAterragens" id="inputNumAterragens"
+        value="{{ old('num_aterragens', $movimento->num_aterragens) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputNumDescolagens">Numero de descolagens</label>
+    <input
+        type="number" class="form-control"
+        name="numDescolagens" id="inputNumDescolagens"
+        value="{{ old('num_descolagens', $movimento->num_descolagens) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputNumPessoas">Numero de pessoas a bordo</label>
+    <input
+        type="number" class="form-control"
+        name="numPessoas" id="inputNumPessoas"
+        value="{{ old('num_pessoas', $movimento->num_pessoas) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputContaHorasInicial">Conta horas inicial</label>
+    <input
+        type="number" class="form-control"
+        name="contaHorasInicial" id="inputContaHorasInicial"
+        value="{{ old('conta_horas_inicio', $movimento->conta_horas_inicio) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputContaHorasFinal">Conta horas final</label>
+    <input
+        type="number" class="form-control"
+        name="contaHorasFinal" id="inputContaHorasFinal"
+        value="{{ old('conta_horas_fim', $movimento->conta_horas_fim) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputTempoVoo">Tempo de voo</label>
+    <input
+        type="number" class="form-control"
+        name="tempoVoo" id="inputTempoVoo"
+        value="{{ old('tempo_voo', $movimento->tempo_voo) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputPrecoVoo">Preco de voo</label>
+    <input
+        type="number" class="form-control"
+        name="precoVoo" id="inputPrecoVoo"
+        value="{{ old('preco_voo', $movimento->preco_voo) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputModoPagamento">Modo de pagamento</label>
+    <select name="type" id="inputModoPagamento" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        <option value="0" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'N' ? "selected" : "" }}>Numerário</option>
+        <option value="1" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'M' ? "selected" : "" }}>Multibanco</option>
+        <option value="2" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'T' ? "selected" : "" }}>Transferência</option>
+        <option value="3" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'P' ? "selected" : "" }}>Paco de horas</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="inputNumRecibo">Numero de recibo</label>
+    <input
+        type="number" class="form-control"
+        name="numRecibo" id="inputNumRecibo"
+        value="{{ old('num_recibo', $movimento->num_recibo) }}"
+        required
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputObs">Observações</label>
+    <input
+        type="textarea" class="form-control"
+        name="obs" id="inputObs"
+        value="{{ old('observacoes', $movimento->observacoes) }}"
+        required
+    />
+</div>
+
+
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.app')
 @section('title','List Users')
 @section('content')
 
@@ -48,6 +48,7 @@
             <th></th>
             <th>Quotas</th>
             <th>Estado</th>
+            
         </tr>
     </thead>
     <tbody>
@@ -65,6 +66,7 @@
             @endif
             <td>{{$user->direcao == 1 ? 'Sim' : 'Não'}}</td>
             <td><img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%"></td>
+            
             <td>
             <!-- fill with edit and delete actions -->
                 <a class="btn btn-primary btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">

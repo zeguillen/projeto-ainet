@@ -5,27 +5,26 @@
 @if ($errors->any())
     @include('common.errors')
 @endif
-<form action="{{route('users.store')}}" method="post" class="form-group">
+<form action="{{route('movimentos.store')}}" method="post" class="form-group">
     @csrf
     @method('POST')
     @include('users.partials.add-edit')
     <div class="form-group">
-        <label for="inputPassword">Password</label>
-        <input
-            type="password" class="form-control"
-            name="password" id="inputPassword"
-            value="{{old('password',$user->password)}}"
-            required
-            minlength="8"
-        />
+        <label for="inputTipoInstrucao">Tipo de instrução</label>
+        <select name="type" id="inputTipoInstrucao" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="0" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
+            <option value="1" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
+        </select>
     </div>
+        
     <div class="form-group">
-        <label for="inputPasswordConfirmation">Password confirmation</label>
+        <label for="inputInstrutor">Instrutor</label>
         <input
-            type="password" class="form-control"
-            name="password_confirmation" id="inputPasswordConfirmation"
+            type="text" class="form-control"
+            name="instrutor" id="inputInstrutor"
+            value="{{ old('instrutor', $movimento->instrutor) }}"
             required
-            minlength="8"
         />
     </div>
     <div class="form-group">

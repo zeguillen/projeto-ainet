@@ -63,7 +63,7 @@
     />
 </div>
 
-<!--<div class="form-group">
+<div class="form-group">
     <label for="inputType">Type</label>
     <select name="type" id="inputType" class="form-control">
         <?=$user->type?>
@@ -72,7 +72,7 @@
         <option value="1" {{ old('type', $user->tipo_socio) == 1 ? "selected" : "" }}>Não Piloto</option>
         <option value="2" {{ old('type', $user->tipo_socio) == 2 ? "selected" : "" }}>Direcção</option>
     </select>
-</div>-->
+</div>
 
 <!--https://www.w3schools.com/tags/att_input_pattern.asp-->
 
@@ -86,6 +86,7 @@
     />
 </div>
 
+@can('isDirecao', Auth::user())
 <div class="form-group">
     <label for="inputImage">Profile Picture</label>
     <input
@@ -107,6 +108,7 @@
         required
     />
 </div>
+@endcan
 
 <div class="form-group">
     <label for="inputTelefone">Telefone</label>
