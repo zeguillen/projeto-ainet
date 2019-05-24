@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Editar perfil</div>
+                <div class="card-header">@yield('title')</div>
                 <div class="card-body">
                     <form action="{{route('users.update',['id'=>$user->id])}}" method="post" class="form-group" enctype="multipart/form-data">
                         @csrf
