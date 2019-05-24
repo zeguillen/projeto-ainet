@@ -1,5 +1,5 @@
-@extends('layouts.master')
-@section('title','Editar Movimentos')
+@extends('layouts.app')
+@section('title','Editar Movimento')
 @section('content')
 
 @if ($errors->any())

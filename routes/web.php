@@ -16,8 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
-Auth::routes(['register' => false, 'verified' => true]);
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true, 'register' => false]);
 
 //password
 Route::get('/password', 'UserController@changePassword')->name('password.change');
@@ -49,3 +48,4 @@ Route::get('/movimentos/create', 'MovimentoController@create')->name('movimentos
 Route::post('/movimentos/create', 'MovimentoController@store')->name('movimentos.store');
 Route::delete('/movimentos/{id}', 'MovimentoController@destroy')->name('movimentos.destroy');
 Route::get('/movimentos/{id}/edit', 'MovimentoController@edit')->name('movimentos.edit');
+Route::put('/movimentos/{id}/edit', 'MovimentoController@update')->name('movimentos.update');

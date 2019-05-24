@@ -5,10 +5,13 @@ namespace App\Policies;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class AccountPolicy
+class UserPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability){
+        return $user->direcao;
+    }
     /**
      * Determine whether the user can view the model.
      *
@@ -16,9 +19,9 @@ class AccountPolicy
      * @param  \App\User  $model
      * @return mixed
      */
-    public function view(User $user, Request $account)
+    public function view(User $user)
     {
-       
+        
     }
 
     /**
@@ -80,7 +83,8 @@ class AccountPolicy
         //
     }
 
-    public function edit(User $user, Account $account){
-        return ($user->id == $account->owner_id) && ($user->direcao);
+    public function edit(User $user){
+        // return $user->id;
     }
+
 }
