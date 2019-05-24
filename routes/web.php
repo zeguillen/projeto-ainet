@@ -16,8 +16,6 @@ Route::get('/', function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
-Auth::routes(['register' => false, 'verified' => true]);
-Auth::routes(['verify' => true]);
 
 //password
 Route::get('/password', 'UserController@changePassword')->name('password.change');
