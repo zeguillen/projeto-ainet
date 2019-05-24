@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Aeronave;
+use App\AeronavePiloto;
 use Illuminate\Http\Request;
+
 
 class AeronaveController extends Controller
 {
@@ -83,5 +85,14 @@ class AeronaveController extends Controller
     public function destroy(Aeronave $aeronave)
     {
         //
+    }
+
+    public function pilotosAutorizados(Request $request) 
+    {   
+        $matricula = request()->route('matricula');
+
+        $pilotos = AeronavePiloto::where('matricula', $matricula)->paginate(10);
+
+        return view('aeronaves.pilotosAutorizados', compact('pilotos'));
     }
 }

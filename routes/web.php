@@ -39,7 +39,7 @@ Route::get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');
 Route::get('/aeronaves/create', 'AeronaveController@create')->name('aeronaves.create');
 Route::post('/aeronaves/create', 'AeronaveController@store')->name('aeronaves.store');
 
-//Route::get('/aeronaves/{id}/pilotos', 'AeronaveController@pilotosAutorizados')->name('pilotos.autorizados');
+Route::get('/aeronaves/{matricula}/pilotos', 'AeronaveController@pilotosAutorizados')->name('aeronaves.pilotos');
 
 //movimentos
 Route::get('/movimentos', 'MovimentoController@index')->name('movimentos.index');
