@@ -11,6 +11,7 @@
             <input type="text" name="aeronave" id="inputAeronave" placeholder="Matricula da Aeronave"/>
             <input type="text" name="piloto" id="inputPiloto" placeholder="Nome do piloto"/>
             <input type="text" name="instrutor" id="inputInstrutor" placeholder="Nome do instrutor"/>
+            <label>Data entre:</label>
             <input type="date" name="data_inf" id="inputDataInicio" placeholder="Data Inicio"/>
             <input type="date" name="data_sup" id="inputDataFim" placeholder="Data Fim"/>
             <select name="natureza" id="inputType">
@@ -75,6 +76,28 @@
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado}}</td>
             <td>{{$movimento->observacoes}}</td>
+            <td>
+                @if($movimento->confirmado)
+                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}" disabled>
+                        Edit
+                    </a>
+                @else
+                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
+                        Edit
+                    </a>
+                @endif
+            </td>
+            <td>    
+                <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    @if($movimento->confirmado)
+                        <input class="btn btn-danger btn-sm" type="submit" value="Delete" disabled/>
+                    @else
+                        <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
+                    @endif
+                </form>
+            </td>
         </tr>
     @endforeach
     </table>

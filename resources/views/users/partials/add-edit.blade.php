@@ -23,11 +23,9 @@
     <label for="inputNomeInformal">Nome Informal</label>
     <input
         type="text" class="form-control"
-        name="nomeinformal" id="inputNomeInformal"
+        name="nome_informal" id="inputNomeInformal"
         placeholder="Nome Informal" value="{{old('nomeinformal',$user->nome_informal)}}"
         required
-        pattern="^[a-zA-Z\s]*$"
-        title="Fullname must only contain letters and numbers"
     />
 </div>
 
@@ -35,11 +33,9 @@
     <label for="inputFullname">Fullname</label>
     <input
         type="text" class="form-control"
-        name="fullname" id="inputFullname"
+        name="name" id="inputFullname"
         placeholder="Fullname" value="{{old('fullname',$user->name)}}"
         required
-        pattern="^[a-zA-Z\s]*$"
-        title="Fullname must only contain letters and numbers"
     />
 </div>
 
@@ -61,8 +57,8 @@
     <label for="inputDataNascimento">Data Nascimento</label>
     <input
         type="date" class="form-control"
-        name="DataNascimento" id="inputDataNascimento"
-        placeholder="Email address" value="{{old('DataNascimento',$user->data_nascimento)}}"
+        name="data_nascimento" id="inputDataNascimento"
+        placeholder="Data Nascimento" value="{{old('DataNascimento',$user->data_nascimento)}}"
         required
     />
 </div>
@@ -87,8 +83,6 @@
         name="email" id="inputEmail"
         placeholder="Email address" value="{{old('email',$user->email)}}"
         required
-        pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
-        title="Email must be valid"
     />
 </div>
 
@@ -111,7 +105,6 @@
         name="nif" id="inputNIF"
         placeholder="NIF" value="{{old('nif',$user->nif)}}"
         required
-        title="NIF must only contain lnumbers"
     />
 </div>
 
@@ -122,7 +115,8 @@
         name="telefone" id="inputTelefone"
         placeholder="Telefone" value="{{old('telefone',$user->telefone)}}"
         required
-        title="Phone number must only contain numbers"
+        pattern="[0-9]{9}"
+        title="Phone number must have 9 numbers"
     />
 </div>
 
@@ -133,8 +127,6 @@
         name="endereco" id="inputEndereco"
         placeholder="Endereço" value="{{old('endereco',$user->nome_informal)}}"
         required
-        pattern="^[a-zA-Z\s]*$"
-        title="Address must only contain letters and numbers"
     />
 </div>
 

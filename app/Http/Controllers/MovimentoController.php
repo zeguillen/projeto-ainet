@@ -26,7 +26,13 @@ class MovimentoController extends Controller
             $query->whereIn('instrutor_id', $ids);
         }
         if(($request->filled('data_inf')) && ($request->filled('data_sup')))  {
-           
+            $query->where('data', '>=', $request->data_inf)->where('data', '<=', $request->data_sup);
+        }
+        if(!($request->filled('data_inf')) && ($request->filled('data_sup')))  {
+            $query->where('data', '<=', $request->data_sup);
+        }
+        if(($request->filled('data_inf')) && !($request->filled('data_sup')))  {
+            $query->where('data', '>=', $request->data_inf);
         }
         if($request->filled('confirmado')) {
             if($request->confirmado == "true") {
@@ -70,9 +76,10 @@ class MovimentoController extends Controller
         //
     }
 
-    public function edit(Movimento $movimento)
+    public function edit(Request $movimento)
     {
-        //
+        $movimento = Movimento::findOrFail($movimento->id);
+        return view('movimentos.edit', compact('movimento'));
     }
 
     public function update(Request $request, Movimento $movimento)
@@ -80,8 +87,15 @@ class MovimentoController extends Controller
         //
     }
 
-    public function destroy(Movimento $movimento)
+    public function destroy(Request $movimento)
     {
-        //
+        $movimento = Movimento::findOrFail($movimento->id);
+        
+        if($movimento->confirmado) {
+            return redirect()->route('movimentos.index')->with('errors',"Movimento já confirmado! Não é possivel eliminar");
+        }
+        
+        $movimento->delete();
+        return redirect()->route('movimentos.index')->with('success',"Movimento eliminado com sucesso");
     }
 }
