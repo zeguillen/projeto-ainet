@@ -95,4 +95,13 @@ class AeronaveController extends Controller
 
         return view('aeronaves.pilotosAutorizados', compact('pilotos'));
     }
+
+    public function naoAutorizarPiloto(Request $request){
+        $matricula = request()->route('matricula');
+        $piloto = request()->route('piloto');
+
+        AeronavePiloto::where('matricula', $matricula)->where('piloto_id', $piloto)->delete();
+
+        return redirect()->route('aeronaves.pilotos', compact('matricula'))->with('success',"Piloto eliminado");
+    }
 }

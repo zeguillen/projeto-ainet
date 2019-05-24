@@ -23,6 +23,13 @@
             <td>{{$piloto->user->email}}</td>
             <td>{{$piloto->user->telefone}}</td>
             <td>{{$piloto->user->num_licenca}}</td>
+            <td>
+                <form action="{{route('piloto.naoautorizar',['matricula'=>$piloto->matricula, 'piloto'=>$piloto->user->id])}}" method="post" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <input class="btn btn-danger btn-sm" type="submit" value="Não Autorizar"/>
+                </form>
+            </td>
             
         </tr>
     @endforeach
