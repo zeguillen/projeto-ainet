@@ -97,7 +97,7 @@
             <td>{{$movimento->confirmado}}</td>
             <td>
                 @if($movimento->confirmado)
-                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}" disabled>
+                    <a class="btn btn-secondary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}" disabled>
                         Edit
                     </a>
                 @else
@@ -111,7 +111,7 @@
                     @csrf
                     @method('DELETE')
                     @if($movimento->confirmado)
-                        <input class="btn btn-danger btn-sm" type="submit" value="Delete" disabled/>
+                        <input class="btn btn-secondary btn-sm" type="submit" value="Delete" disabled/>
                     @else
                         <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
                     @endif

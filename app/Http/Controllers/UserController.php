@@ -23,6 +23,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        //if (auth()->user()->can('updateAll',User::class))
         $query = User::query();
         if($request->filled('num_socio')) {
             $query->where('num_socio', $request->num_socio);
@@ -63,6 +64,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', User::class);
         $user = new User;
         return view('users.add', compact('user'));
     }
@@ -75,6 +77,7 @@ class UserController extends Controller
      */
     public function store(UserStorageRequest $request)
     {
+        $this->authorize('create', User::class);
         $validated = $request->validated();
 
         $user = new User;
@@ -105,9 +108,9 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $user)
+    public function edit(User $socio)
     {
-        $user = User::findOrFail($user->id);
+        $user = $socio;
         return view('users.edit', compact('user'));
     }
 
@@ -118,9 +121,10 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $socio)
     {
-        $user = User::findOrFail(Auth::User()->id);
+        $this->authorize('update', $socio);
+        $user = $socio;
         $user->fill($request->except('password'));
         $user->save();
          if($request->has("email")) {
@@ -135,23 +139,25 @@ class UserController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $user)
+    public function destroy(User $socio)
     {
-        $user = User::findOrFail($user->id);
-        $user->delete();
+        $socio->delete();
         return redirect()->route('users.index')->with('success',"User successfully deleted");
     }
 
     public function changePassword(Request $request)
     {
-        $id = Auth::user()->id;
-        $user = User::findOrFail($id);
+        $user = Auth::user();
         return view('users.changePassword', compact('user'));
     }
 
     public function savePassword(Request $request)
     {
-        //TODO falta validator
+        $request->validate([
+            'password' => 'required|min:8',
+            'password_old' => 'required|min:8',
+            'password_confirmation' => 'required|min:8'
+        ]);
 
         if (!(Hash::check($request->old_password, Auth::user()->password))) {
             return response()->json(['errors' => ['Old password missmatch']], 400);
@@ -165,11 +171,8 @@ class UserController extends Controller
             return response()->json(['errors' => ['Confirmation password missmatch']], 400);
         }
 
-        $request_data = $request->All();
-        $user_id = Auth::User()->id;                       
-        $obj_user = User::find($user_id);
-        $obj_user->password = Hash::make($request_data['password']);;
-        $obj_user->save(); 
+        Auth::user()->password = Hash::make($request->password);;
+        Auth::user()->save(); 
 
         return redirect()->route('home')->with('success',"Password updated");
     }

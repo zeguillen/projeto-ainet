@@ -2,8 +2,12 @@
 @section('title','List Users')
 @section('content')
 
+
 <div class="action-buttons">
+    @can('create', App\User::class) 
     <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Add user</a>
+    @endcan
+    @can('updateAll', App\User::class) 
     <form action="{{route('quotas.reset')}}" method="post" class="form-inline float-left mr-2">
             @csrf
             @method('PATCH')
@@ -14,6 +18,7 @@
             @method('PATCH')
             <input class="btn btn-danger" type="submit" value="Desativar sócios com quotas por pagar"/>
     </form>
+    @endcan
 </div>
 
 @if (count($users))
@@ -59,8 +64,10 @@
             <th>Membro da direção</th>
             <th>Profile Picture</th>
             <th></th>
+            @can('updateAll', App\User::class)
             <th>Quotas</th>
             <th>Estado</th>
+            @endcan
             
         </tr>
     </thead>
@@ -82,16 +89,28 @@
             
             <td>
             <!-- fill with edit and delete actions -->
-                <a class="btn btn-primary btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">
-                    Edit
-                </a>
+                @can('update', $user)
+                    <a class="btn btn-primary btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">
+                        Edit
+                    </a>
+                @else
+                    <span class="btn btn-secondary btn-sm disabled" >
+                        Edit
+                    </span>
+                @endcan
+                @can('delete', App\User::class)
                 <form action="{{route('users.destroy',['id'=>$user->id])}}" method="post" class="inline">
                     @csrf
                     @method('DELETE')
                     <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
                 </form>
+                @else
+                    <span class="btn btn-secondary btn-sm disabled" >
+                        Delete
+                    </span>
+                @endcan
             </td>
-
+            @can('updateAll', App\User::class)
             <td> 
                 <form  action=" {{route('quota.change', ['id'=>$user->id])}} " method="post">
                     @csrf
@@ -117,6 +136,7 @@
                     @endif
                 </form>
             </td>
+            @endcan
         </tr>
     @endforeach
     </table>
