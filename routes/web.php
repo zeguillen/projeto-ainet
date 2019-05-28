@@ -33,8 +33,8 @@ Route::middleware('auth')->patch('/socios/{socio}/quota', 'UserController@change
 Route::middleware('auth')->patch('/socios/reset_quotas', 'UserController@resetQuotas')->name('quotas.reset');
 Route::middleware('auth')->patch('/socios/desativar_sem_quotas', 'UserController@desativarUsersSemQuotas')->name('users.desativar');
 Route::middleware('auth')->patch('/socios/{socio}/ativo', 'UserController@changeAtivo')->name('ativo.change');
-Route::middleware('auth')->get('/pilotos/{piloto}/certificado', 'UserController@certificadoPiloto')->name('ver.certificado');
-Route::middleware('auth')->get('/pilotos/{piloto}/licenca', 'UserController@licencaPiloto')->name('ver.licenca');
+Route::middleware('auth')->get('/pilotos/{piloto}/certificado', 'UserController@verCertificadoPiloto')->name('ver.certificado');
+Route::middleware('auth')->get('/pilotos/{piloto}/licenca', 'UserController@verLicencaPiloto')->name('ver.licenca');
 
 //aeronaves 
 Route::middleware('auth')->get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');

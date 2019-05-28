@@ -65,13 +65,13 @@
 </div>
 
 <div class="form-group">
-    <label for="inputType">Type</label>
-    <select name="type" id="inputType" class="form-control">
+    <label for="inputTipoSocio">Tipo de sócio</label>
+    <select name="tipo_socio" id="inputTipoSocio" class="form-control">
         <?=$user->type?>
         <option disabled selected> -- select an option -- </option>
-        <option value="0" {{ old('type', $user->tipo_socio) == 0 ? "selected" : "" }}>Piloto</option>
-        <option value="1" {{ old('type', $user->tipo_socio) == 1 ? "selected" : "" }}>Não Piloto</option>
-        <option value="2" {{ old('type', $user->tipo_socio) == 2 ? "selected" : "" }}>Direcção</option>
+        <option value="P" {{ old('type', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
+        <option value="NP" {{ old('type', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
+        <option value="A" {{ old('type', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
     </select>
 </div>
 
@@ -134,7 +134,7 @@
     <input
         type="text" class="form-control"
         name="endereco" id="inputEndereco"
-        placeholder="Endereço" value="{{old('endereco',$user->nome_informal)}}"
+        placeholder="Endereço" value="{{old('endereco',$user->endereco)}}"
         required
     />
 </div>
@@ -150,16 +150,76 @@
 
 @can('viewPiloto', Auth::user())
 <h5>Informação de Piloto</h5>
-<label>Nº de licença</label><p>{{ old('num_licenca', $user->num_licenca) }}</p>
-<label>Tipo de licença</label><p>{{ old('tipo_licenca', $user->tipo_licenca) }}</p>
-<label>Pode dar instrução?</label><p>{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}</p>
+<div class="form-group">
+    <label for="inputNumLicenca">Nº de licença</label>
+    <input 
+        type="number" class="form-control"
+        name="num_licenca" id="inputNumLicenca"
+        placeholder="Número da licença" value="{{ old('num_licenca', $user->num_licenca) }}"
+    />
+    
+</div>
+
+<div class="form-group">
+    <label>Tipo de licença</label>
+    <select name="type" id="inputType" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        @foreach ($tipos_licencas as $tipo_licenca)
+        <option value="{{ $tipo_licenca->code }}" {{ old('tipo_licenca', $user->tipo_licenca) == $tipo_licenca->code ? "selected" : ""}}>{{ $tipo_licenca->code }} - {{ $tipo_licenca->nome }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label>Pode dar instrução?</label>
+    <input 
+        type="text" class="form-control"
+        value="{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}" disabled
+    />
+</div>
 
 <h5>Certificado Médico</h5>
-<label>Nº de certificado</label><p>{{ old('num_certificado', $user->num_certificado) }}</p>
-<label>Classe de certificado</label><p>{{ old('classe_certificado', $user->classe_certificado) }}</p>
-<label>Validade</label><p>{{ old('validade_certificado', $user->validade_certificado) }}</p>
-<label>Certificado confirmado?</label><p>{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}</p>
-<label>Cópia Digital do Certificado</label>
-<a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Ver certificado</a>
-<a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Descarregar certificado</a>
+<div class="form-group">
+    <label for="inputNumCertificado">Nº do certificado</label>
+    <input 
+        type="text" class="form-control"
+        name="num_certificado" id="inputNumCertificado"
+        placeholder="Número do certificado" value="{{ old('num_certificado', $user->num_certificado) }}"
+    />
+</div>
+
+<div class="form-group">
+    <label for="inputClasseCertificado">Classe de certificado</label>
+    <select name="classe_certificado" id="inputClasseCertificado" class="form-control">
+    <option disabled selected> -- select an option -- </option>
+    @foreach ($classes_certificados as $classe_certificado)
+    <option value="{{ $classe_certificado->code }}" {{ old('classe_certificado', $user->classe_certificado) == $classe_certificado->code ? "selected" : ""}}>{{ $classe_certificado->code }} - {{ $classe_certificado->nome }}</option>
+    @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="inputValidadeCertificado">Validade</label>
+    <input  
+        type="date" class="form-control"
+        name="validade_certificado" id="inputValidadeCertificado"
+        placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
+    />
+</div>
+
+<div class="form-group">
+    <label>Certificado confirmado?</label>
+    <input 
+        type="text" class="form-control"
+        value="{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}" 
+        disabled 
+    />
+</div>
+
+<div class="form-group">
+    <label>Cópia Digital do Certificado</label><br>
+    <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Ver certificado</a>
+    <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Descarregar certificado</a>
+</div>
+
 @endcan

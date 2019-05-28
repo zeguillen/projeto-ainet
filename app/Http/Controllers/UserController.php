@@ -66,7 +66,9 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
         $user = new User;
-        return view('users.add', compact('user'));
+        $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
+        $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
+        return view('users.add', compact('user', 'tipos_licencas', 'classes_certificados'));
     }
 
     /**
@@ -112,7 +114,9 @@ class UserController extends Controller
     {
         $this->authorize('view', $socio);
         $user = $socio;
-        return view('users.edit', compact('user'));
+        $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
+        $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
+        return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados'));
     }
 
     /**
@@ -225,7 +229,11 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success',"Os sócios que tinham as quotas por pagar encontram-se agora desativos");
     }
 
-    public function certificadoPiloto(Request $socio){
-        $this->authorize('viewPiloto', $socio);
+    public function verCertificadoPiloto($piloto){
+        return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+    }
+
+    public function verLicencaPiloto($piloto){
+        return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
     }
 }

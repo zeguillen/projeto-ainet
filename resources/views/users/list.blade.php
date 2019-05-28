@@ -5,7 +5,7 @@
 
 <div class="action-buttons">
     @can('create', App\User::class) 
-    <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Add user</a>
+    <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Adicionar sócio</a>
     @endcan
     @can('updateAll', App\User::class) 
     <form action="{{route('quotas.reset')}}" method="post" class="form-inline float-left mr-2">
