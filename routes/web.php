@@ -23,7 +23,7 @@ Route::get('/password', 'UserController@changePassword')->name('password.change'
 Route::patch('/password', 'UserController@savePassword')->name('password.save');
 
 //socios
-Route::middleware('auth')->get('/socios', 'UserController@index')->name('users.index');
+Route::middleware('auth', 'verified')->get('/socios', 'UserController@index')->name('users.index');
 Route::middleware('auth')->get('/socios/create', 'UserController@create')->name('users.create');
 Route::middleware('auth')->post('/socios', 'UserController@store')->name('users.store');
 Route::middleware('auth')->get('/socios/{socio}/edit', 'UserController@edit')->name('users.edit');
