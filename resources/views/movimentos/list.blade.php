@@ -2,7 +2,7 @@
 @section('title','List Movimentos')
 @section('content')
 
-<div class="mb-3"><a class="btn btn-primary" href="{{route('movimentos.create')}}">Add movimento</a></div>
+<div class="mb-3"><a class="btn btn-primary" href="{{route('movimentos.create')}}">Adicionar movimento</a></div>
 @if (count($movimentos))
     <div class="form">
         <form action="{{route('movimentos.index')}}" method="get">
@@ -70,6 +70,8 @@
             <th>Tipo Instrucao</th>
             <th>Instrutor</th>
             <th>Confirmado</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -92,14 +94,14 @@
             <td>{{$movimento->conta_horas_inicio}}</td>
             <td>{{$movimento->conta_horas_fim}}</td>
             <td>{{$movimento->num_pessoas}}</td>
-            <td>{{$movimento->tipo_instrucao}}</td>
+            <td>{{$movimento->tipoInstrucaoToStr() }}</td>
             <td>{{$movimento->instrutor_id}}</td>
-            <td>{{$movimento->confirmado}}</td>
+            <td>{{$movimento->confirmado == 1 ? 'Sim' : 'Não'}}</td>
             <td>
                 @if($movimento->confirmado)
-                    <a class="btn btn-secondary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}" disabled>
+                    <button class="btn btn-secondary btn-sm disabled" disabled>
                         Edit
-                    </a>
+                    </button>
                 @else
                     <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
                         Edit
