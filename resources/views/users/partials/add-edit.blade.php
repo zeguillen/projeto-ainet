@@ -148,7 +148,7 @@
 <label>Pertence á direção?</label><p>{{old('Direcao',$user->direcao) == 1 ? 'Sim' : 'Não'}}</p>
 <br>
 
-@can('viewPerfilPiloto', Auth::user())
+@can('viewPiloto', Auth::user())
 <h5>Informação de Piloto</h5>
 <label>Nº de licença</label><p>{{ old('num_licenca', $user->num_licenca) }}</p>
 <label>Tipo de licença</label><p>{{ old('tipo_licenca', $user->tipo_licenca) }}</p>
@@ -160,10 +160,6 @@
 <label>Validade</label><p>{{ old('validade_certificado', $user->validade_certificado) }}</p>
 <label>Certificado confirmado?</label><p>{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}</p>
 <label>Cópia Digital do Certificado</label>
-<form  action=" {{route('ver.certificado', ['id'=>$user->id])}} " method="post">
-    @method('POST')
-
-    <input type="submit" class="btn btn-info btn-sm" value="Ver certificado" />
-</form>
-
+<a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Ver certificado</a>
+<a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Descarregar certificado</a>
 @endcan

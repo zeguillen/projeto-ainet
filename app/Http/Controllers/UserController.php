@@ -226,8 +226,6 @@ class UserController extends Controller
     }
 
     public function certificadoPiloto(Request $socio){
-        $user = Auth::user();
-
-        return view('ver.certificado', compact('user'));
+        $this->authorize('viewPiloto', $socio);
     }
 }
