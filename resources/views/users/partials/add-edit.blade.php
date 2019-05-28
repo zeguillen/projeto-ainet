@@ -1,3 +1,4 @@
+@if ($user->num_socio != null)
 <label>Número de Sócio:</label><p>{{old('>NumSocio',$user->num_socio)}}</p>
 <br>
 
@@ -18,7 +19,7 @@
     @endswitch
     </p>
 <br>
-
+@endif
 <div class="form-group">
     <label for="inputNomeInformal">Nome Informal</label>
     <input
@@ -86,7 +87,7 @@
     />
 </div>
 
-@can('isDirecao', Auth::user())
+
 <div class="form-group">
     <label for="inputImage">Profile Picture</label>
     <input
@@ -96,7 +97,13 @@
 </div>
 
 <div class="form-group">
-    <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="10%">
+    <div style="max-width: 100px;">
+    @if ($user->foto_url != null)
+    <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
+    @else
+    <img src="/storage/fotos/blank.jpg" alt="Empty Profile Picture" width="100%">
+    @endif
+    </div>
 </div>
 
 <div class="form-group">
@@ -108,7 +115,7 @@
         required
     />
 </div>
-@endcan
+
 
 <div class="form-group">
     <label for="inputTelefone">Telefone</label>
@@ -140,3 +147,23 @@
 
 <label>Pertence á direção?</label><p>{{old('Direcao',$user->direcao) == 1 ? 'Sim' : 'Não'}}</p>
 <br>
+
+@can('viewPerfilPiloto', Auth::user())
+<h5>Informação de Piloto</h5>
+<label>Nº de licença</label><p>{{ old('num_licenca', $user->num_licenca) }}</p>
+<label>Tipo de licença</label><p>{{ old('tipo_licenca', $user->tipo_licenca) }}</p>
+<label>Pode dar instrução?</label><p>{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}</p>
+
+<h5>Certificado Médico</h5>
+<label>Nº de certificado</label><p>{{ old('num_certificado', $user->num_certificado) }}</p>
+<label>Classe de certificado</label><p>{{ old('classe_certificado', $user->classe_certificado) }}</p>
+<label>Validade</label><p>{{ old('validade_certificado', $user->validade_certificado) }}</p>
+<label>Certificado confirmado?</label><p>{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}</p>
+<label>Cópia Digital do Certificado</label>
+<form  action=" {{route('ver.certificado', ['id'=>$user->id])}} " method="post">
+    @method('POST')
+
+    <input type="submit" class="btn btn-info btn-sm" value="Ver certificado" />
+</form>
+
+@endcan

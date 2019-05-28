@@ -81,7 +81,9 @@
 
 <div class="form-group">
     <label for="inputAerodromoPartida">Aerodromo de Partida</label><br>
+    @if ($movimento->id != null)
     <span>{{ old('aerodromo_partida', $movimento->aerodromoPartida->nome) }}</span>
+    @endif
     <input
         type="text" class="form-control"
         name="aerodromoPartida" id="inputAerodromoPartida"
@@ -92,7 +94,9 @@
 
 <div class="form-group">
     <label for="inputAerodromoChegada">Aerodromo de Chegada</label><br>
+    @if ($movimento->id != null)
     <span>{{ old('aerodromo_partida', $movimento->aerodromoChegada->nome) }}</span>
+    @endif
     <input
         type="text" class="form-control"
         name="aerodromoChegada" id="inputAerodromoChegada"
@@ -174,7 +178,7 @@
 <div class="form-group">
     <label for="inputModoPagamento">Modo de pagamento</label>
     <select name="type" id="inputModoPagamento" class="form-control">
-        <option disabled selected> -- select an option -- </option>
+        <option disabled selected> -- selecione uma opção -- </option>
         <option value="0" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'N' ? "selected" : "" }}>Numerário</option>
         <option value="1" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'M' ? "selected" : "" }}>Multibanco</option>
         <option value="2" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'T' ? "selected" : "" }}>Transferência</option>
@@ -198,9 +202,9 @@
         type="textarea" class="form-control"
         name="obs" id="inputObs"
         value="{{ old('observacoes', $movimento->observacoes) }}"
-        required
     />
 </div>
+
 
 
 

@@ -63,8 +63,8 @@ class MovimentoController extends Controller
 
     public function create()
     {
-        $movimentos = new Movimento;
-        return view('movimentos.add', compact('movimentos'));
+        $movimento = new Movimento;
+        return view('movimentos.add', compact('movimento'));
     }
 
     public function store(MovimentoStorageRequest $request)
@@ -83,7 +83,7 @@ class MovimentoController extends Controller
         //
     }
 
-    public function edit(Request $movimento)
+    public function edit(Movimento $movimento)
     {
         $movimento = Movimento::findOrFail($movimento->id);
         return view('movimentos.edit', compact('movimento'));

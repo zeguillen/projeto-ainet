@@ -85,7 +85,15 @@
                 <td>Sem licença</td>
             @endif
             <td>{{$user->direcao == 1 ? 'Sim' : 'Não'}}</td>
-            <td><img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%"></td>
+            <td>
+                <div style="max-width: 100px;">
+                @if ($user->foto_url != null)
+                <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
+                @else
+                <img src="/storage/fotos/blank.jpg" alt="Empty Profile Picture" width="100%">
+                @endif
+                </div>
+            </td>
             
             <td>
             <!-- fill with edit and delete actions -->

@@ -20,6 +20,10 @@ class UserPolicy
         return false;
     }
 
+    public function view(User $user, User $model){
+        return $user->id == $model->id;
+    }
+
     public function updateAll(User $user)
     {
         return false;
@@ -35,10 +39,15 @@ class UserPolicy
 
     public function updatePiloto(User $user, User $model)
     {
-        if ($user->id==$model->id && $user->tipo_piloto == 'P') {
+        if ($user->id==$model->id && $user->tipo_socio == 'P') {
             return true;
         }
         return false;
+    }
+
+    public function viewPerfilPiloto(User $user)
+    {
+        return $user->tipo_socio == 'P';
     }
 
     public function delete(User $user)

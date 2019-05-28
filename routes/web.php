@@ -33,6 +33,8 @@ Route::patch('/socios/{socio}/quota', 'UserController@changeQuota')->name('quota
 Route::patch('/socios/reset_quotas', 'UserController@resetQuotas')->name('quotas.reset');
 Route::patch('/socios/desativar_sem_quotas', 'UserController@desativarUsersSemQuotas')->name('users.desativar');
 Route::patch('/socios/{socio}/ativo', 'UserController@changeAtivo')->name('ativo.change');
+Route::patch('/pilotos/{piloto}/certificado', 'UserController@certificadoPiloto')->name('ver.certificado');
+Route::patch('/pilotos/{piloto}/licenca', 'UserController@licencaPiloto')->name('ver.licenca');
 
 //aeronaves 
 Route::get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');

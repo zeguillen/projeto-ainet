@@ -13,6 +13,7 @@
             <th>Nº de Lugares</th>
             <th>Total de horas</th>
             <th>Preço hora</th>
+            <th>Pilotos autorizados</th>
         </tr>
     </thead>
     <tbody>

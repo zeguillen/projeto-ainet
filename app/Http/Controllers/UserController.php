@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     public function __construct(){
-        $this->middleware('auth')->except('changeAtivo'); 
+        // $this->middleware('auth')->except('changeAtivo'); 
     }
 
     /**
@@ -110,6 +110,7 @@ class UserController extends Controller
      */
     public function edit(User $socio)
     {
+        $this->authorize('view', $socio);
         $user = $socio;
         return view('users.edit', compact('user'));
     }
@@ -222,5 +223,11 @@ class UserController extends Controller
         DB::table('users')->where('quota_paga', '0')->update(['ativo' => 0]);
 
         return redirect()->route('users.index')->with('success',"Os sócios que tinham as quotas por pagar encontram-se agora desativos");
+    }
+
+    public function certificadoPiloto(Request $socio){
+        $user = Auth::user();
+
+        return view('ver.certificado', compact('user'));
     }
 }
