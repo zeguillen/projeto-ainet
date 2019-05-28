@@ -134,7 +134,7 @@
     <input
         type="text" class="form-control"
         name="endereco" id="inputEndereco"
-        placeholder="Endereço" value="{{old('endereco',$user->nome_informal)}}"
+        placeholder="Endereço" value="{{old('endereco',$user->endereco)}}"
         required
     />
 </div>

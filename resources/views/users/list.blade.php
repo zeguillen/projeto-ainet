@@ -120,7 +120,7 @@
             </td>
             @can('updateAll', App\User::class)
             <td> 
-                <form  action=" {{route('quota.change', ['id'=>$user->id])}} " method="post">
+                <form  action=" {{route('quota.change', ['socio'=>$user->id])}} " method="post">
                     @csrf
                     @method('PATCH')
 
@@ -133,7 +133,7 @@
             </td>
 
             <td> 
-                <form  action=" {{route('ativo.change', ['id'=>$user->id])}} " method="post">
+                <form  action=" {{route('ativo.change', ['socio'=>$user->id])}} " method="post">
                     @csrf
                     @method('PATCH')
 

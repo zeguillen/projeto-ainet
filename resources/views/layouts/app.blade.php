@@ -75,7 +75,7 @@
                                         @csrf
                                     </form>
 
-                                    <a class="dropdown-item" href="{{route('password.change',['id'=>Auth::user()->id])}}" onclick="event.preventDefault();
+                                    <a class="dropdown-item" href="{{route('password.change')}}" onclick="event.preventDefault();
                                        document.getElementById('reset-form').submit();">
                                        {{ __('Change my password') }}
                                     </a>
