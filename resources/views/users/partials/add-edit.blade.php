@@ -1,3 +1,33 @@
+<script>
+    //função que carrega a imagem para a página
+    function loadImage() {
+        var preview = document.querySelector('img');
+        var file    = document.querySelector('input[type=file]').files[0];
+        var reader  = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+        }
+    }
+
+    //piloto ou nao piloto
+    function changeType() {
+        var select = document.getElementById("inputTipoSocio");
+        var selected = select.options[select.selectedIndex].value;
+        if(selected !== "P") {
+            document.getElementById("camposPiloto").style.display="none";
+        } else { 
+            document.getElementById("camposPiloto").style.display="block";
+        }
+    }
+</script>
+
 @if ($user->num_socio != null)
 <label>Número de Sócio:</label><p>{{old('>NumSocio',$user->num_socio)}}</p>
 <br>
@@ -19,7 +49,18 @@
     @endswitch
     </p>
 <br>
+@else
+    <div class="form-group">
+        <label for="inputTipoSocio">Tipo de sócio</label>
+        <select name="tipo_socio" id="inputTipoSocio" class="form-control" onchange="changeType()">
+            <option disabled selected> -- select an option -- </option>
+            <option value="P" {{ old('type', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
+            <option value="NP" {{ old('type', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
+            <option value="A" {{ old('type', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
+        </select>
+    </div>
 @endif
+
 <div class="form-group">
     <label for="inputNomeInformal">Nome Informal</label>
     <input
@@ -40,7 +81,19 @@
     />
 </div>
 
-<label>Sexo:</label>
+
+
+@if ($user->num_socio == null)
+    <div class="form-group">
+        <label for="inputSexo">Sexo</label>
+        <select name="sexo" id="inputSexo" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="F">Feminino</option>
+            <option value="M">Masculino</option>
+        </select>
+    </div>
+@else
+    <label>Sexo:</label>
     <p>
     @switch(old('Sexo',$user->sexo))
     @case('F')
@@ -52,7 +105,8 @@
         @break
     @endswitch
     </p>
-<br>
+    <br>
+@endif
 
 <div class="form-group">
     <label for="inputDataNascimento">Data Nascimento</label>
@@ -65,19 +119,6 @@
 </div>
 
 <div class="form-group">
-    <label for="inputTipoSocio">Tipo de sócio</label>
-    <select name="tipo_socio" id="inputTipoSocio" class="form-control">
-        <?=$user->type?>
-        <option disabled selected> -- select an option -- </option>
-        <option value="P" {{ old('type', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
-        <option value="NP" {{ old('type', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
-        <option value="A" {{ old('type', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
-    </select>
-</div>
-
-<!--https://www.w3schools.com/tags/att_input_pattern.asp-->
-
-<div class="form-group">
     <label for="inputEmail">Email</label>
     <input
         type="email" class="form-control"
@@ -86,26 +127,6 @@
         required
     />
 </div>
-
-
-<script>
-    //função que carrega a imagem para a página
-    function loadImage() {
-        var preview = document.querySelector('img');
-        var file    = document.querySelector('input[type=file]').files[0];
-        var reader  = new FileReader();
-
-        reader.onloadend = function () {
-            preview.src = reader.result;
-        }
-
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "";
-        }
-    }
-</script>
 
 <div class="form-group">
     <label id="userPhoto" for="inputImage">Profile Picture</label>
@@ -160,87 +181,102 @@
     />
 </div>
 
-<label>Estado das quotas:</label><p>{{old('Quotas',$user->quota_paga) == 1 ? 'Em dia' : 'Não pagas'}}</p>
-<br>
+@if ($user->num_socio != null)
+    <label>Estado das quotas:</label><p>{{old('Quotas',$user->quota_paga) == 1 ? 'Em dia' : 'Não pagas'}}</p>
+    <br>
 
-<label>Sócio Ativo?</label><p>{{old('Ativacao',$user->ativo) == 1 ? 'Sim' : 'Não'}}</p>
-<br>
+    <label>Sócio Ativo?</label><p>{{old('Ativacao',$user->ativo) == 1 ? 'Sim' : 'Não'}}</p>
+    <br>
+@endif
 
-<label>Pertence á direção?</label><p>{{old('Direcao',$user->direcao) == 1 ? 'Sim' : 'Não'}}</p>
-<br>
+@if ($user->num_socio == null)
+    <div class="form-group">
+        <label for="inputDirecao">Pertence á Direção?</label>
+        <select name="sexo" id="inputDirecao" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+    </div>
+@else
+    <label>Pertence á direção?</label><p>{{old('Direcao',$user->direcao) == 1 ? 'Sim' : 'Não'}}</p>
+    <br>
+@endif
+
 
 @can('viewPiloto', Auth::user())
-<h5>Informação de Piloto</h5>
-<div class="form-group">
-    <label for="inputNumLicenca">Nº de licença</label>
-    <input 
-        type="number" class="form-control"
-        name="num_licenca" id="inputNumLicenca"
-        placeholder="Número da licença" value="{{ old('num_licenca', $user->num_licenca) }}"
-    />
-    
-</div>
+<div id="camposPiloto">
+    <h5>Informação de Piloto</h5>
+    <div class="form-group">
+        <label for="inputNumLicenca">Nº de licença</label>
+        <input 
+            type="number" class="form-control"
+            name="num_licenca" id="inputNumLicenca"
+            placeholder="Número da licença" value="{{ old('num_licenca', $user->num_licenca) }}"
+        />
+        
+    </div>
 
-<div class="form-group">
-    <label>Tipo de licença</label>
-    <select name="type" id="inputType" class="form-control">
+    <div class="form-group">
+        <label>Tipo de licença</label>
+        <select name="type" id="inputType" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            @foreach ($tipos_licencas as $tipo_licenca)
+            <option value="{{ $tipo_licenca->code }}" {{ old('tipo_licenca', $user->tipo_licenca) == $tipo_licenca->code ? "selected" : ""}}>{{ $tipo_licenca->code }} - {{ $tipo_licenca->nome }}</option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Pode dar instrução?</label>
+        <input 
+            type="text" class="form-control"
+            value="{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}" disabled
+        />
+    </div>
+
+    <h5>Certificado Médico</h5>
+    <div class="form-group">
+        <label for="inputNumCertificado">Nº do certificado</label>
+        <input 
+            type="text" class="form-control"
+            name="num_certificado" id="inputNumCertificado"
+            placeholder="Número do certificado" value="{{ old('num_certificado', $user->num_certificado) }}"
+        />
+    </div>
+
+    <div class="form-group">
+        <label for="inputClasseCertificado">Classe de certificado</label>
+        <select name="classe_certificado" id="inputClasseCertificado" class="form-control">
         <option disabled selected> -- select an option -- </option>
-        @foreach ($tipos_licencas as $tipo_licenca)
-        <option value="{{ $tipo_licenca->code }}" {{ old('tipo_licenca', $user->tipo_licenca) == $tipo_licenca->code ? "selected" : ""}}>{{ $tipo_licenca->code }} - {{ $tipo_licenca->nome }}</option>
+        @foreach ($classes_certificados as $classe_certificado)
+        <option value="{{ $classe_certificado->code }}" {{ old('classe_certificado', $user->classe_certificado) == $classe_certificado->code ? "selected" : ""}}>{{ $classe_certificado->code }} - {{ $classe_certificado->nome }}</option>
         @endforeach
-    </select>
-</div>
+        </select>
+    </div>
 
-<div class="form-group">
-    <label>Pode dar instrução?</label>
-    <input 
-        type="text" class="form-control"
-        value="{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}" disabled
-    />
-</div>
+    <div class="form-group">
+        <label for="inputValidadeCertificado">Validade</label>
+        <input  
+            type="date" class="form-control"
+            name="validade_certificado" id="inputValidadeCertificado"
+            placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
+        />
+    </div>
 
-<h5>Certificado Médico</h5>
-<div class="form-group">
-    <label for="inputNumCertificado">Nº do certificado</label>
-    <input 
-        type="text" class="form-control"
-        name="num_certificado" id="inputNumCertificado"
-        placeholder="Número do certificado" value="{{ old('num_certificado', $user->num_certificado) }}"
-    />
-</div>
+    <div class="form-group">
+        <label>Certificado confirmado?</label>
+        <input 
+            type="text" class="form-control"
+            value="{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}" 
+            disabled 
+        />
+    </div>
 
-<div class="form-group">
-    <label for="inputClasseCertificado">Classe de certificado</label>
-    <select name="classe_certificado" id="inputClasseCertificado" class="form-control">
-    <option disabled selected> -- select an option -- </option>
-    @foreach ($classes_certificados as $classe_certificado)
-    <option value="{{ $classe_certificado->code }}" {{ old('classe_certificado', $user->classe_certificado) == $classe_certificado->code ? "selected" : ""}}>{{ $classe_certificado->code }} - {{ $classe_certificado->nome }}</option>
-    @endforeach
-    </select>
+    <div class="form-group">
+        <label>Cópia Digital do Certificado</label><br>
+        <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Ver certificado</a>
+        <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Descarregar certificado</a>
+    </div>
 </div>
-
-<div class="form-group">
-    <label for="inputValidadeCertificado">Validade</label>
-    <input  
-        type="date" class="form-control"
-        name="validade_certificado" id="inputValidadeCertificado"
-        placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
-    />
-</div>
-
-<div class="form-group">
-    <label>Certificado confirmado?</label>
-    <input 
-        type="text" class="form-control"
-        value="{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}" 
-        disabled 
-    />
-</div>
-
-<div class="form-group">
-    <label>Cópia Digital do Certificado</label><br>
-    <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Ver certificado</a>
-    <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Descarregar certificado</a>
-</div>
-
 @endcan

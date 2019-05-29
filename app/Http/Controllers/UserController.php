@@ -64,12 +64,14 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $image = $request->file('image');
-        $nome = time().'.'.$image->getClientOriginalExtension();
-
-        Storage::putFileAs('public/fotos', $nome);
-
         $user = new User;
+        $file = $request->image;
+
+        if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
+            $file->store('fotos', 'public');
+        }
+
+        $user->foto_url = $file->hashname();
         $user->fill($request->all()->validated());
         $user->password = Hash::make($user->password);
         $user->save();
