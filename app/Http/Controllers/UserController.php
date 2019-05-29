@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserStorageRequest;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\DB;
 
@@ -92,12 +93,45 @@ class UserController extends Controller
     {
         
         if(Auth::user()->direcao) {
-            $socio->fill($request->all()->validated());
-            $socio->save();
+            $file = $request->image;
 
+            if (!is_null($socio->foto_url)) {
+                Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+            }
+
+            if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
+                $file->store('fotos', 'public');
+            }
+
+            $socio->foto_url = $file->hashname();
+            $socio->nome_informal = $request->nome_informal;
+            $socio->name = $request->name;
+            $oldEmail = $socio->email;
+            $socio->email = $request->email;
+            //foto
+            $socio->data_nascimento = $request->data_nascimento;
+            $socio->nif = $request->nif;
+            $socio->telefone = $request->telefone;
+            $socio->endereco = $request->endereco;
+            $socio->save();
+            if($oldEmail != $socio->email) {
+                //todo 
+                Mail::to($request->user())->send(new UserActivation($socio->id));
+            }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
-        if($this->authorize('update', $socio)) {
+        if($this->authorize('update', $socio)) {         
+            $file = $request->image;
+
+            if (!is_null($socio->foto_url)) {
+                Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+            }
+
+            if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
+                $file->store('fotos', 'public');
+            }
+
+            $socio->foto_url = $file->hashname();
             $socio->nome_informal = $request->nome_informal;
             $socio->name = $request->name;
             $oldEmail = $socio->email;
@@ -120,7 +154,31 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
         if($this->authorize('update', $socio)) {
-            return 3;
+            $file = $request->image;
+
+            if (!is_null($socio->foto_url)) {
+                Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+            }
+
+            if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
+                $file->store('fotos', 'public');
+            }
+
+            $socio->foto_url = $file->hashname();
+            $socio->nome_informal = $request->nome_informal;
+            $socio->name = $request->name;
+            $oldEmail = $socio->email;
+            $socio->email = $request->email;
+            //foto
+            $socio->data_nascimento = $request->data_nascimento;
+            $socio->nif = $request->nif;
+            $socio->telefone = $request->telefone;
+            $socio->endereco = $request->endereco;
+            $socio->save();
+            if($oldEmail != $socio->email) {
+                //todo 
+                Mail::to($request->user())->send(new UserActivation($socio->id));
+            }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
 
