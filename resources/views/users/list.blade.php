@@ -5,7 +5,7 @@
 
 <div class="action-buttons">
     @can('create', App\User::class) 
-    <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Add user</a>
+    <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Adicionar sócio</a>
     @endcan
     @can('updateAll', App\User::class) 
     <form action="{{route('quotas.reset')}}" method="post" class="form-inline float-left mr-2">
@@ -120,7 +120,7 @@
             </td>
             @can('updateAll', App\User::class)
             <td> 
-                <form  action=" {{route('quota.change', ['id'=>$user->id])}} " method="post">
+                <form  action=" {{route('quota.change', ['socio'=>$user->id])}} " method="post">
                     @csrf
                     @method('PATCH')
 
@@ -133,7 +133,7 @@
             </td>
 
             <td> 
-                <form  action=" {{route('ativo.change', ['id'=>$user->id])}} " method="post">
+                <form  action=" {{route('ativo.change', ['socio'=>$user->id])}} " method="post">
                     @csrf
                     @method('PATCH')
 

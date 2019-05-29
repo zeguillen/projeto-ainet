@@ -45,7 +45,7 @@ class UserPolicy
         return false;
     }
 
-    public function viewPerfilPiloto(User $user)
+    public function viewPiloto(User $user)
     {
         return $user->tipo_socio == 'P';
     }

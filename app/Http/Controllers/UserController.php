@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Mail\UserActivation;
+use Mail;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -12,18 +14,8 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function __construct(){
-        // $this->middleware('auth')->except('changeAtivo'); 
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Request $request)
     {
-        //if (auth()->user()->can('updateAll',User::class))
         $query = User::query();
         if($request->filled('num_socio')) {
             $query->where('num_socio', $request->num_socio);
@@ -57,24 +49,15 @@ class UserController extends Controller
         return view('users.list', compact('users'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $this->authorize('create', User::class);
         $user = new User;
-        return view('users.add', compact('user'));
+        $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
+        $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
+        return view('users.add', compact('user', 'tipos_licencas', 'classes_certificados'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(UserStorageRequest $request)
     {
         $this->authorize('create', User::class);
@@ -91,47 +74,46 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', "User successfully created");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function edit(User $socio)
     {
         $this->authorize('view', $socio);
         $user = $socio;
-        return view('users.edit', compact('user'));
+        $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
+        $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
+        return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, User $socio)
     {
-        $this->authorize('update', $socio);
-        $user = $socio;
-        $user->fill($request->except('password'));
-        $user->save();
-         if($request->has("email")) {
-            
+        
+        if(Auth::user()->direcao) {
+            //posso alterar todos os campos
+            return 1;
+            return redirect()->route('users.index')->with('success',"User successfully updated");
         }
-        return redirect()->route('users.index')->with('success',"User successfully updated");
+        if($this->authorize('update', $socio)) {
+            $socio->nome_informal = $request->nome_informal;
+            $socio->name = $request->name;
+            $oldEmail = $socio->email;
+            $socio->email = $request->email;
+            //foto
+            $socio->data_nascimento = $request->data_nascimento;
+            $socio->nif = $request->nif;
+            $socio->telefone = $request->telefone;
+            $socio->endereco = $request->endereco;
+            $socio->save();
+            if($oldEmail != $socio->email) {
+                //todo 
+                Mail::to($request->user())->send(new UserActivation($socio->id));
+            }
+            return redirect()->route('users.index')->with('success',"User successfully updated");
+        }
+        if($this->authorize('update', $socio)) {
+            return 3;
+            return redirect()->route('users.index')->with('success',"User successfully updated");
+        }
+
+        return 0;
     }
 
     /**
@@ -142,14 +124,14 @@ class UserController extends Controller
      */
     public function destroy(User $socio)
     {
+        $this->authorize('delete', User::class);
         $socio->delete();
         return redirect()->route('users.index')->with('success',"User successfully deleted");
     }
 
-    public function changePassword(Request $request)
+    public function changePassword()
     {
-        $user = Auth::user();
-        return view('users.changePassword', compact('user'));
+        return view('users.changePassword');
     }
 
     public function savePassword(Request $request)
@@ -179,9 +161,10 @@ class UserController extends Controller
     }
 
 
-    public function changeQuota(Request $user)
+    public function changeQuota(User $socio)
     {
-        $user = User::findOrFail($user->id);
+        $this->authorize('updateAll', User::class);
+        $user = User::findOrFail($socio->id);
 
         switch($user->quota_paga) {
             case 1:
@@ -197,14 +180,16 @@ class UserController extends Controller
     }
 
     public function resetQuotas() {
+        $this->authorize('updateAll', User::class);
         DB::table('users')->update(['quota_paga' => 0]);
 
         return redirect()->route('users.index')->with('success',"As quotas dos sócios encontram-se todas por pagar");
     }
 
-    public function changeAtivo(Request $user)
+    public function changeAtivo(User $socio)
     {
-        $user = User::findOrFail($user->id);
+        $this->authorize('updateAll', User::class);
+        $user = User::findOrFail($socio->id);
 
         switch($user->ativo) {
             case 1:
@@ -220,14 +205,17 @@ class UserController extends Controller
     }
 
     public function desativarUsersSemQuotas() {
+        $this->authorize('updateAll', User::class);
         DB::table('users')->where('quota_paga', '0')->update(['ativo' => 0]);
 
         return redirect()->route('users.index')->with('success',"Os sócios que tinham as quotas por pagar encontram-se agora desativos");
     }
 
-    public function certificadoPiloto(Request $socio){
-        $user = Auth::user();
+    public function verCertificadoPiloto($piloto){
+        return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+    }
 
-        return view('ver.certificado', compact('user'));
+    public function verLicencaPiloto($piloto){
+        return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
     }
 }

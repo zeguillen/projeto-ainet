@@ -16,7 +16,6 @@
                         @csrf
                         @method('POST')
                         @include('users.partials.add-edit')
-                        
                         <div class="form-group">
                             <label for="inputPassword">Password</label>
                             <input
