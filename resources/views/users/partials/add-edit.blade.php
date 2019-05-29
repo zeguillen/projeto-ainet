@@ -88,18 +88,39 @@
 </div>
 
 
+<script>
+    //função que carrega a imagem para a página
+    function loadImage() {
+        var preview = document.querySelector('img');
+        var file    = document.querySelector('input[type=file]').files[0];
+        var reader  = new FileReader();
+
+        reader.onloadend = function () {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+        }
+    }
+</script>
+
 <div class="form-group">
-    <label for="inputImage">Profile Picture</label>
+    <label id="userPhoto" for="inputImage">Profile Picture</label>
     <input
         type="file" class="form-control"
-        name="Image" id="inputImage"
+        name="image" id="inputImage"
+        enctype='multipart/form-data'
+        onchange='loadImage()'
     />
 </div>
 
 <div class="form-group">
     <div style="max-width: 100px;">
     @if ($user->foto_url != null)
-    <img src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
+    <img id="profilePicture" src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
     @else
     <img src="/storage/fotos/blank.jpg" alt="Empty Profile Picture" width="100%">
     @endif
