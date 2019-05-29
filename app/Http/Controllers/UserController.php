@@ -9,6 +9,7 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\UserStorageRequest;
 
 use Illuminate\Support\Facades\DB;
 
