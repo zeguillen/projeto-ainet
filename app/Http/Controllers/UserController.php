@@ -62,10 +62,14 @@ class UserController extends Controller
     public function store(UserStorageRequest $request)
     {
         $this->authorize('create', User::class);
-        $validated = $request->validated();
+
+        $image = $request->file('image');
+        $nome = time().'.'.$image->getClientOriginalExtension();
+
+        Storage::putFileAs('public/fotos', $nome);
 
         $user = new User;
-        $user->fill($request->all());
+        $user->fill($request->all()->validated());
         $user->password = Hash::make($user->password);
         $user->save();
 
@@ -88,8 +92,9 @@ class UserController extends Controller
     {
         
         if(Auth::user()->direcao) {
-            //posso alterar todos os campos
-            return 1;
+            $socio->fill($request->all()->validated());
+            $socio->save();
+
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
         if($this->authorize('update', $socio)) {
@@ -97,7 +102,12 @@ class UserController extends Controller
             $socio->name = $request->name;
             $oldEmail = $socio->email;
             $socio->email = $request->email;
-            //foto
+            if(! is_null($request['image'])){
+                $image = $request->file('image');
+                $nome = time.'.'.$image->getClientOriginalExtension();
+
+                Storage::putFileAs('public/fotos', $nome);
+            }
             $socio->data_nascimento = $request->data_nascimento;
             $socio->nif = $request->nif;
             $socio->telefone = $request->telefone;

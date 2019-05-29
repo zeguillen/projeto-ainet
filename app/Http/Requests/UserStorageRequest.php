@@ -24,6 +24,7 @@ class UserStorageRequest extends FormRequest
     public function rules()
     {
         return [
+            'num_socio' => 'required|sometimes',
             'nome_informal' => 'required|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
@@ -37,8 +38,8 @@ class UserStorageRequest extends FormRequest
             'password' => 'required|min:8|confirmed',
             'ativo' => 'required|in: 0,1',
             'quota_paga' => 'required|in: 0,1',
-            'aluno' => ['nullable', 'in: 0,1', new ValidateInstrutorAluno($this->instrutor)],
-            'instrutor' => ['nullable', 'in: 0,1', new ValidateInstrutorAluno($this->aluno)],
+            'aluno' => ['nullable', 'in: 0,1'],
+            'instrutor' => ['nullable', 'in: 0,1'],
             'foto_url' => 'nullable|image|mimes: jpeg, png, jpg, gif|max: 2048',
             'file_licenca' => 'nullable|mimes: pdf| max:2048',
             'file_certificado' => 'nullable|mimes: pdf| max:2048',
