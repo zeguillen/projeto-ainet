@@ -51,3 +51,6 @@ Route::middleware('auth')->post('/movimentos', 'MovimentoController@store')->nam
 Route::middleware('auth')->delete('/movimentos/{movimento}', 'MovimentoController@destroy')->name('movimentos.destroy');
 Route::middleware('auth')->get('/movimentos/{movimento}/edit', 'MovimentoController@edit')->name('movimentos.edit');
 Route::middleware('auth')->put('/movimentos/{movimento}', 'MovimentoController@update')->name('movimentos.update');
+
+//estatisticas
+Route::middleware('auth')->get('/movimentos/estatisticas', 'MovimentoController@estatisticas')->name('movimentos.estatisticas');

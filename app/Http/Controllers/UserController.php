@@ -187,12 +187,6 @@ class UserController extends Controller
         return 0;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(User $socio)
     {
         $this->authorize('delete', User::class);

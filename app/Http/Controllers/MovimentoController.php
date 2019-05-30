@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Movimento;
 use Illuminate\Http\Request;
 use DB;
+use Khill\Lavacharts\Lavacharts;
 
 class MovimentoController extends Controller
 {
@@ -78,11 +79,6 @@ class MovimentoController extends Controller
         return redirect()->route('movimentos.index')->with('success', "Movimento criado com sucesso");
     }
 
-    public function show(Movimento $movimento)
-    {
-        //
-    }
-
     public function edit(Movimento $movimento)
     {
         $movimento = Movimento::findOrFail($movimento->id);
@@ -104,5 +100,66 @@ class MovimentoController extends Controller
         
         $movimento->delete();
         return redirect()->route('movimentos.index')->with('success',"Movimento eliminado com sucesso");
+    }
+
+    public function estatisticas(Request $request)
+    {
+        $years = DB::select('SELECT DISTINCT YEAR(data) AS "year" FROM movimentos ORDER BY YEAR(data) DESC');
+
+        if ($request->filled('ano')) {
+            $aeronaves_mes_ano = DB::select('SELECT SUM(tempo_voo) AS "tempo", MONTH(data) AS "mes", aeronave FROM movimentos WHERE YEAR(data) = "'.$request->ano.'" GROUP BY aeronave, MONTH(data)');
+
+            $ano = $request->ano;
+
+            //chart ------------------------------------------------------------
+           
+            $lava = new Lavacharts; // See note below for Laravel
+
+            $horasDeVoo = $lava->DataTable();
+
+            $horasDeVoo->addStringColumn('Mês');
+
+            $aeronaves = DB::select('SELECT DISTINCT aeronave FROM movimentos WHERE YEAR(data) = "'.$request->ano.'"');         
+            foreach ($aeronaves as $aeronave) {
+                $horasDeVoo->addNumberColumn($aeronave->aeronave);
+            }
+
+            $maxMonth = 0;
+            $minMonth = 12;
+            foreach ($aeronaves_mes_ano as $aeronave_mes_ano) {
+                if($aeronave_mes_ano->mes > $maxMonth) {
+                    $maxMonth = $aeronave_mes_ano->mes;
+                }
+                if($aeronave_mes_ano->mes < $minMonth) {
+                    $minMonth = $aeronave_mes_ano->mes;
+                }     
+            }
+
+            $data = [];
+            for ($i = $minMonth; $i <= $maxMonth; $i++) {
+                array_push($data, $i);
+                foreach ($aeronaves_mes_ano as $aeronave_mes_ano) {
+                    if($aeronave_mes_ano->mes == $i) {
+                        array_push($data, $aeronave_mes_ano->tempo);
+                    }     
+                }  
+                $horasDeVoo->addRow($data);
+                $data = [];
+            }
+
+            $lava->ColumnChart('HorasDeVoo', $horasDeVoo, [
+                'title' => 'Horas de Voo',
+                'titleTextStyle' => [
+                    'color'    => '#eb6b2c',
+                    'fontSize' => 14
+                ]
+            ]);
+
+            //--------------------------------------------------------
+
+            return view('movimentos.estatisticas', compact('years', 'aeronaves_mes_ano', 'ano'), ["lava"=>$lava]);
+        }
+
+        return view('movimentos.estatisticas', compact('years'));
     }
 }
