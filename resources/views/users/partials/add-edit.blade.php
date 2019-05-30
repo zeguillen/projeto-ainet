@@ -207,6 +207,27 @@
 @can('viewPiloto', Auth::user())
 <div id="camposPiloto">
     <h5>Informação de Piloto</h5>
+
+    @if (count($user->aeronaves) > 0)
+    <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Matricula</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach ($user->aeronaves as $aeronave)
+        <tr>
+            <td>SIRVE</td>
+        </tr>
+    @endforeach
+    </tbody>
+    </table>
+    @else
+    <div class="alert alert-secondary text-center" role="alert">
+        Não existem aeronaves autorizadas para este piloto
+    </div>
+    @endif
     <div class="form-group">
         <label for="inputNumLicenca">Nº de licença</label>
         <input 
@@ -275,8 +296,15 @@
 
     <div class="form-group">
         <label>Cópia Digital do Certificado</label><br>
-        <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Ver certificado</a>
-        <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}">Descarregar certificado</a>
+
+        @if(file_exists(storage_path('app/docs_piloto/certificado_'. $user->id .'.pdf')))
+        <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}" target="_blank">Ver certificado</a>
+        <a class="btn btn-primary" href="{{route('transferir.certificado', ['piloto'=>$user->id])}}" target="_blank">Transferir certificado</a>
+        @else
+        <a class="btn btn-primary disabled">Ver certificado</a>
+        <a class="btn btn-primary disabled">Transferir certificado</a>
+        @endif
+
     </div>
 </div>
 @endcan

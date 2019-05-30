@@ -20,4 +20,8 @@ class Aeronave extends Model
     public function movimentosAeronave(){
         return $this->hasMany('App\Movimento');
     }
+
+    public function users(){
+        return $this->belongsToMany('App\User', 'aeronaves_pilotos', 'matricula');
+    }
 }

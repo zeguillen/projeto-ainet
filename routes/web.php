@@ -19,6 +19,19 @@ Route::get('/home', 'HomeController@index')->name('home');
 Auth::routes(['verify' => true, 'register' => false]);
 
 
+//socios
+Route::middleware('auth', 'verified')->get('/socios', 'UserController@index')->name('users.index');
+Route::middleware('auth')->get('/socios/create', 'UserController@create')->name('users.create');
+Route::middleware('auth')->post('/socios', 'UserController@store')->name('users.store');
+Route::middleware('auth')->get('/socios/{socio}/edit', 'UserController@edit')->name('users.edit');
+Route::middleware('auth')->put('/socios/{socio}', 'UserController@update')->name('users.update');
+Route::middleware('auth')->delete('/socios/{socio}', 'UserController@destroy')->name('users.destroy');
+Route::middleware('auth')->patch('/socios/{socio}/quota', 'UserController@changeQuota')->name('quota.change');
+Route::middleware('auth')->patch('/socios/reset_quotas', 'UserController@resetQuotas')->name('quotas.reset');
+Route::middleware('auth')->patch('/socios/desativar_sem_quotas', 'UserController@desativarUsersSemQuotas')->name('users.desativar');
+Route::middleware('auth')->patch('/socios/{socio}/ativo', 'UserController@changeAtivo')->name('ativo.change');
+Route::middleware('auth')->get('/pilotos/{piloto}/certificado', 'UserController@verCertificadoPiloto')->name('ver.certificado');
+Route::middleware('auth')->get('/pilotos/{piloto}/licenca', 'UserController@verLicencaPiloto')->name('ver.licenca');
 
 Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	//password

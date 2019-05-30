@@ -89,9 +89,11 @@ class UserController extends Controller
     {
         $this->authorize('view', $socio);
         $user = $socio;
+
         $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
         $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
-        return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados'));
+        $aeronaves = User::find($user->id);
+        return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados', 'aeronaves'));
     }
 
     public function update(Request $request, User $socio)
@@ -280,7 +282,15 @@ class UserController extends Controller
         return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
     }
 
+    public function transferirCertificadoPiloto($piloto){
+        return response()->download(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+    }
+    
     public function verLicencaPiloto($piloto){
         return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
+    }
+
+    public function transferirLicencaPiloto($piloto){
+        return response()->download(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
     }
 }
