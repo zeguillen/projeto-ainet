@@ -6,7 +6,6 @@ use DB;
 use App\Movimento;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use DB;
 use Khill\Lavacharts\Lavacharts;
 
 class MovimentoController extends Controller
