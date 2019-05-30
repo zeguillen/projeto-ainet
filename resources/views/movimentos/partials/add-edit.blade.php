@@ -1,4 +1,3 @@
-
 <div class="form-group">
     <label for="inputDataVoo">Data do voo</label>
     <input
@@ -12,7 +11,7 @@
 <div class="form-group">
     <label for="inputHoraDescolagem">Hora descolagem</label>
     <input
-        type="time" class="form-control"
+        type="text" class="form-control"
         name="horaDescolagem" id="inputhoraDescolagem"
         value="{{old('hora_descolagem',$movimento->hora_descolagem)}}"
         required
@@ -22,7 +21,7 @@
 <div class="form-group">
     <label for="inputHoraAterragem">Hora aterragem</label>
     <input
-        type="time" class="form-control"
+        type="text" class="form-control"
         name="horaAterragem" id="inputhoraAterragem"
         value="{{old('hora_aterragem',$movimento->hora_aterragem)}}"
         required
@@ -31,12 +30,13 @@
 
 <div class="form-group">
     <label for="inputAeronave">Aeronave</label>
-    <input
-        type="text" class="form-control"
-        name="aeronave" id="inputAeronave"
-        value="{{old('aeronave',$movimento->aeronave)}}"
-        required
-    />
+    <select name="aeronave" id="inputAeronave" class="form-control" required>
+        <option disabled selected>-- sele an option --</option>
+        @foreach ($aeronaves as $aeronave)
+        <option value="{{ $aeronave->matricula }}" {{ old('aeronave', $movimento->aeronave) == $aeronave->matricula ? "selected" : ""}}>{{ $aeronave->matricula }}</option>
+        @endforeach
+    </select>
+
 </div>
 
 <div class="form-group">
@@ -61,10 +61,16 @@
 
 <div class="form-group">
     <label for="InputPilotoId">Piloto</label>
+    <select name="piloto" id="InputPilotoId" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        @foreach ($aeronaves_pilotos as $aeronave_piloto)
+        <option value="{{$piloto->}}" {{ old('natureza', $movimento->natureza) == 'T' ? "selected" : "" }}>Treino</option>
+        @endforeach
+    </select>
     <input
         type="text" class="form-control"
         name="pilotoId" id="inputPilotoId"
-        value="{{ Auth::user()->id }}"
+        value="{{ old('num_licenca_piloto', $movimento->num_licenca_piloto) }}"
         required
     />
 </div>
@@ -80,29 +86,23 @@
 </div>
 
 <div class="form-group">
-    <label for="inputAerodromoPartida">Aerodromo de Partida</label><br>
-    @if ($movimento->id != null)
-    <span>{{ old('aerodromo_partida', $movimento->aerodromoPartida->nome) }}</span>
-    @endif
-    <input
-        type="text" class="form-control"
-        name="aerodromoPartida" id="inputAerodromoPartida"
-        value="{{ old('aerodromo_partida', $movimento->aerodromo_partida) }}"
-        required
-    />
+    <label for="inputAerodromoPartida">Aerodromo de Partida</label>
+    <select name="aerodromo_partida" id="inputAerodromoPartida" class="form-control" required>
+        <option disabled selected>-- select an option --</option>
+        @foreach ($aerodromos as $aerodromo)
+        <option value="{{ $aerodromo->code }}" {{ old('aerodromo_partida', $movimento->aerodromo_partida) == $aerodromo->code ? "selected" : ""}}>{{ $aerodromo->code }} - {{ $aerodromo->nome }}</option>
+        @endforeach
+    </select>
 </div>
 
 <div class="form-group">
-    <label for="inputAerodromoChegada">Aerodromo de Chegada</label><br>
-    @if ($movimento->id != null)
-    <span>{{ old('aerodromo_partida', $movimento->aerodromoChegada->nome) }}</span>
-    @endif
-    <input
-        type="text" class="form-control"
-        name="aerodromoChegada" id="inputAerodromoChegada"
-        value="{{ old('aerodromo_chegada', $movimento->aerodromo_chegada) }}"
-        required
-    />
+    <label for="inputAerodromoChegada">Aerodromo de Chegada</label>
+    <select name="aerodromo_chegada" id="inputAerodromoChegada" class="form-control" required>
+        <option disabled selected>-- select an option --</option>
+        @foreach ($aerodromos as $aerodromo)
+        <option value="{{ $aerodromo->code }}" {{ old('aerodromo_chegada', $movimento->aerodromo_chegada) == $aerodromo->code ? "selected" : ""}}>{{ $aerodromo->code }} - {{ $aerodromo->nome }}</option>
+        @endforeach
+    </select>
 </div>
 
 <div class="form-group">
@@ -197,12 +197,8 @@
 </div>
 
 <div class="form-group">
-    <label for="inputObs">Observações</label>
-    <input
-        type="textarea" class="form-control"
-        name="obs" id="inputObs"
-        value="{{ old('observacoes', $movimento->observacoes) }}"
-    />
+    <label for="inputObservacoes">Observações</label>
+    <textarea name="observacoes" id="inputObservacoes" cols="30" rows="10" class="form-control">{{ old('observacoes', $movimento->observacoes) }}</textarea>
 </div>
 
 

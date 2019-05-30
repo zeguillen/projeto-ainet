@@ -1,10 +1,14 @@
 @extends('layouts.app')
-@section('title','List Aeronaves')
+@section('title','Listar aeronaves')
 @section('content')
 
-<div><a class="btn btn-primary" href="{{route('aeronaves.create')}}">Add aeroplane</a></div>
+@if (session()->has('success'))
+    @include('common.success')
+@endif
+
+<div class="form-group"><a class="btn btn-primary" href="{{route('aeronaves.create')}}">Adicionar aeronave</a></div>
 @if (count($aeronaves))
-    <table class="table table-striped">
+    <table class="table table-striped ">
     <thead>
         <tr>
             <th>Matrícula</th>
@@ -14,6 +18,7 @@
             <th>Total de horas</th>
             <th>Preço hora</th>
             <th>Pilotos autorizados</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +31,16 @@
             <td>{{$aeronave->conta_horas}}</td>
             <td>{{$aeronave->preco_hora}}</td>
             <td>
-               <a class="btn btn-primary" href="{{route('aeronaves.pilotos', ['matricula'=>$aeronave->matricula])}}">Pilotos Autorizados</a> 
+               <a class="btn btn-primary" href="{{route('aeronaves.pilotos', ['aeronave'=>$aeronave->matricula])}}">Pilotos Autorizados</a> 
+            </td>
+            <td>
+                <a class="btn btn-primary btn-sm" href="{{route('aeronaves.edit', ['aeronave'=>$aeronave->matricula])}}">Editar</a>
+
+                <form action="{{route('aeronaves.destroy', ['aeronave'=>$aeronave->matricula])}}" method="post" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <input type="submit" class="btn btn-danger btn-sm" value="Apagar" />
+                </form>
             </td>
         </tr>
     @endforeach

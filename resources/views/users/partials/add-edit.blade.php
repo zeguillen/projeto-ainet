@@ -192,7 +192,7 @@
 @if ($user->num_socio == null)
     <div class="form-group">
         <label for="inputDirecao">Pertence á Direção?</label>
-        <select name="sexo" id="inputDirecao" class="form-control">
+        <select name="direcao" id="inputDirecao" class="form-control">
             <option disabled selected> -- select an option -- </option>
             <option value="0">Não</option>
             <option value="1">Sim</option>

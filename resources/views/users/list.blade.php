@@ -2,6 +2,9 @@
 @section('title','List Users')
 @section('content')
 
+@if (session()->has('success'))
+    @include('common.success')
+@endif
 
 <div class="action-buttons">
     @can('create', App\User::class) 
@@ -45,6 +48,7 @@
                     <input type="radio" name="direcao" class="form-check-input" id="inputEDirecaoSim" value="true"><label for="inputEDirecaoSim" class="mr-2">Sim</label>
                     <input type="radio" name="direcao" class="form-check-input" id="inputEDirecaoNao" value="false"><label for="inputEDirecaoNao">Não</label>
                 </div>
+
                 <div class="form-group col-auto">
                     <button type="submit" class="btn btn-success">Filtrar</button>
                 </div>
@@ -99,22 +103,22 @@
             <!-- fill with edit and delete actions -->
                 @can('update', $user)
                     <a class="btn btn-primary btn-sm" href="{{route('users.edit',['id'=>$user->id])}}">
-                        Edit
+                        Editar
                     </a>
                 @else
                     <span class="btn btn-secondary btn-sm disabled" >
-                        Edit
+                        Editar
                     </span>
                 @endcan
                 @can('delete', App\User::class)
-                <form action="{{route('users.destroy',['id'=>$user->id])}}" method="post" class="inline">
+                <form action="{{route('users.destroy',['id'=>$user->id])}}" method="post" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
+                    <input class="btn btn-danger btn-sm" type="submit" value="Apagar"/>
                 </form>
                 @else
                     <span class="btn btn-secondary btn-sm disabled" >
-                        Delete
+                        Apagar
                     </span>
                 @endcan
             </td>

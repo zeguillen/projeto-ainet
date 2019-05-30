@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Movimento;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\Auth;
 
 class MovimentoController extends Controller
 {
@@ -64,7 +65,10 @@ class MovimentoController extends Controller
     public function create()
     {
         $movimento = new Movimento;
-        return view('movimentos.add', compact('movimento'));
+        $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
+        $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
+        $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto')->get();
+        return view('movimentos.add', compact('movimento', 'aeronaves', 'aerodromos', 'aeronaves_pilotos'));
     }
 
     public function store(MovimentoStorageRequest $request)
@@ -78,15 +82,14 @@ class MovimentoController extends Controller
         return redirect()->route('movimentos.index')->with('success', "Movimento criado com sucesso");
     }
 
-    public function show(Movimento $movimento)
-    {
-        //
-    }
-
     public function edit(Movimento $movimento)
     {
+        $this->authorize('view', $movimento);
         $movimento = Movimento::findOrFail($movimento->id);
-        return view('movimentos.edit', compact('movimento'));
+        $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
+        $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
+        $pilotos = DB::table('aeronaves_pilotos');
+        return view('movimentos.edit', compact('movimento', 'aeronaves', 'aerodromos'));
     }
 
     public function update(Request $request, Movimento $movimento)

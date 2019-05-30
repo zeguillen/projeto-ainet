@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use App\Aeronave;
 use App\AeronavePiloto;
 use Illuminate\Http\Request;
+use App\Http\Requests\AeronaveUpdateRequest;
+use App\Http\Requests\AeronaveStorageRequest;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class AeronaveController extends Controller
 {
+    use SoftDeletes;
+
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +21,7 @@ class AeronaveController extends Controller
      */
     public function index()
     {
-        $aeronaves = Aeronave::paginate(5);
+        $aeronaves = Aeronave::paginate(10);
         return view('aeronaves.list', compact('aeronaves'));
     }
 
@@ -27,8 +32,8 @@ class AeronaveController extends Controller
      */
     public function create()
     {
-        $aeronaves = new Aeronave;
-        return view('aeronaves.add', compact('aeronaves'));
+        $aeronave = new Aeronave;
+        return view('aeronaves.add', compact('aeronave'));
     }
 
     /**
@@ -37,20 +42,16 @@ class AeronaveController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AeronaveStorageRequest $request)
     {
-        //
-    }
+        $aeronave = new Aeronave;
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Aeronave  $aeronave
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Aeronave $aeronave)
-    {
-        //
+        $validated = $request->validated();
+        
+        $aeronave->fill($request->all());
+        $aeronave->save();
+
+        return redirect()->route('aeronaves.index')->with('success', 'Aeronave adicionada com sucesso');
     }
 
     /**
@@ -61,7 +62,8 @@ class AeronaveController extends Controller
      */
     public function edit(Aeronave $aeronave)
     {
-        //
+        // authorize
+        return view('aeronaves.edit', compact('aeronave'));
     }
 
     /**
@@ -71,9 +73,14 @@ class AeronaveController extends Controller
      * @param  \App\Aeronave  $aeronave
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Aeronave $aeronave)
+    public function update(AeronaveUpdateRequest $request, Aeronave $aeronave)
     {
-        //
+        $validated = $request->validated();
+ 
+        $aeronave->fill($request->all());
+        $aeronave->save();
+
+        return redirect()->route('aeronaves.index')->with('success', 'Aeronave atualizada com sucesso');
     }
 
     /**
@@ -84,7 +91,16 @@ class AeronaveController extends Controller
      */
     public function destroy(Aeronave $aeronave)
     {
-        //
+        // PERGUNTAR
+        $movimentos = Aeronave::findOrFail($aeronave->matricula)->movimentos;
+
+        if($movimentos > 0){
+            $aeronave->delete(); //soft delete
+        }else{
+            $aeronave->forceDelete(); // permanent delete
+        }
+
+        return redirect()->route('aeronaves.index')->with('success', 'Aeronave apagada com sucesso');
     }
 
     public function pilotosAutorizados(Request $request) 
