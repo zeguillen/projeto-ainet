@@ -80,7 +80,7 @@ class UserController extends Controller
         $user->save();
 
         // Enviar email para activação
-        Mail::to($request->user())->send(new UserActivation($num_socio));
+        $socio->sendEmailVerificationNotification();
 
         return redirect()->route('users.index')->with('success', "User successfully created");
     }
@@ -121,9 +121,6 @@ class UserController extends Controller
             $socio->telefone = $request->telefone;
             $socio->endereco = $request->endereco;
             $socio->save();
-            if($oldEmail != $socio->email) {
-                $socio->sendEmailVerificationNotification();
-            }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
         if(Auth::user()->can('update', $socio)) {         
@@ -153,9 +150,6 @@ class UserController extends Controller
             $socio->telefone = $request->telefone;
             $socio->endereco = $request->endereco;
             $socio->save();
-            if($oldEmail != $socio->email) {
-                $socio->sendEmailVerificationNotification();
-            }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
         if(Auth::user()->can('updatePiloto', $socio)) {
@@ -180,9 +174,6 @@ class UserController extends Controller
             $socio->telefone = $request->telefone;
             $socio->endereco = $request->endereco;
             $socio->save();
-            if($oldEmail != $socio->email) {
-                $socio->sendEmailVerificationNotification();
-            }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
 
