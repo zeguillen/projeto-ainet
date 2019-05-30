@@ -2,6 +2,10 @@
 @section('title','List Movimentos')
 @section('content')
 
+@if (session()->has('success'))
+    @include('common.success')
+@endif
+
 <div class="mb-3"><a class="btn btn-primary" href="{{route('movimentos.create')}}">Adicionar movimento</a></div>
 @if (count($movimentos))
     <div class="form">
@@ -98,7 +102,7 @@
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado == 1 ? 'Sim' : 'Não'}}</td>
             <td>
-                @if($movimento->confirmado)
+                @if ($movimento->confirmado && ($movimento->piloto_id != Auth::user()->id || $movimento->instrutor_id != Auth::user()->id))
                     <button class="btn btn-secondary btn-sm disabled" disabled>
                         Edit
                     </button>
@@ -109,10 +113,10 @@
                 @endif
             </td>
             <td>    
-                <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="inline">
+                <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="form-inline">
                     @csrf
                     @method('DELETE')
-                    @if($movimento->confirmado)
+                    @if ($movimento->confirmado && ($movimento->piloto_id != Auth::user()->id || $movimento->instrutor_id != Auth::user()->id))
                         <input class="btn btn-secondary btn-sm" type="submit" value="Delete" disabled/>
                     @else
                         <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
@@ -124,7 +128,7 @@
     </table>
     {{$movimentos->appends(request()->input())->links()}} <!--Paginate-->
 @else
-    <h2>No aeroplane found</h2>
+    <h2>Não existem movimentos</h2>
 @endif
 
 @endsection

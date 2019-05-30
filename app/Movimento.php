@@ -65,7 +65,7 @@ class Movimento extends Model
         return $this->belongsTo('App\Aerodromo', 'aerodromo_chegada', 'code');
     }
 
-    public function estadoMovimento(){
-
+    public function aeronave(){
+        return $this->belongsTo('App\Aeronave', 'matricula');
     }
 }

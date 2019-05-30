@@ -9,13 +9,16 @@ use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\UserStorageRequest;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Requests\UserStorageRequest;
 
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    use SoftDeletes;
+    
     public function index(Request $request)
     {
         $query = User::query();

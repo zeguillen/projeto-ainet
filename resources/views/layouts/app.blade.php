@@ -66,7 +66,7 @@
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ Auth::user()->nome_informal }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
@@ -74,7 +74,7 @@
                                         ->id])}}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('usersedit-form').submit();">
-                                        {{ __('Edit Profile') }}
+                                        {{ __('Editar perfil') }}
                                     </a>
                                     <form id="usersedit-form" action="{{route('users.edit',['id'=>Auth::user()->id])}}" method="GET" style="display: none;">
                                         @csrf
@@ -82,7 +82,7 @@
 
                                     <a class="dropdown-item" href="{{route('password.change')}}" onclick="event.preventDefault();
                                        document.getElementById('reset-form').submit();">
-                                       {{ __('Change my password') }}
+                                       {{ __('Mudar palavra-passe') }}
                                     </a>
                                     <form id="reset-form" action="{{route('password.change',['id'=>Auth::user()->id])}}" method="GET" style="display: none;">
                                         @csrf

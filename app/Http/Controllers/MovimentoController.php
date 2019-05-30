@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Movimento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use DB;
 use Khill\Lavacharts\Lavacharts;
 
@@ -65,7 +67,10 @@ class MovimentoController extends Controller
     public function create()
     {
         $movimento = new Movimento;
-        return view('movimentos.add', compact('movimento'));
+        $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
+        $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
+        $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto')->get();
+        return view('movimentos.add', compact('movimento', 'aeronaves', 'aerodromos', 'aeronaves_pilotos'));
     }
 
     public function store(MovimentoStorageRequest $request)
@@ -81,8 +86,12 @@ class MovimentoController extends Controller
 
     public function edit(Movimento $movimento)
     {
+        $this->authorize('view', $movimento);
         $movimento = Movimento::findOrFail($movimento->id);
-        return view('movimentos.edit', compact('movimento'));
+        $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
+        $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
+        $pilotos = DB::table('aeronaves_pilotos');
+        return view('movimentos.edit', compact('movimento', 'aeronaves', 'aerodromos'));
     }
 
     public function update(Request $request, Movimento $movimento)

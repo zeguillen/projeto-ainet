@@ -40,9 +40,11 @@ Route::middleware('auth')->get('/pilotos/{piloto}/licenca', 'UserController@verL
 Route::middleware('auth')->get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');
 Route::middleware('auth')->get('/aeronaves/create', 'AeronaveController@create')->name('aeronaves.create');
 Route::middleware('auth')->post('/aeronaves', 'AeronaveController@store')->name('aeronaves.store');
-
+Route::middleware('auth')->get('/aeronaves/{aeronave}/edit', 'AeronaveController@edit')->name('aeronaves.edit');
+Route::middleware('auth')->put('/aeronaves/{aeronave}', 'AeronaveController@update')->name('aeronaves.update');
 Route::middleware('auth')->get('/aeronaves/{aeronave}/pilotos', 'AeronaveController@pilotosAutorizados')->name('aeronaves.pilotos');
 Route::middleware('auth')->delete('/aeronaves/{aeronave}/pilotos/{piloto}', 'AeronaveController@naoAutorizarPiloto')->name('piloto.naoautorizar');
+Route::middleware('auth')->delete('/aeronaves/{aeronave}', 'AeronaveController@destroy')->name('aeronaves.destroy');
 
 //movimentos
 Route::middleware('auth')->get('/movimentos', 'MovimentoController@index')->name('movimentos.index');
