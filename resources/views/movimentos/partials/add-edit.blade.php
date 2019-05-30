@@ -63,9 +63,7 @@
     <label for="InputPilotoId">Piloto</label>
     <select name="piloto" id="InputPilotoId" class="form-control">
         <option disabled selected> -- select an option -- </option>
-        @foreach ($aeronaves_pilotos as $aeronave_piloto)
-        <option value="{{$piloto->}}" {{ old('natureza', $movimento->natureza) == 'T' ? "selected" : "" }}>Treino</option>
-        @endforeach
+
     </select>
     <input
         type="text" class="form-control"

@@ -92,8 +92,8 @@ class UserController extends Controller
 
         $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
         $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
-        $aeronaves = User::find($user->id);
-        return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados', 'aeronaves'));
+        
+        return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados'));
     }
 
     public function update(Request $request, User $socio)

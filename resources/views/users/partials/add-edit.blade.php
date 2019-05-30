@@ -131,7 +131,7 @@
 <div class="form-group">
     <label id="userPhoto" for="inputImage">Profile Picture</label>
     <input
-        type="file" class="form-control"
+        type="file" class="form-control-file"
         name="image" id="inputImage"
         enctype='multipart/form-data'
         onchange='loadImage()'
@@ -212,13 +212,13 @@
     <table class="table table-striped">
     <thead>
         <tr>
-            <th>Matricula</th>
+            <th>Aeronaves autorizadas para o piloto {{$user->name}}</th>
         </tr>
     </thead>
     <tbody>
     @foreach ($user->aeronaves as $aeronave)
         <tr>
-            <td>SIRVE</td>
+            <td>{{$aeronave->matricula}}</td>
         </tr>
     @endforeach
     </tbody>

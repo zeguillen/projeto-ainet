@@ -19,7 +19,8 @@ class MovimentoPolicy
      */
     public function view(User $user, Movimento $movimento)
     {
-        return ($movimento->confirmado == 0) && ($movimento->piloto_id == $user->id || $movimento->instrutor_id == $user->id);
+        // return ($movimento->confirmado == 0);
+        
     }
 
     /**

@@ -41,7 +41,7 @@ class MovimentoController extends Controller
                 $query->where('confirmado', 1);
             } else {
                 $query->where('confirmado', 0);
-            }      
+            }
         }
         if(($request->natureza != "none") && ($request->filled('natureza'))) {
             switch ($request->natureza) {
@@ -59,7 +59,7 @@ class MovimentoController extends Controller
         }
 
         $movimentos = $query->orderBy('id', 'asc')->paginate(5);
-        
+
         return view('movimentos.list', compact('movimentos'));
     }
 
@@ -85,11 +85,12 @@ class MovimentoController extends Controller
 
     public function edit(Movimento $movimento)
     {
-        $this->authorize('view', $movimento);
-        $movimento = Movimento::findOrFail($movimento->id);
+        // $this->authorize('view', $movimento);
+        // $movimento = Movimento::findOrFail($movimento->id);
+
         $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
         $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
-        $pilotos = DB::table('aeronaves_pilotos');
+
         return view('movimentos.edit', compact('movimento', 'aeronaves', 'aerodromos'));
     }
 
@@ -101,11 +102,11 @@ class MovimentoController extends Controller
     public function destroy(Request $movimento)
     {
         $movimento = Movimento::findOrFail($movimento->id);
-        
+
         if($movimento->confirmado) {
             return redirect()->route('movimentos.index')->with('errors',"Movimento já confirmado! Não é possivel eliminar");
         }
-        
+
         $movimento->delete();
         return redirect()->route('movimentos.index')->with('success',"Movimento eliminado com sucesso");
     }
@@ -120,14 +121,14 @@ class MovimentoController extends Controller
             $ano = $request->ano;
 
             //chart ------------------------------------------------------------
-           
+
             $lava = new Lavacharts; // See note below for Laravel
 
             $horasDeVoo = $lava->DataTable();
 
             $horasDeVoo->addStringColumn('Mês');
 
-            $aeronaves = DB::select('SELECT DISTINCT aeronave FROM movimentos WHERE YEAR(data) = "'.$request->ano.'"');         
+            $aeronaves = DB::select('SELECT DISTINCT aeronave FROM movimentos WHERE YEAR(data) = "'.$request->ano.'"');
             foreach ($aeronaves as $aeronave) {
                 $horasDeVoo->addNumberColumn($aeronave->aeronave);
             }
@@ -140,7 +141,7 @@ class MovimentoController extends Controller
                 }
                 if($aeronave_mes_ano->mes < $minMonth) {
                     $minMonth = $aeronave_mes_ano->mes;
-                }     
+                }
             }
 
             $data = [];
@@ -149,8 +150,8 @@ class MovimentoController extends Controller
                 foreach ($aeronaves_mes_ano as $aeronave_mes_ano) {
                     if($aeronave_mes_ano->mes == $i) {
                         array_push($data, $aeronave_mes_ano->tempo);
-                    }     
-                }  
+                    }
+                }
                 $horasDeVoo->addRow($data);
                 $data = [];
             }
