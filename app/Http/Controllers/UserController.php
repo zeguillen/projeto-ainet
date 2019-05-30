@@ -97,7 +97,7 @@ class UserController extends Controller
     public function update(Request $request, User $socio)
     {
         
-        if(Auth::user()->direcao) {
+        if(Auth::user()->can('updateAll', User::class)) {
             $file = $request->image;
 
             if (!is_null($socio->foto_url)) {
@@ -120,12 +120,11 @@ class UserController extends Controller
             $socio->endereco = $request->endereco;
             $socio->save();
             if($oldEmail != $socio->email) {
-                //todo 
-                Mail::to($request->user())->send(new UserActivation($socio->id));
+                $socio->sendEmailVerificationNotification();
             }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
-        if($this->authorize('update', $socio)) {         
+        if(Auth::user()->can('update', $socio)) {         
             $file = $request->image;
 
             if (!is_null($socio->foto_url)) {
@@ -153,12 +152,11 @@ class UserController extends Controller
             $socio->endereco = $request->endereco;
             $socio->save();
             if($oldEmail != $socio->email) {
-                //todo 
-                Mail::to($request->user())->send(new UserActivation($socio->id));
+                $socio->sendEmailVerificationNotification();
             }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
-        if($this->authorize('update', $socio)) {
+        if(Auth::user()->can('updatePiloto', $socio)) {
             $file = $request->image;
 
             if (!is_null($socio->foto_url)) {
@@ -181,8 +179,7 @@ class UserController extends Controller
             $socio->endereco = $request->endereco;
             $socio->save();
             if($oldEmail != $socio->email) {
-                //todo 
-                Mail::to($request->user())->send(new UserActivation($socio->id));
+                $socio->sendEmailVerificationNotification();
             }
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
