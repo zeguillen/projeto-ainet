@@ -29,7 +29,6 @@ class UserStorageRequest extends FormRequest
             'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
             'telefone' => 'nullable|min:9|max:20',
-            'data_nascimento' => 'required|date|before:today',
             'direcao' => 'required|in:0,1',
             'sexo' => 'required|in:F,M',
             'endereco' => 'nullable|',
@@ -57,6 +56,8 @@ class UserStorageRequest extends FormRequest
 
     public function messages(){
         return [
+            'num_socio.unique' => 'O nome de sócio já se encontra em uso',
+            'num_socio.required' => 'O nome de sócio é requerido',
             'name.regex' => 'O nome só pode conter letras e espaços',
             'name.required' => 'O nome é requerido',
             'nome_informal.regex' => 'O nome só pode conter letras e espaços',

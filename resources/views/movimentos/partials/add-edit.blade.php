@@ -95,7 +95,7 @@
     </select>
 </div>
 
-<div id="camposInstrucao">
+<div id="camposInstrucao" style="display:none;">
     <div class="form-group">
         <label for="inputTipoInstrucao">Tipo de Instrução</label>
         <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">

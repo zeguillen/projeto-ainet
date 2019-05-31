@@ -28,13 +28,12 @@ class UserUpdateRequest extends FormRequest
             'name' => 'nullable|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
             'telefone' => 'nullable|min:9|max:20',
-            'data_nascimento' => 'nullable|date|before:today',
             'direcao' => 'sometimes|required|in:0,1',
             'sexo' => 'sometimes|required|in:F,M',
             'data_nascimento' => 'nullable|date_format:Y-m-d|before:18 years ago',
             'email' => 'nullable|email|unique:users,email,'.$this->socio->email.',email',
             'tipo_socio' => 'sometimes|required|in:P,NP,A',
-            'ativo' => 'somtimes|required|in:0,1',
+            'ativo' => 'sometimes|required|in:0,1',
             'quota_paga' => 'sometimes|required|in: 0,1',
             'aluno' => ['nullable', 'in: 0,1'],
             'instrutor' => ['nullable', 'in: 0,1'],
@@ -48,8 +47,8 @@ class UserUpdateRequest extends FormRequest
             'classe_certificado' => 'nullable|exists:classes_certificados,code|max: 20',
             'licenca_confirmada' => 'nullable|in:0,1',
             'certificado_confirmado' => 'nullable|in:0,1',
-            'validade_certificado' => 'sometimes|nullable|date|after:today',
-            'validade_licenca' => 'sometimes|nullable|date|after:today',
+            'validade_certificado' => 'nullable|date|after:today|date_format:Y-m-d',
+            'validade_licenca' => 'nullable|date|after:today|date_format:Y-m-d',
         ];
     }
 
@@ -77,8 +76,8 @@ class UserUpdateRequest extends FormRequest
             'num_certificado.unique' => 'O numero do certificado já existe',
             'tipo_licenca.max' => 'O tipo de licença só pode conter 20 caracteres',
             'classe_certificado.max' => 'A classe do certficiado só pode conter 20 caracteres',
-            'validade_certificado.after' => 'A validade do certificado é inválida',
-            'validade_licenca.after' => 'A validade da licença é inválida'
+            'validade_certificado.after' => 'A data do certificado é inválida',
+            'validade_licenca.after' => 'A data da licença é inválida'
         ];
     }
 }

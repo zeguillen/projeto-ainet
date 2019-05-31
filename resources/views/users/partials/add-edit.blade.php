@@ -51,6 +51,15 @@
 <br>
 @else
     <div class="form-group">
+        <label for="inputNumeroSocio">Nº de sócio</label>
+        <input 
+            type="number" class="form-control"
+            name="num_socio" id="inputNumeroSocio"
+            placeholder="#" value="{{old('num_socio', $user->num_socio)}}"
+            required
+        />
+    </div>
+    <div class="form-group">
         <label for="inputTipoSocio">Tipo de sócio</label>
         <select name="tipo_socio" id="inputTipoSocio" class="form-control" onchange="changeType()">
             <option disabled selected> -- select an option -- </option>
@@ -72,11 +81,11 @@
 </div>
 
 <div class="form-group">
-    <label for="inputFullname">Fullname</label>
+    <label for="inputFullname">Nome Completo</label>
     <input
         type="text" class="form-control"
         name="name" id="inputFullname"
-        placeholder="Fullname" value="{{old('fullname',$user->name)}}"
+        placeholder="Nome Completo" value="{{old('fullname',$user->name)}}"
         required
     />
 </div>
@@ -129,10 +138,10 @@
 </div>
 
 <div class="form-group">
-    <label id="userPhoto" for="inputImage">Profile Picture</label>
+    <label id="userPhoto" for="inputImage">Foto</label>
     <input
         type="file" class="form-control-file"
-        name="image" id="inputImage"
+        name="file_foto" id="inputImage"
         enctype='multipart/form-data'
         onchange='loadImage()'
     />
@@ -142,8 +151,6 @@
     <div style="max-width: 100px;">
     @if ($user->foto_url != null)
     <img id="profilePicture" src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
-    @else
-    <img src="/storage/fotos/blank.jpg" alt="Empty Profile Picture" width="100%">
     @endif
     </div>
 </div>
@@ -187,6 +194,20 @@
 
     <label>Sócio Ativo?</label><p>{{old('Ativacao',$user->ativo) == 1 ? 'Sim' : 'Não'}}</p>
     <br>
+@else
+    <label for="inputoAtivo">Estado do sócio</label>
+    <select name="ativo" id="inputoAtivo" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        <option value="0">Não ativo</option>
+        <option value="1">Ativo</option>
+    </select>
+    
+    <label for="inputEstadoQuotas">Estado das quotas</label>
+    <select name="quota_paga" id="inputEstadoQuotas" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        <option value="0">Por pagar</option>
+        <option value="1">Pagas</option>
+    </select>
 @endif
 
 @if ($user->num_socio == null)
@@ -205,7 +226,7 @@
 
 
 @can('viewPiloto', Auth::user())
-<div id="camposPiloto">
+<div id="camposPiloto" style="display: none;">
     <h5>Informação de Piloto</h5>
 
     @if (count($user->aeronaves) > 0)
@@ -223,7 +244,7 @@
     @endforeach
     </tbody>
     </table>
-    @else
+    @elseif ($user->id != null)
     <div class="alert alert-secondary text-center" role="alert">
         Não existem aeronaves autorizadas para este piloto
     </div>
@@ -240,7 +261,7 @@
 
     <div class="form-group">
         <label>Tipo de licença</label>
-        <select name="type" id="inputType" class="form-control">
+        <select name="tipo_licenca" id="inputTipoLicenca" class="form-control">
             <option disabled selected> -- select an option -- </option>
             @foreach ($tipos_licencas as $tipo_licenca)
             <option value="{{ $tipo_licenca->code }}" {{ old('tipo_licenca', $user->tipo_licenca) == $tipo_licenca->code ? "selected" : ""}}>{{ $tipo_licenca->code }} - {{ $tipo_licenca->nome }}</option>
@@ -250,10 +271,18 @@
 
     <div class="form-group">
         <label>Pode dar instrução?</label>
+        @if ($user->id != null)
         <input
             type="text" class="form-control"
             value="{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}" disabled
         />
+        @else
+        <select name="instrutor" id="inputInstrutor" class="form-control">
+            <option disabled selected> -- selecione uma opção --</option>
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+        </select>
+        @endif
     </div>
 
     <h5>Certificado Médico</h5>
@@ -284,7 +313,7 @@
             placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
         />
     </div>
-
+    @if ($user->id != null)
     <div class="form-group">
         <label>Certificado confirmado?</label>
         <input
@@ -293,7 +322,6 @@
             disabled
         />
     </div>
-
-   
+    @endif
 </div>
 @endcan

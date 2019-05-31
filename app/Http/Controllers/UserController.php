@@ -58,6 +58,7 @@ class UserController extends Controller
     public function create()
     {
         $this->authorize('create', User::class);
+
         $user = new User;
         $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
         $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
@@ -67,18 +68,23 @@ class UserController extends Controller
     public function store(UserStorageRequest $request)
     {
         $this->authorize('create', User::class);
+        $validated = $request->validated();
 
-        $user = new User;
-        $file = $request->image;
+        $socio = new User;
+        $foto = $request->file_foto;
 
-        if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
-            $file->store('fotos', 'public');
+        if (!is_null($socio->foto_url) && $request->hasFile('file_foto')) {
+            Storage::disk('public')->delete('fotos/'.$socio->foto_url);
         }
 
-        $user->foto_url = $file->hashname();
-        $user->fill($request->all()->validated());
-        $user->password = Hash::make($user->password);
-        $user->save();
+        if($request->hasFile('file_foto') && $foto->isValid()){
+            $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . $foto->hashName() . '.jpg');
+        }
+
+        $socio->fill($request->all()->except('foto_url', 'password'));
+        $socio->foto_url = $path;
+        $socio->password = Hash::make($socio->password);
+        $socio->save();
 
         // Enviar email para activação
         $socio->sendEmailVerificationNotification();
@@ -99,93 +105,32 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, User $socio)
     {
+        $this->authorize('update', User::class);
+        $validated = $request->validated();
+        
+        $foto = $request->file_foto;
 
-        if(Auth::user()->can('updateAll', User::class)) {
-            $file = $request->image;
-
-            if (!is_null($socio->foto_url)) {
-                Storage::disk('public')->delete('fotos/'.$socio->foto_url);
-            }
-
-            if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
-                $file->store('fotos', 'public');
-            }
-
-            $socio->foto_url = $file->hashname();
-            $socio->nome_informal = $request->nome_informal;
-            $socio->name = $request->name;
-            $oldEmail = $socio->email;
-            $socio->email = $request->email;
-            //foto
-            $socio->data_nascimento = $request->data_nascimento;
-            $socio->nif = $request->nif;
-            $socio->telefone = $request->telefone;
-            $socio->endereco = $request->endereco;
-            $socio->save();
-            return redirect()->route('users.index')->with('success',"User successfully updated");
-        }
-        if(Auth::user()->can('update', $socio)) {
-            $file = $request->image;
-
-            if (!is_null($socio->foto_url)) {
-                Storage::disk('public')->delete('fotos/'.$socio->foto_url);
-            }
-
-            if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
-                $file->store('fotos', 'public');
-            }
-
-            $socio->foto_url = $file->hashname();
-            $socio->nome_informal = $request->nome_informal;
-            $socio->name = $request->name;
-            $oldEmail = $socio->email;
-            $socio->email = $request->email;
-            if(! is_null($request['image'])){
-                $image = $request->file('image');
-                $nome = time.'.'.$image->getClientOriginalExtension();
-
-                Storage::putFileAs('public/fotos', $nome);
-            }
-            $socio->data_nascimento = $request->data_nascimento;
-            $socio->nif = $request->nif;
-            $socio->telefone = $request->telefone;
-            $socio->endereco = $request->endereco;
-            $socio->save();
-            return redirect()->route('users.index')->with('success',"User successfully updated");
-        }
-        if(Auth::user()->can('updatePiloto', $socio)) {
-            $file = $request->image;
-
-            if (!is_null($socio->foto_url)) {
-                Storage::disk('public')->delete('fotos/'.$socio->foto_url);
-            }
-
-            if (!Storage::disk('public')->exists('profiles/'.$file->hashname())) {
-                $file->store('fotos', 'public');
-            }
-
-            $socio->foto_url = $file->hashname();
-            $socio->nome_informal = $request->nome_informal;
-            $socio->name = $request->name;
-            $oldEmail = $socio->email;
-            $socio->email = $request->email;
-            //foto
-            $socio->data_nascimento = $request->data_nascimento;
-            $socio->nif = $request->nif;
-            $socio->telefone = $request->telefone;
-            $socio->endereco = $request->endereco;
-            $socio->save();
-            return redirect()->route('users.index')->with('success',"User successfully updated");
+        if (!is_null($socio->foto_url) && $request->hasFile('file_foto')) {
+            Storage::disk('public')->delete('fotos/'.$socio->foto_url);
         }
 
-        return 0;
+        if($request->hasFile('file_foto') && $foto->isValid()){
+            $path = Storage::putFileAs('public/fotos', $foto, $user->id . '_' . $foto->hashName() . '.jpg');
+        }
+
+        $socio->fill($request->all()->except('foto_url'));
+        $socio->foto_url = $path;
+        $socio->save();
+        return redirect()->route('users.index')->with('success',"Sócio atualizado com sucesso");
     }
 
     public function destroy(User $socio)
     {
         $this->authorize('delete', User::class);
+
         $socio->delete();
-        return redirect()->route('users.index')->with('success',"User successfully deleted");
+        
+        return redirect()->route('users.index')->with('success',"Sócio eliminado com sucesso");
     }
 
     public function changePassword()
