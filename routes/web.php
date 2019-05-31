@@ -34,10 +34,9 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	Route::patch('/socios/reset_quotas', 'UserController@resetQuotas')->name('quotas.reset');
 	Route::patch('/socios/desativar_sem_quotas', 'UserController@desativarUsersSemQuotas')->name('users.desativar');
 	Route::patch('/socios/{socio}/ativo', 'UserController@changeAtivo')->name('ativo.change');
-	Route::get('/pilotos/{piloto}/certificado', 'UserController@verCertificadoPiloto')->name('ver.certificado');
-	Route::get('/pilotos/{piloto}/certificado/download', 'UserController@transferirCertificadoPiloto')->name('transferir.certificado');
-	Route::get('/pilotos/{piloto}/licenca', 'UserController@verLicencaPiloto')->name('ver.licenca');
-	Route::get('/pilotos/{piloto}/licenca/download', 'UserController@transferirLicencaPiloto')->name('transferir.licenca');
+	Route::get('/pilotos/{piloto}/certificado', 'UserController@CertificadoPiloto')->name('certificado.piloto');
+	Route::get('/pilotos/{piloto}/licenca', 'UserController@LicencaPiloto')->name('licenca.piloto');
+
 
 	//aeronaves 
 	Route::get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');

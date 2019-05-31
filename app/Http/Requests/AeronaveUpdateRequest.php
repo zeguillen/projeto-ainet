@@ -24,19 +24,29 @@ class AeronaveUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'marca' => 'nullable|min:3',
-            'modelo' => 'nullable|min:3',
-            'num_lugares' => 'nullable',
-            'conta_horas' => 'nullable',
-            'preco_hora' => 'nullable'
+            'matricula' => 'sometimes|required|unique:aeronaves,matricula',
+            'marca' => 'sometimes|required|min:3',
+            'modelo' => 'sometimes|required|min:3',
+            'num_lugares' => 'sometimes|required|integer',
+            'conta_horas' => 'sometimes|required|integer',
+            'preco_hora' => 'sometimes|required|numeric'
         ];
     }
 
     public function message(){
         return [
-            'matricula.unique' => 'A matricula já se encontra em uso',
+            'matricula.required' => 'A matricula é requerida',
+            'matricula.unique' => 'A matricula já existe',
+            'marca.required' => 'A marca é requerida',
             'marca.min' => 'A marca é muito curta',
+            'modelo.required' => 'O modelo é requerido',
             'modelo.min' => 'O modelo é muito curto',
+            'num_lugares.required' => 'O número de lugares é requerido',
+            'num_lugares.numeric' => 'O número de lugares é inválido',
+            'conta_horas.required' => 'O conta horas é requerido',
+            'conta_horas.numeric' => 'O conta horas é inválido',
+            'preco_hora.required' => 'O preco por hora é requerido',
+            'preco_hora.numeric' => 'O preco por hora é inválido'
         ];
     }
 }

@@ -270,19 +270,24 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success',"Os sócios que tinham as quotas por pagar encontram-se agora desativos");
     }
 
-    public function verCertificadoPiloto($piloto){
-        return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+    public function certificadoPiloto(Request $request, $piloto){
+        switch($request->certificado){
+            case 'verCertificado':
+                return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+                break;
+            case 'transferirCertificado':
+                return response()->download(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+                break;
+        }
     }
 
-    public function transferirCertificadoPiloto($piloto){
-        return response()->download(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
+    public function licencaPiloto(Request $request, $piloto){
+        switch($request->licenca){
+            case 'verLicenca':
+                return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
+            case 'transferirLicenca':
+                return response()->download(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
+        }
     }
 
-    public function verLicencaPiloto($piloto){
-        return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
-    }
-
-    public function transferirLicencaPiloto($piloto){
-        return response()->download(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
-    }
 }

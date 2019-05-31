@@ -85,7 +85,7 @@ class MovimentoController extends Controller
 
     public function edit(Movimento $movimento)
     {
-        // $this->authorize('view', $movimento);
+        $this->authorize('view', $movimento);
         // $movimento = Movimento::findOrFail($movimento->id);
 
         $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
@@ -104,7 +104,7 @@ class MovimentoController extends Controller
         $movimento = Movimento::findOrFail($movimento->id);
 
         if($movimento->confirmado) {
-            return redirect()->route('movimentos.index')->with('errors',"Movimento já confirmado! Não é possivel eliminar");
+            return redirect()->route('movimentos.index')->with('errors',"Movimento já confirmado return ($movimento->confirmado == 0) && ($movimento->piloto_id == $user->id || $movimento->instrutor_id == $user->id);view! Não é possivel eliminar");
         }
 
         $movimento->delete();
