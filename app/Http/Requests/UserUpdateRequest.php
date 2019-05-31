@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserStorageRequest extends FormRequest
+class UserUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,25 +24,24 @@ class UserStorageRequest extends FormRequest
     public function rules()
     {
         return [
-            'num_socio' => 'required|sometimes',
-            'nome_informal' => 'required|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
-            'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
+            'nome_informal' => 'nullable|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
+            'name' => 'nullable|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
             'telefone' => 'nullable|min:9|max:20',
-            'data_nascimento' => 'required|date|before:today',
-            'direcao' => 'required|in:0,1',
-            'sexo' => 'required|in:F,M',
-            'data_nascimento' => 'required|date_format:Y-m-d|before:18 years ago',
-            'email' => 'required|email|unique:users,email|regex:/^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/',
-            'tipo_socio' => 'required|in:P,NP,A',
-            'password' => 'required|min:8|confirmed',
-            'ativo' => 'sometimes|required|in:0,1',
-            'quota_paga' => 'sometimes|required|in: 0,1',
+            'data_nascimento' => 'nullable|date|before:today',
+            'direcao' => 'nullable|in:0,1',
+            'sexo' => 'nullable|in:F,M',
+            'data_nascimento' => 'nullable|date_format:Y-m-d|before:18 years ago',
+            'email' => 'nullable|email|unique:users,email,'.$this->socio->email.',email|regex:/^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/',
+            'tipo_socio' => 'nullable|in:P,NP,A',
+            'ativo' => 'nullable|in:0,1',
+            'quota_paga' => 'nullable|in: 0,1',
             'aluno' => ['nullable', 'in: 0,1'],
             'instrutor' => ['nullable', 'in: 0,1'],
             'foto_url' => 'nullable|image|mimes: jpeg, png, jpg, gif|max: 2048',
             'file_licenca' => 'nullable|mimes:pdf|max:2048',
             'file_certificado' => 'nullable|mimes:pdf|max:2048',
+            'num_socio' => 'sometimes|nullable|unique:users,num_socio,'.$this->socio->num_socio.'|integer|min:0',
             'num_licenca' => 'nullable|max:30|unique:users,num_licenca',
             'num_certificado' => 'nullable|max:30|unique:users,num_certificado',
             'tipo_licenca' => 'nullable|exists:tipos_licencas,code|max: 20',
@@ -57,25 +56,14 @@ class UserStorageRequest extends FormRequest
     public function messages(){
         return [
             'name.regex' => 'O nome só pode conter letras e espaços',
-            'name.required' => 'O nome é requerido',
             'nome_informal.regex' => 'O nome só pode conter letras e espaços',
-            'nome_informal.required' => 'O nome é requerido',
             'nome_informal.max' => 'O nome pode ter no máximo 40 caracteres',
             'nif.min' => 'O NIF é invalido',
             'nif.max' => 'O NIF é invalido',
             'telefone.min' => 'O telefone é inválido',
-            'sexo.required' => 'O sexo é requerido',
-            'data_nascimento.required' => 'A data de nascimento é requerida',
             'data_nascimento.before' => 'A data de nascimento é inválida',
-            'email.required' => 'O email é requerido',
             'email.unique' => 'O email inserido já se encontra registado',
             'email.regex' => 'O email inserido não é válido',
-            'tipo_socio.required' => 'O tipo de sócio é requerido',
-            'password.required' => 'A palavra-passe é requerida',
-            'password.min' => 'A palavra-passe tem que ter no mínimo 8 caracteres',
-            'password.confirmed' => 'A palavra-passe é a confirmação têm que ser iguais',
-            'ativo.required' => 'O estado do utilizador é requerido',
-            'quota_paga.required' => 'O estado da quota é requerido',
             'foto_url.mimes' => 'O formato da foto não é válido. Formatos válidos:  jpeg, png, jpg, gif',
             'foto_url.max' => 'O tamanho máximo da foto é 2mb',
             'foto_url.image' => 'A foto tem que ser uma imagem',

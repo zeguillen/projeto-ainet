@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
+use Mail;
 use App\User;
 use App\Mail\UserActivation;
-use Mail;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Http\Requests\UserStorageRequest;
+use App\Http\Requests\UserUpdateRequest;
 
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UserStorageRequest;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserController extends Controller
 {
     use SoftDeletes;
-    
+
     public function index(Request $request)
     {
         $query = User::query();
@@ -47,7 +48,7 @@ class UserController extends Controller
                 $query->where('direcao', 1);
             } else {
                 $query->where('direcao', 0);
-            }      
+            }
         }
 
         $users = $query->orderBy('id', 'asc')->paginate(5);
@@ -92,13 +93,13 @@ class UserController extends Controller
 
         $tipos_licencas = DB::table('tipos_licencas')->select('code', 'nome')->get();
         $classes_certificados = DB::table('classes_certificados')->select('code', 'nome')->get();
-        
+
         return view('users.edit', compact('user', 'tipos_licencas', 'classes_certificados'));
     }
 
-    public function update(Request $request, User $socio)
+    public function update(UserUpdateRequest $request, User $socio)
     {
-        
+
         if(Auth::user()->can('updateAll', User::class)) {
             $file = $request->image;
 
@@ -123,7 +124,7 @@ class UserController extends Controller
             $socio->save();
             return redirect()->route('users.index')->with('success',"User successfully updated");
         }
-        if(Auth::user()->can('update', $socio)) {         
+        if(Auth::user()->can('update', $socio)) {
             $file = $request->image;
 
             if (!is_null($socio->foto_url)) {
@@ -213,7 +214,7 @@ class UserController extends Controller
         }
 
         Auth::user()->password = Hash::make($request->password);;
-        Auth::user()->save(); 
+        Auth::user()->save();
 
         return redirect()->route('home')->with('success',"Password updated");
     }
@@ -233,7 +234,7 @@ class UserController extends Controller
         }
 
         $user->save();
-        
+
         return redirect()->route('users.index')->with('success',"Quota atualizada");
     }
 
@@ -258,7 +259,7 @@ class UserController extends Controller
         }
 
         $user->save();
-        
+
         return redirect()->route('users.index')->with('success',"Estado atualizado");
     }
 
@@ -276,7 +277,7 @@ class UserController extends Controller
     public function transferirCertificadoPiloto($piloto){
         return response()->download(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
     }
-    
+
     public function verLicencaPiloto($piloto){
         return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
     }

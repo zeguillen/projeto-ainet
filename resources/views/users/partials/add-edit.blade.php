@@ -22,7 +22,7 @@
         var selected = select.options[select.selectedIndex].value;
         if(selected !== "P") {
             document.getElementById("camposPiloto").style.display="none";
-        } else { 
+        } else {
             document.getElementById("camposPiloto").style.display="block";
         }
     }
@@ -230,12 +230,12 @@
     @endif
     <div class="form-group">
         <label for="inputNumLicenca">Nº de licença</label>
-        <input 
+        <input
             type="number" class="form-control"
             name="num_licenca" id="inputNumLicenca"
             placeholder="Número da licença" value="{{ old('num_licenca', $user->num_licenca) }}"
         />
-        
+
     </div>
 
     <div class="form-group">
@@ -250,7 +250,7 @@
 
     <div class="form-group">
         <label>Pode dar instrução?</label>
-        <input 
+        <input
             type="text" class="form-control"
             value="{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}" disabled
         />
@@ -259,7 +259,7 @@
     <h5>Certificado Médico</h5>
     <div class="form-group">
         <label for="inputNumCertificado">Nº do certificado</label>
-        <input 
+        <input
             type="text" class="form-control"
             name="num_certificado" id="inputNumCertificado"
             placeholder="Número do certificado" value="{{ old('num_certificado', $user->num_certificado) }}"
@@ -278,7 +278,7 @@
 
     <div class="form-group">
         <label for="inputValidadeCertificado">Validade</label>
-        <input  
+        <input
             type="date" class="form-control"
             name="validade_certificado" id="inputValidadeCertificado"
             placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
@@ -287,11 +287,24 @@
 
     <div class="form-group">
         <label>Certificado confirmado?</label>
-        <input 
+        <input
             type="text" class="form-control"
-            value="{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}" 
-            disabled 
+            value="{{ old('certificado_confirmado', $user->certificado_confirmado) == 1 ? 'Sim' : 'Não' }}"
+            disabled
         />
+    </div>
+
+    <div class="form-group">
+        <label>Cópia Digital da Licença</label><br>
+
+        @if(file_exists(storage_path('app/docs_piloto/licenca_'. $user->id .'.pdf')))
+        <a class="btn btn-primary" href="{{route('ver.licenca', ['piloto'=>$user->id])}}" target="_blank">Ver licença</a>
+        <a class="btn btn-primary" href="{{route('transferir.licenca', ['piloto'=>$user->id])}}" target="_blank">Transferir licença</a>
+        @else
+        <a class="btn btn-primary disabled">Ver licença</a>
+        <a class="btn btn-primary disabled">Transferir licença</a>
+        @endif
+
     </div>
 
     <div class="form-group">
