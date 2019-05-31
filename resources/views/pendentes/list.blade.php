@@ -27,14 +27,14 @@
             <td>{{$movimento->piloto_id}}</td>
             <td>{{$movimento->aeronave}}</td>
             @if($movimento->confirmado)
-                <td>Sim</td>
+                <td style="color: green">Sim</td>
             @else
-                <td>Não</td>
+                <td style="color: red">Não</td>
             @endif
             @if($movimento->tipo_conflito != NULL)
-                <td>Sim</td>
+                <td style="color: red">Sim</td>
             @else
-                <td>Não</td>
+                <td style="color: green">Não</td>
             @endif
             <td>
 	            <a class="btn btn-primary" href="{{route('movimentos.edit',['movimento'=>$movimento->id])}}">
@@ -70,15 +70,15 @@
             <td>{{$user->nome_informal}}</td>
             <td>{{$user->num_licenca}}</td>
             @if($user->licenca_confirmada)
-                <td>Sim</td>
+                <td style="color: green">Sim</td>
             @else
-                <td>Não</td>
+                <td style="color: red">Não</td>
             @endif
             <td>{{$user->num_certificado}}</td>
             @if($user->certificado_confirmado)
-                <td>Sim</td>
+                <td style="color: green">Sim</td>
             @else
-                <td>Não</td>
+                <td style="color: red">Não</td>
             @endif
             <td>
             	<a class="btn btn-primary" href="{{route('users.edit',['socio'=>$user->id])}}">
