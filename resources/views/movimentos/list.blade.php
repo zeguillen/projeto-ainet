@@ -107,7 +107,7 @@
                         Edit
                     </button>
                 @else
-                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
+                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['movimento'=>$movimento->id])}}">
                         Edit
                     </a>
                 @endif

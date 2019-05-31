@@ -68,7 +68,7 @@ class MovimentoController extends Controller
         $movimento = new Movimento;
         $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
         $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
-        $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto')->get();
+        $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto_id')->get();
         return view('movimentos.add', compact('movimento', 'aeronaves', 'aerodromos', 'aeronaves_pilotos'));
     }
 
