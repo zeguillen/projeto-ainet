@@ -24,7 +24,7 @@ class UserStorageRequest extends FormRequest
     public function rules()
     {
         return [
-            'num_socio' => 'required|sometimes',
+            'num_socio' => 'required|unique:users,num_socio',
             'nome_informal' => 'required|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'name' => 'required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
@@ -32,14 +32,15 @@ class UserStorageRequest extends FormRequest
             'data_nascimento' => 'required|date|before:today',
             'direcao' => 'required|in:0,1',
             'sexo' => 'required|in:F,M',
+            'endereco' => 'nullable|',
             'data_nascimento' => 'required|date_format:Y-m-d|before:18 years ago',
             'email' => 'required|email|unique:users,email|regex:/^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/',
             'tipo_socio' => 'required|in:P,NP,A',
             'password' => 'required|min:8|confirmed',
-            'ativo' => 'sometimes|required|in:0,1',
-            'quota_paga' => 'sometimes|required|in: 0,1',
-            'aluno' => ['nullable', 'in: 0,1'],
-            'instrutor' => ['nullable', 'in: 0,1'],
+            'ativo' => 'required|in:0,1',
+            'quota_paga' => 'required|in: 0,1',
+            'aluno' => 'nullable', 'in: 0,1',
+            'instrutor' => 'nullable', 'in: 0,1',
             'foto_url' => 'nullable|image|mimes: jpeg, png, jpg, gif|max: 2048',
             'file_licenca' => 'nullable|mimes:pdf|max:2048',
             'file_certificado' => 'nullable|mimes:pdf|max:2048',

@@ -23,9 +23,9 @@
 <div class="form-group">
     <label for="inputHoraDescolagem">Hora descolagem</label>
     <input
-        type="text" class="form-control"
+        type="time" class="form-control"
         name="horaDescolagem" id="inputhoraDescolagem"
-        value="{{old('hora_descolagem',$movimento->hora_descolagem)}}"
+        value="{{ date('H:i', strtotime(old('hora_descolagem',$movimento->hora_descolagem))) }}"
         required
     />
 </div>
@@ -33,9 +33,9 @@
 <div class="form-group">
     <label for="inputHoraAterragem">Hora aterragem</label>
     <input
-        type="text" class="form-control"
+        type="time" class="form-control"
         name="horaAterragem" id="inputhoraAterragem"
-        value="{{old('hora_aterragem',$movimento->hora_aterragem)}}"
+        value="{{ date('H:i', strtotime(old('hora_aterragem',$movimento->hora_aterragem))) }}"
         required
     />
 </div>
@@ -109,8 +109,8 @@
         <label for="inputTipoInstrucao">Instrutor</label>
         <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
             <option disabled selected> -- select an option -- </option>
-            <option value="D" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
-            <option value="S" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
+            <option value="D" {{ old('instrutor', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
+            <option value="S" {{ old('instrutor', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
         </select>
     </div>
 </div>

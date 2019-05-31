@@ -24,12 +24,12 @@ class AeronaveStorageRequest extends FormRequest
     public function rules()
     {
         return [
-            'matricula' => 'sometimes|required|unique:aeronaves,matricula',
+            'matricula' => 'required|unique:aeronaves,matricula',
             'marca' => 'required|min:3',
             'modelo' => 'required|min:3',
-            'num_lugares' => 'required',
-            'conta_horas' => 'required',
-            'preco_hora' => 'required'
+            'num_lugares' => 'required|integer',
+            'conta_horas' => 'required|integer',
+            'preco_hora' => 'required|numeric'
         ];
     }
 
@@ -42,8 +42,11 @@ class AeronaveStorageRequest extends FormRequest
             'modelo.required' => 'O modelo é requerido',
             'modelo.min' => 'O modelo é muito curto',
             'num_lugares.required' => 'O número de lugares é requerido',
+            'num_lugares.numeric' => 'O número de lugares é inválido',
             'conta_horas.required' => 'O conta horas é requerido',
-            'preco_hora.required' => 'O preco por hora é requerido'
+            'conta_horas.numeric' => 'O conta horas é inválido',
+            'preco_hora.required' => 'O preco por hora é requerido',
+            'preco_hora.numeric' => 'O preco por hora é inválido'
         ];
     }
 }

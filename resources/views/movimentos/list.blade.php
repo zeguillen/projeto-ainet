@@ -102,24 +102,24 @@
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado == 1 ? 'Sim' : 'Não'}}</td>
             <td>
-                @if ($movimento->confirmado && ($movimento->piloto_id != Auth::user()->id || $movimento->instrutor_id != Auth::user()->id))
-                    <button class="btn btn-secondary btn-sm disabled" disabled>
-                        Edit
-                    </button>
-                @else
+                @if ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id))
                     <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
                         Edit
                     </a>
+                @else
+                    <button class="btn btn-secondary btn-sm disabled" disabled>
+                        Edit
+                    </button>
                 @endif
             </td>
             <td>    
                 <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="form-inline">
                     @csrf
                     @method('DELETE')
-                    @if ($movimento->confirmado && ($movimento->piloto_id != Auth::user()->id || $movimento->instrutor_id != Auth::user()->id))
-                        <input class="btn btn-secondary btn-sm" type="submit" value="Delete" disabled/>
-                    @else
+                    @if ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id))
                         <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
+                    @else
+                        <input class="btn btn-secondary btn-sm" type="submit" value="Delete" disabled/>
                     @endif
                 </form>
             </td>

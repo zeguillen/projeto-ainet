@@ -294,30 +294,6 @@
         />
     </div>
 
-    <div class="form-group">
-        <label>Cópia Digital da Licença</label><br>
-
-        @if(file_exists(storage_path('app/docs_piloto/licenca_'. $user->id .'.pdf')))
-        <a class="btn btn-primary" href="{{route('ver.licenca', ['piloto'=>$user->id])}}" target="_blank">Ver licença</a>
-        <a class="btn btn-primary" href="{{route('transferir.licenca', ['piloto'=>$user->id])}}" target="_blank">Transferir licença</a>
-        @else
-        <a class="btn btn-primary disabled">Ver licença</a>
-        <a class="btn btn-primary disabled">Transferir licença</a>
-        @endif
-
-    </div>
-
-    <div class="form-group">
-        <label>Cópia Digital do Certificado</label><br>
-
-        @if(file_exists(storage_path('app/docs_piloto/certificado_'. $user->id .'.pdf')))
-        <a class="btn btn-primary" href="{{route('ver.certificado', ['piloto'=>$user->id])}}" target="_blank">Ver certificado</a>
-        <a class="btn btn-primary" href="{{route('transferir.certificado', ['piloto'=>$user->id])}}" target="_blank">Transferir certificado</a>
-        @else
-        <a class="btn btn-primary disabled">Ver certificado</a>
-        <a class="btn btn-primary disabled">Transferir certificado</a>
-        @endif
-
-    </div>
+   
 </div>
 @endcan
