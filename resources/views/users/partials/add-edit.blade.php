@@ -63,9 +63,9 @@
         <label for="inputTipoSocio">Tipo de sócio</label>
         <select name="tipo_socio" id="inputTipoSocio" class="form-control" onchange="changeType()">
             <option disabled selected> -- select an option -- </option>
-            <option value="P" {{ old('type', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
-            <option value="NP" {{ old('type', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
-            <option value="A" {{ old('type', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
+            <option value="P" {{ old('tipo_socio', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
+            <option value="NP" {{ old('tipo_socio', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
+            <option value="A" {{ old('tipo_socio', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
         </select>
     </div>
 @endif
@@ -75,7 +75,7 @@
     <input
         type="text" class="form-control"
         name="nome_informal" id="inputNomeInformal"
-        placeholder="Nome Informal" value="{{old('nomeinformal',$user->nome_informal)}}"
+        placeholder="Nome Informal" value="{{old('nome_informal',$user->nome_informal)}}"
         required
     />
 </div>
@@ -85,7 +85,7 @@
     <input
         type="text" class="form-control"
         name="name" id="inputFullname"
-        placeholder="Nome Completo" value="{{old('fullname',$user->name)}}"
+        placeholder="Nome Completo" value="{{old('name',$user->name)}}"
         required
     />
 </div>
@@ -195,19 +195,23 @@
     <label>Sócio Ativo?</label><p>{{old('Ativacao',$user->ativo) == 1 ? 'Sim' : 'Não'}}</p>
     <br>
 @else
-    <label for="inputoAtivo">Estado do sócio</label>
-    <select name="ativo" id="inputoAtivo" class="form-control">
-        <option disabled selected> -- select an option -- </option>
-        <option value="0">Não ativo</option>
-        <option value="1">Ativo</option>
-    </select>
+    <div class="form-group">
+        <label for="inputoAtivo">Estado do sócio</label>
+        <select name="ativo" id="inputoAtivo" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="0" {{ old('ativo', $user->ativo) == '0' ? "selected" : "" }}>Não ativo</option>
+            <option value="1" {{ old('ativo', $user->ativo) == '1' ? "selected" : "" }}>Ativo</option>
+        </select>
+    </div>
     
-    <label for="inputEstadoQuotas">Estado das quotas</label>
-    <select name="quota_paga" id="inputEstadoQuotas" class="form-control">
-        <option disabled selected> -- select an option -- </option>
-        <option value="0">Por pagar</option>
-        <option value="1">Pagas</option>
-    </select>
+    <div class="form-group">
+        <label for="inputEstadoQuotas">Estado das quotas</label>
+        <select name="quota_paga" id="inputEstadoQuotas" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="0" {{ old('quota_paga', $user->ativo) == '0' ? "selected" : "" }}>Por pagar</option>
+            <option value="1" {{ old('quota_paga', $user->ativo) == '1' ? "selected" : "" }}>Pagas</option>
+        </select>
+    </div>
 @endif
 
 @if ($user->num_socio == null)
@@ -215,8 +219,8 @@
         <label for="inputDirecao">Pertence á Direção?</label>
         <select name="direcao" id="inputDirecao" class="form-control">
             <option disabled selected> -- select an option -- </option>
-            <option value="0">Não</option>
-            <option value="1">Sim</option>
+            <option value="0" {{ old('direcao', $user->direcao) == '0' ? "selected" : "" }}>Não</option>
+            <option value="1" {{ old('direcao', $user->direcao) == '1' ? "selected" : "" }}>Sim</option>
         </select>
     </div>
 @else

@@ -56,7 +56,7 @@ class UserStorageRequest extends FormRequest
 
     public function messages(){
         return [
-            'num_socio.unique' => 'O nome de sócio já se encontra em uso',
+            'num_socio.unique' => 'O número de sócio já se encontra em uso',
             'num_socio.required' => 'O nome de sócio é requerido',
             'name.regex' => 'O nome só pode conter letras e espaços',
             'name.required' => 'O nome é requerido',

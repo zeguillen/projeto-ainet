@@ -77,19 +77,21 @@ class UserController extends Controller
             Storage::disk('public')->delete('fotos/'.$socio->foto_url);
         }
 
-        if($request->hasFile('file_foto') && $foto->isValid()){
+        if($foto->hasFile('file_foto') && $foto->isValid()){
             $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . $foto->hashName() . '.jpg');
         }
 
-        $socio->fill($request->all()->except('foto_url', 'password'));
-        $socio->foto_url = $path;
+        $socio->fill($request->except('foto_url', 'password'));
+        if($socio->foto_url != null){
+            $socio->foto_url = $path;
+        }
         $socio->password = Hash::make($socio->password);
         $socio->save();
 
         // Enviar email para activação
         $socio->sendEmailVerificationNotification();
 
-        return redirect()->route('users.index')->with('success', "User successfully created");
+        return redirect()->route('users.index')->with('success', "Sócio criado com sucesso");
     }
 
     public function edit(User $socio)
@@ -107,7 +109,7 @@ class UserController extends Controller
     {
         $this->authorize('update', User::class);
         $validated = $request->validated();
-        
+
         $foto = $request->file_foto;
 
         if (!is_null($socio->foto_url) && $request->hasFile('file_foto')) {

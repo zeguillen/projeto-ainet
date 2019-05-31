@@ -10,6 +10,12 @@ class AeronavePolicy
 {
     use HandlesAuthorization;
 
+    public function before($user, $ability){
+        if  ($user->direcao){
+            return true;
+        }
+    }
+    
     /**
      * Determine whether the user can view the aeronave.
      *
