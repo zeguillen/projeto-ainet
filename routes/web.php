@@ -60,5 +60,5 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	Route::get('/movimentos/estatisticas', 'MovimentoController@estatisticas')->name('movimentos.estatisticas');
 
 	//pendentes
-	Route::get('/pendentes', 'PendenteController@index')->name('pendentes.index');
+	Route::get('/pendentes', 'UserController@assuntosPendentes')->name('acesso.pendentes');
 });

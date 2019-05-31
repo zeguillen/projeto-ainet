@@ -54,4 +54,9 @@ class UserPolicy
     {
         return false;
     }
+
+    public function acessoPendentes(User $user) 
+    {
+        return false;
+    }
 }
