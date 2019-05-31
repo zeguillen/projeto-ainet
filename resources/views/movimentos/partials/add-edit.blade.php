@@ -1,3 +1,15 @@
+<script>
+    function changeType() {
+        var select = document.getElementById("inputNatureza");
+        var selected = select.options[select.selectedIndex].value;
+        if(selected !== "I") {
+            document.getElementById("camposInstrucao").style.display="none";
+        } else {
+            document.getElementById("camposInstrucao").style.display="block";
+        }
+    }
+</script>
+
 <div class="form-group">
     <label for="inputDataVoo">Data do voo</label>
     <input
@@ -75,12 +87,32 @@
 
 <div class="form-group">
     <label for="inputNatureza">Natureza do voo</label>
-    <select name="type" id="inputNatureza" class="form-control">
+    <select name="natureza" id="inputNatureza" class="form-control" onchange="changeType()">
         <option disabled selected> -- select an option -- </option>
-        <option value="0" {{ old('natureza', $movimento->natureza) == 'T' ? "selected" : "" }}>Treino</option>
-        <option value="1" {{ old('natureza', $movimento->natureza) == 'I' ? "selected" : "" }}>Instrução</option>
-        <option value="2" {{ old('natureza', $movimento->natureza) == 'E' ? "selected" : "" }}>Especial</option>
+        <option value="T" {{ old('natureza', $movimento->natureza) == 'T' ? "selected" : "" }}>Treino</option>
+        <option value="I" {{ old('natureza', $movimento->natureza) == 'I' ? "selected" : "" }}>Instrução</option>
+        <option value="E" {{ old('natureza', $movimento->natureza) == 'E' ? "selected" : "" }}>Especial</option>
     </select>
+</div>
+
+<div id="camposInstrucao">
+    <div class="form-group">
+        <label for="inputTipoInstrucao">Tipo de Instrução</label>
+        <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="D" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
+            <option value="S" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="inputTipoInstrucao">Instrutor</label>
+        <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
+            <option disabled selected> -- select an option -- </option>
+            <option value="D" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
+            <option value="S" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
+        </select>
+    </div>
 </div>
 
 <div class="form-group">
@@ -198,14 +230,3 @@
     <label for="inputObservacoes">Observações</label>
     <textarea name="observacoes" id="inputObservacoes" cols="30" rows="10" class="form-control">{{ old('observacoes', $movimento->observacoes) }}</textarea>
 </div>
-
-
-
-
-
-
-
-
-
-
-

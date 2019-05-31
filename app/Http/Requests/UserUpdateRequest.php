@@ -42,14 +42,14 @@ class UserUpdateRequest extends FormRequest
             'file_licenca' => 'nullable|mimes:pdf|max:2048',
             'file_certificado' => 'nullable|mimes:pdf|max:2048',
             'num_socio' => 'sometimes|nullable|unique:users,num_socio,'.$this->socio->num_socio.'|integer|min:0',
-            'num_licenca' => 'nullable|max:30|unique:users,num_licenca',
-            'num_certificado' => 'nullable|max:30|unique:users,num_certificado',
+            'num_licenca' => 'nullable|max:30|unique:users,num_licenca,'.$this->socio->num_licenca.',num_licenca',
+            'num_certificado' => 'nullable|max:30|unique:users,num_certificado,'.$this->socio->num_certificado.',num_certificado',
             'tipo_licenca' => 'nullable|exists:tipos_licencas,code|max: 20',
             'classe_certificado' => 'nullable|exists:classes_certificados,code|max: 20',
             'licenca_confirmada' => 'nullable|in:0,1',
             'certificado_confirmado' => 'nullable|in:0,1',
-            'validade_certificado' => 'nullable|date|after:today|date_format: Y-m-d',
-            'validade_licenca' => 'nullable|date|after:today|date_format: Y-m-d',
+            'validade_certificado' => 'sometimes|nullable|date|after:today',
+            'validade_licenca' => 'sometimes|nullable|date|after:today',
         ];
     }
 

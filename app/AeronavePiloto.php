@@ -12,5 +12,8 @@ class AeronavePiloto extends Model
         'matricula', 'piloto_id'
     ];
 
-    
+    public function user()
+	{
+	  return $this->belongsTo('App\User', 'piloto_id');
+	}
 }

@@ -105,10 +105,10 @@ class AeronaveController extends Controller
 
     public function pilotosAutorizados(Request $request) 
     {   
-        $matricula = request()->route('matricula');
+        $matricula = request()->route('aeronave');
 
         $pilotos = AeronavePiloto::where('matricula', $matricula)->paginate(10);
-
+        
         return view('aeronaves.pilotosAutorizados', compact('pilotos'));
     }
 
