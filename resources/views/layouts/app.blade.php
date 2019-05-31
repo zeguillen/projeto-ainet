@@ -60,6 +60,11 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link p-2" href="/pendentes">
+                                    Assuntos Pendentes
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link p-2" href="/movimentos/estatisticas">
                                     Estatisticas dos Movimentos
                                 </a>
