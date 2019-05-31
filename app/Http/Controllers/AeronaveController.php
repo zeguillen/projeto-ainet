@@ -113,7 +113,7 @@ class AeronaveController extends Controller
     }
 
     public function naoAutorizarPiloto(Request $request){
-        $matricula = request()->route('matricula');
+        $matricula = request()->route('aeronave');
         $piloto = request()->route('piloto');
 
         AeronavePiloto::where('matricula', $matricula)->where('piloto_id', $piloto)->delete();
