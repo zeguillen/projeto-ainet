@@ -113,6 +113,7 @@ class MovimentoController extends Controller
 
     public function estatisticas(Request $request)
     {
+        //primeiro aeronave mes ano
         $years = DB::select('SELECT DISTINCT YEAR(data) AS "year" FROM movimentos ORDER BY YEAR(data) DESC');
 
         if ($request->filled('ano')) {
@@ -122,15 +123,13 @@ class MovimentoController extends Controller
 
             //chart ------------------------------------------------------------
 
-            $lava = new Lavacharts; // See note below for Laravel
+            $horasAeronaveMesAno = \Lava::DataTable();
 
-            $horasDeVoo = $lava->DataTable();
-
-            $horasDeVoo->addStringColumn('Mês');
+            $horasAeronaveMesAno->addStringColumn('Mês');
 
             $aeronaves = DB::select('SELECT DISTINCT aeronave FROM movimentos WHERE YEAR(data) = "'.$request->ano.'"');
             foreach ($aeronaves as $aeronave) {
-                $horasDeVoo->addNumberColumn($aeronave->aeronave);
+                $horasAeronaveMesAno->addNumberColumn($aeronave->aeronave);
             }
 
             $maxMonth = 0;
@@ -146,17 +145,17 @@ class MovimentoController extends Controller
 
             $data = [];
             for ($i = $minMonth; $i <= $maxMonth; $i++) {
-                array_push($data, $i);
+                array_push($data, date("F", mktime(0, 0, 0, $i, 10)));
                 foreach ($aeronaves_mes_ano as $aeronave_mes_ano) {
                     if($aeronave_mes_ano->mes == $i) {
                         array_push($data, $aeronave_mes_ano->tempo);
                     }
                 }
-                $horasDeVoo->addRow($data);
+                $horasAeronaveMesAno->addRow($data);
                 $data = [];
             }
 
-            $lava->ColumnChart('HorasDeVoo', $horasDeVoo, [
+            \Lava::ColumnChart('HorasAeronaveMesAno', $horasAeronaveMesAno, [
                 'title' => 'Horas de Voo',
                 'titleTextStyle' => [
                     'color'    => '#eb6b2c',
@@ -165,10 +164,59 @@ class MovimentoController extends Controller
             ]);
 
             //--------------------------------------------------------
-
-            return view('movimentos.estatisticas', compact('years', 'aeronaves_mes_ano', 'ano'), ["lava"=>$lava]);
         }
 
-        return view('movimentos.estatisticas', compact('years'));
+        //segundo aeronave ano
+        $aeronaves_ano = DB::select('SELECT SUM(tempo_voo) AS "tempo", YEAR(data) AS "ano", aeronave FROM movimentos GROUP BY aeronave, YEAR(data)');
+
+        //chart ------------------------------------------------------------
+
+        $horasAeronaveAno = \Lava::DataTable();
+
+        $horasAeronaveAno->addStringColumn('Ano');
+
+        $aeronaves = DB::select('SELECT DISTINCT aeronave FROM movimentos');
+        foreach ($aeronaves as $aeronave) {
+            $horasAeronaveAno->addNumberColumn($aeronave->aeronave);
+        }
+
+        $maxYear = 0;
+        $minYear = date("Y");
+       
+        foreach ($aeronaves_ano as $aeronave_ano) {
+            if($aeronave_ano->ano > $maxYear) {
+                $maxYear = $aeronave_ano->ano;                 
+            }
+            if($aeronave_ano->ano < $minYear) {
+                $minYear = $aeronave_ano->ano;         
+            }     
+        }
+
+        $data = [];
+        for ($i = $minYear; $i <= $maxYear; $i++) {
+            array_push($data, $i);
+            foreach ($aeronaves_ano as $aeronave_ano) {
+                if($aeronave_ano->ano == $i) {
+                    array_push($data, $aeronave_ano->tempo);
+                }
+            }
+            $horasAeronaveAno->addRow($data);
+            $data = [];
+        }
+
+        \Lava::ColumnChart('HorasAeronaveAno', $horasAeronaveAno, [
+            'title' => 'Horas de Voo',
+            'titleTextStyle' => [
+                'color'    => '#eb6b2c',
+                'fontSize' => 14
+            ]
+        ]);
+
+        //--------------------------------------------------------
+
+        if ($request->filled('ano')) {
+            return view('movimentos.estatisticas', compact('years', 'aeronaves_mes_ano', 'ano', 'aeronaves_ano'));
+        }
+        return view('movimentos.estatisticas', compact('years', 'aeronaves_ano'));
     }
 }
