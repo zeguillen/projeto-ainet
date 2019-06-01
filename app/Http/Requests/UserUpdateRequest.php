@@ -24,7 +24,7 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'num_socio' => 'sometimes|required|unique:users,num_socio',
+            'num_socio' => 'sometimes|required|unique:users,'.$this->socio->num_socio.',num_socio',
             'nome_informal' => 'sometimes|required|min:3|max:40|regex:/^[0-9a-zA-ZÀ-ù\s]+$/',
             'name' => 'sometimes|required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
