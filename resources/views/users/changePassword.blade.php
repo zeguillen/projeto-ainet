@@ -18,7 +18,7 @@
                             <label for="" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="old_password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="old_password" required>
+                                <input id="old_password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password_old" required>
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback" role="alert">

@@ -221,7 +221,7 @@ class UserController extends Controller
                 $socio->certificado_confirmado = 0;
             }
 
-            
+
             //confirmar licenca e certificado manualmente: DIRECAO
             if($request->filled('conf_licenca')) {
                 if($request->conf_licenca == "true") {
@@ -266,15 +266,15 @@ class UserController extends Controller
         ]);
 
         if (!(Hash::check($request->old_password, Auth::user()->password))) {
-            return response()->json(['errors' => ['Old password missmatch']], 400);
+            return redirect()->back()->withErrors(['Old password missmatch']);
         }
 
         if ($request->password == $request->old_password ) {
-            return response()->json(['errors' => ['You can not use the same password']], 400);
+            return redirect()->back()->withErrors(['You can not use the same password']);
         }
 
         if ($request->password != $request->password_confirmation) {
-            return response()->json(['errors' => ['Confirmation password missmatch']], 400);
+            return redirect()->back()->withErrors(['Confirmation password missmatch']);
         }
 
         Auth::user()->password = Hash::make($request->password);
@@ -357,11 +357,11 @@ class UserController extends Controller
 
     public function reenviarEmailAtivacao(User $socio) {
         $this->authorize('updateAll', User::class);
-        
+
         if($socio->ativo) {
             return redirect()->route('users.index')->with('errors',"O Sócio já se encontra ativo");
         }
-        
+
         $socio->sendEmailVerificationNotification();
         return redirect()->route('users.index')->with('success',"Email de ativação enviado");
     }
@@ -379,7 +379,7 @@ class UserController extends Controller
     }
 
     public function autorizarPiloto(Request $request)
-    { 
+    {
         $this->authorize('updateAll', User::class);
 
         $matricula = request()->route('aeronave');
