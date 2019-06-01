@@ -47,6 +47,12 @@
                     <input class="form-check-input" type="radio" name="confirmado" value="true" id="confirmadoSim"><label class="form-check-label mr-2" for="confirmadoSim">Sim</label>
                     <input class="form-check-input" type="radio" name="confirmado" value="false" id="confirmadoNao"><label class="form-check-label" for="confirmadoNao">Não</label>
                 </div>
+                @if(Auth::user()->tipo_socio == "P")
+                <div class="form-group form-check form-check-inline col-auto">
+                    <label class="mr-2">Meus Movimentos:</label>
+                    <input class="form-check-input" type="checkbox" name="meu" value="true" id="meuSim">
+                </div>
+                @endif
                 <div class="form-group col-auto">
                     <button type="submit" class="btn btn-success">Filtrar</button>
                 </div>

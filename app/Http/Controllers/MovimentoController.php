@@ -47,6 +47,11 @@ class MovimentoController extends Controller
                 $query->where('confirmado', 0);
             }
         }
+        if($request->filled('meu')) {
+            if($request->meu == "true") {
+                $query->where('piloto_id', Auth::user()->id)->orWhere('instrutor_id', Auth::user()->id);
+            }
+        }
         if(($request->natureza != "none") && ($request->filled('natureza'))) {
             switch ($request->natureza) {
                 case 'treino':

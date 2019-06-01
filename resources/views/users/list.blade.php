@@ -33,6 +33,9 @@
                     <input type="text" name="num_socio" class="form-control" id="inputNumSocio" placeholder="Número de Sócio"/>
                 </div>
                 <div class="form-group col-auto">
+                    <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email"/>
+                </div>
+                <div class="form-group col-auto">
                     <input type="text" name="nome_informal" class="form-control" id="inputNumSocio" placeholder="Nome Informal"/>
                 </div>
                 <div class="form-group col-auto mr-2">
