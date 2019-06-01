@@ -88,12 +88,21 @@ class MovimentoController extends Controller
         $this->authorize('create', $socio);
 
         $validated = $request->validated();
+        $piloto = User::findOrFail($request->piloto_id);
+        $instrutor = User::findOrFail($request->instrutor_id);
 
+        // Verificar piloto e instrutor
         if($request->piloto_id == $request->instrutor_id){
             return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
         }
 
-        $piloto = User::findOrFail($request->piloto_id);
+        // Verificar se o piloto esta autorizado para a aeronave
+        foreach($piloto->aeronavesPiloto as $aeronavePiloto){
+            if(($request->aeronave != $aeronavePiloto->matricula) && ($piloto->id != $aeronavePiloto->piloto_id)){
+                return redirect()->back()->withErrors(['O piloto selecionado não se encontra autorizado para pilotar a aeronave selecionada']);
+            }
+        }
+
 
         $movimento = new Movimento;
 
