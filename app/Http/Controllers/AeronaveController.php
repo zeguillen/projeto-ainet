@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AeronaveUpdateRequest;
 use App\Http\Requests\AeronaveStorageRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 
 class AeronaveController extends Controller
@@ -107,9 +108,23 @@ class AeronaveController extends Controller
     {   
         $matricula = request()->route('aeronave');
 
-        $pilotos = AeronavePiloto::where('matricula', $matricula)->paginate(10);
+        $autorizados = DB::table('aeronaves_pilotos')->select('piloto_id')->where('matricula', $matricula);
+        $type = "P";
+        $pilotos= DB::table('users')->where('tipo_socio', $type)->whereIn('id', $autorizados)->paginate(10);
+
+        $aut = 1;
         
-        return view('aeronaves.pilotosAutorizados', compact('pilotos'));
+        if($request->filled('autorizado')) {
+            if($request->autorizado == "false") {
+                $autorizados = DB::table('aeronaves_pilotos')->select('piloto_id')->where('matricula', $matricula);
+                $type = "P";
+                $pilotos= DB::table('users')->where('tipo_socio', $type)->whereNotIn('id', $autorizados)->paginate(10);
+
+                $aut = 0;
+            }
+        }
+
+        return view('aeronaves.pilotosAutorizados', compact('pilotos', 'matricula', 'aut'));
     }
 
     public function naoAutorizarPiloto(Request $request){
@@ -119,5 +134,20 @@ class AeronaveController extends Controller
         AeronavePiloto::where('matricula', $matricula)->where('piloto_id', $piloto)->delete();
 
         return redirect()->route('aeronaves.pilotos', compact('matricula'))->with('success',"Piloto eliminado");
+    }
+
+    public function autorizarPiloto(Request $request) {
+        $matricula = request()->route('aeronave');
+        $piloto = request()->route('piloto');
+
+        $aeronavePiloto = new AeronavePiloto;
+
+        $aeronavePiloto->timestamps = false;
+        $aeronavePiloto->matricula = $matricula;
+        $aeronavePiloto->piloto_id = $piloto;
+
+        $aeronavePiloto->save();
+
+        return redirect()->route('aeronaves.pilotos', compact('matricula'))->with('success',"Piloto adicionado");
     }
 }
