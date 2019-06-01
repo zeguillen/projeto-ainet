@@ -12,6 +12,7 @@ class US01Test extends USTestBase
     {
         parent::setUp();
         $this->seedNormalUsers();
+        $this->seedSoftDeletedUser();
     }
 
     public function testExisteRotaGetLogin()
@@ -48,4 +49,12 @@ class US01Test extends USTestBase
             ->assertSuccessfulOrRedirect();
         $this->assertAuthenticatedAs($this->normalUser);
     }
+
+    public function testLoginFalhaComCredenciasUserSoftDeleted()
+    {
+        $response = $this->post('/login', ['email' => $this->softDeletedUser->email, 'password' => '123123123'])
+            ->assertSessionHasErrors('email');
+        $this->assertGuest();
+    }
+
 }

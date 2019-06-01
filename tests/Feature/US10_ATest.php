@@ -3,17 +3,17 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class US10Test extends USTestBase
+class US10_ATest extends USTestBase
 {
     protected function setUp(): void
     {
         parent::setUp();
         $this->seedNormalUsers();
-        $this->seedEmailNaoVerificadoUser();
-        $this->seedDesativadoUser();
+        $this->seedAeronaves();
     }
 
     public function testExisteRotaAeronaves()
@@ -24,15 +24,15 @@ class US10Test extends USTestBase
 
     public function testTotalAeronaves()
     {
-        $total = USTestBase::$totalAeronaves + 1; // + 1 cabeçalho
+        $allMatriculas = DB::table('aeronaves')->whereNull('deleted_at')->pluck('matricula');
+        $total = count($allMatriculas);
         $this->actingAs($this->normalUser)->get('/aeronaves')
                 ->assertStatus(200)
-                ->assertPatternCount('/<tr/u',$total,
-                    "Total de linhas (elementos <tr>) deve ser = $total (1 para o cabeçalho). Nota: Podem ocorrer falhas se $total > nº de linhas por página+1");
+                ->assertSeeAll($allMatriculas, "A lista de aeronaves não apresenta todas as aeronaves (total = $total)");        
     }
 
 
-    public function testMostraAeronave()
+    public function testMostraCamposAeronave()
     {
         $this->actingAs($this->normalUser)->get('/aeronaves')
                 ->assertStatus(200)
@@ -56,24 +56,6 @@ class US10Test extends USTestBase
                 ->assertDontSeeAll([
                     $this->aeronaveDeleted->matricula
                 ]);
+
     }
-
-    // // Protecção de recursos será testada posterioremente
-    // public function testProtecaoGetAeronavesParaAnonimo()
-    // {
-    //     $this->get('/aeronaves')
-    //             ->assertUnauthorized('GET', '/aeronaves');
-    // }
-
-    // public function testProtecaoGetAeronavesParaUserComEmailNaoVerificado()
-    // {
-    //     $this->actingAs($this->emailNaoVerificadoUser)->get('/aeronaves')
-    //             ->assertUnauthorized('GET', '/aeronaves');
-    // }
-
-    // public function testProtecaoGetAeronavesPasswordParaSocioDesativado()
-    // {
-    //     $this->actingAs($this->desativadoUser)->get('/aeronaves')
-    //             ->assertUnauthorized('GET', '/aeronaves');
-    // }
 }
