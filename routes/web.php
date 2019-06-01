@@ -36,6 +36,9 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	Route::patch('/socios/{socio}/ativo', 'UserController@changeAtivo')->name('ativo.change');
 	Route::get('/pilotos/{piloto}/certificado', 'UserController@certificadoPiloto')->name('certificado.piloto');
 	Route::get('/pilotos/{piloto}/licenca', 'UserController@licencaPiloto')->name('licenca.piloto');
+	Route::post('/socios/{socio}/send_reactivate_mail', 'UserController@reenviarEmailAtivacao')->name('reenviar.email');
+	Route::delete('/aeronaves/{aeronave}/pilotos/{piloto}', 'UserController@naoAutorizarPiloto')->name('piloto.naoautorizar');
+	Route::post('/aeronaves/{aeronave}/pilotos/{piloto}', 'UserController@autorizarPiloto')->name('piloto.autorizar');
 
 
 	//aeronaves
@@ -45,8 +48,6 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	Route::get('/aeronaves/{aeronave}/edit', 'AeronaveController@edit')->name('aeronaves.edit');
 	Route::put('/aeronaves/{aeronave}', 'AeronaveController@update')->name('aeronaves.update');
 	Route::get('/aeronaves/{aeronave}/pilotos', 'AeronaveController@pilotosAutorizados')->name('aeronaves.pilotos');
-	Route::delete('/aeronaves/{aeronave}/pilotos/{piloto}', 'AeronaveController@naoAutorizarPiloto')->name('piloto.naoautorizar');
-	Route::post('/aeronaves/{aeronave}/pilotos/{piloto}', 'AeronaveController@autorizarPiloto')->name('piloto.autorizar');
 	Route::delete('/aeronaves/{aeronave}', 'AeronaveController@destroy')->name('aeronaves.destroy');
 
 	//movimentos

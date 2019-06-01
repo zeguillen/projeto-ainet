@@ -294,10 +294,20 @@
         <label>Licença confirmada?</label>
         <input
             type="text" class="form-control"
-            value="{{ old('licenca_confirmado', $user->licenca_confirmado) == 1 ? 'Sim' : 'Não' }}"
+            value="{{ old('licenca_confirmadoa', $user->licenca_confirmada) == 1 ? 'Sim' : 'Não' }}"
             disabled
         />
     </div>
+    
+    @can('updateAll', App\User::class)
+    @if(!$user->licenca_confirmada)
+    <div class="form-row form-inline  align-items-center">
+        <label class="mr-2">Confirmar Licença</label>
+        <input type="checkbox" name="conf_licenca" value="true">
+    </div>
+    <br><br>
+    @endif
+    @endcan
 
     <div class="form-group">
         <label>Cópia Digital da Licença</label>
@@ -353,6 +363,16 @@
             disabled
         />
     </div>
+
+    @can('updateAll', App\User::class)
+    @if(!$user->certificado_confirmado)
+    <div class="form-row form-inline  align-items-center">
+        <label class="mr-2">Confirmar Certificado</label>
+        <input type="checkbox" name="conf_certificado" value="true">
+    </div>
+    <br><br>
+    @endif
+    @endcan
 
     <div class="form-group">
         <label>Cópia Digital do Certificado</label>
