@@ -16,8 +16,8 @@
                         @method('PUT')
                         @include('movimentos.partials.add-edit')
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success" name="ok" value="guardar">Guardar</button>
-                            <button type="submit" class="btn btn-success" name="ok" value="confirmar">Confirmar e Guardar</button>
+                            <button type="submit" class="btn btn-success" name="gravar" value="guardar">Guardar</button>
+                            <button type="submit" class="btn btn-success" name="gravar" value="confirmar">Confirmar e Guardar</button>
                             <a href="{{route('movimentos.index')}}" class="btn btn-default">Cancel</a>
                         </div>
                     </form>

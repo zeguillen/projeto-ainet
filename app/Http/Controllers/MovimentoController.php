@@ -137,7 +137,17 @@ class MovimentoController extends Controller
         // Validar pilot autorizado
 
         // Validar instrutor autorizado
-        $movimento->fill($request->except('hora_descolagem', 'hora_aterragem'));
+
+        //guardar sem confirmar o movimento OU guardar e confirmar o movimento
+        switch($request->input('gravar')) {
+            case 'guardar':
+                $movimento->fill($request->except('hora_descolagem', 'hora_aterragem'));
+                break;
+            case 'confirmar':
+                $movimento->fill($request->except('hora_descolagem', 'hora_aterragem', 'confirmado'));
+                $movimento->confirmado = 1;
+                break;
+        }
 
         $movimento->hora_descolagem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_descolagem));
         $movimento->hora_aterragem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_aterragem));
