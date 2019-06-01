@@ -213,7 +213,7 @@
     <input
         type="number" class="form-control"
         name="preco_voo" id="inputPrecoVoo"
-        min="0"
+        min="0" step="0.1"
         value="{{ old('preco_voo', $movimento->preco_voo) }}"
         required
     />
