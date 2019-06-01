@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	Route::put('/aeronaves/{aeronave}', 'AeronaveController@update')->name('aeronaves.update');
 	Route::get('/aeronaves/{aeronave}/pilotos', 'AeronaveController@pilotosAutorizados')->name('aeronaves.pilotos');
 	Route::delete('/aeronaves/{aeronave}/pilotos/{piloto}', 'AeronaveController@naoAutorizarPiloto')->name('piloto.naoautorizar');
+	Route::post('/aeronaves/{aeronave}/pilotos/{piloto}', 'AeronaveController@autorizarPiloto')->name('piloto.autorizar');
 	Route::delete('/aeronaves/{aeronave}', 'AeronaveController@destroy')->name('aeronaves.destroy');
 
 	//movimentos

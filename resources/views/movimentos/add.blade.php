@@ -35,7 +35,8 @@
                             />
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success" name="inputAdicionar">Adicionar</button>
+                            <button type="submit" class="btn btn-success" name="inputAdicionar" value="add">Adicionar</button>
+                            <button type="submit" class="btn btn-success" name="inputAdicionar" value="confirmar">Confirmar e Adicionar</button>
                             <a href="{{route('users.index')}}" class="btn btn-default">Cancel</a>
                             <!-- <button type="submit" class="btn btn-default" name="cancel">Cancel</button> -->
                         </div>
