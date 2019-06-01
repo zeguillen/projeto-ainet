@@ -260,21 +260,17 @@ class UserController extends Controller
     public function savePassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:8',
             'password_old' => 'required|min:8',
+            'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|min:8'
         ]);
 
         if (!(Hash::check($request->old_password, Auth::user()->password))) {
-            return response()->json(['errors' => ['Old password missmatch']], 400);
+            return redirect()->back()->withErrors(['Password incorrecta']);
         }
 
         if ($request->password == $request->old_password ) {
-            return response()->json(['errors' => ['You can not use the same password']], 400);
-        }
-
-        if ($request->password != $request->password_confirmation) {
-            return response()->json(['errors' => ['Confirmation password missmatch']], 400);
+            return redirect()->back()->withErrors(['Não pode reutilizar passwords']);
         }
 
         Auth::user()->password = Hash::make($request->password);
