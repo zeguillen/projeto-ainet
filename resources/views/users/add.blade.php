@@ -41,6 +41,12 @@
                                 </select>
                             </div>
 
+                            <div class="form-row form-inline  align-items-center">
+                                <label class="mr-2">Confirmar Licença</label>
+                                <input type="checkbox" name="conf_certificado" value="true">
+                            </div>
+                            <br>
+
                             <div class="form-group">
                                 <label>Pode dar instrução?</label>
                                 <select name="instrutor" id="inputInstrutor" class="form-control">
@@ -79,6 +85,12 @@
                                     placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
                                 />
                             </div>
+
+                            <div class="form-row form-inline  align-items-center">
+                                <label class="mr-2">Confirmar Certificado</label>
+                                <input type="checkbox" name="conf_certificado" value="true">
+                            </div>
+                            <br><br>
 
                         </div>
                         @endif

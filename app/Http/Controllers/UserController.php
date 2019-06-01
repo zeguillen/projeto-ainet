@@ -84,6 +84,19 @@ class UserController extends Controller
 
         $socio->fill($request->except('foto_url', 'password'));
         $socio->password = Hash::make($socio->password);
+
+        if($request->filled('conf_licenca')) {
+            if($request->conf_licenca == "true") {
+                $socio->licenca_confirmada = 1;
+            }
+        }
+
+        if($request->filled('conf_certificado')) {
+            if($request->conf_certificado == "true") {
+                $socio->certificado_confirmado = 1;
+            }
+        }
+
         $socio->save();
 
         // Enviar email para activação
@@ -206,6 +219,20 @@ class UserController extends Controller
 
             if($request->filled('num_certficado') || $request->filled('classe_certificado') || $request->filled('validade_certificado')){
                 $socio->certificado_confirmado = 0;
+            }
+
+            
+            //confirmar licenca e certificado manualmente: DIRECAO
+            if($request->filled('conf_licenca')) {
+                if($request->conf_licenca == "true") {
+                    $socio->licenca_confirmada = 1;
+                }
+            }
+
+            if($request->filled('conf_certificado')) {
+                if($request->conf_certificado == "true") {
+                    $socio->certificado_confirmado = 1;
+                }
             }
 
             $socio->save();
