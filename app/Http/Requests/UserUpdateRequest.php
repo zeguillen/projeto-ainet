@@ -25,7 +25,7 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'num_socio' => 'sometimes|required|unique:users,num_socio',
-            'nome_informal' => 'sometimes|required|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
+            'nome_informal' => 'sometimes|required|min:3|max:40|regex:/^[0-9a-zA-ZÀ-ù\s]+$/',
             'name' => 'sometimes|required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
             'telefone' => 'nullable|min:9|max:20',
@@ -33,7 +33,7 @@ class UserUpdateRequest extends FormRequest
             'sexo' => 'sometimes|required|in:F,M',
             'endereco' => 'nullable|',
             'data_nascimento' => 'sometimes|required|date_format:Y-m-d|before:18 years ago',
-            'email' => 'nullable|email|unique:users,email,'.$this->socio->email.',email',
+            'email' => 'sometimes|required|email|unique:users,email,'.$this->socio->email.',email',
             'tipo_socio' => 'sometimes|required|in:P,NP,A',
             'ativo' => 'sometimes|required|in:0,1',
             'quota_paga' => 'sometimes|required|in: 0,1',
