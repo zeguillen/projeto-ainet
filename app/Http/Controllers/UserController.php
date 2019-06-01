@@ -327,4 +327,15 @@ class UserController extends Controller
         return view('users.pendentes', compact('movimentos', 'users'));
     }
 
+    public function reenviarEmailAtivacao(User $socio) {
+        $this->authorize('updateAll', User::class);
+        
+        if($socio->ativo) {
+            return redirect()->route('users.index')->with('errors',"O Sócio já se encontra ativo");
+        }
+        
+        $socio->sendEmailVerificationNotification();
+        return redirect()->route('users.index')->with('success',"Email de ativação enviado");
+    }
+
 }
