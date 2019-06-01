@@ -28,8 +28,11 @@ class UserController extends Controller
         if($request->filled('num_socio')) {
             $query->where('num_socio', $request->num_socio);
         }
+        if($request->filled('email')) {
+            $query->where('email', 'LIKE', '%' . $request->email . '%');
+        }
         if($request->filled('nome_informal')) {
-            $query->where('nome_informal', 'LIKE', $request->nome_informal . '%');
+            $query->where('nome_informal', 'LIKE', '%' . $request->nome_informal . '%');
         }
         if(($request->tipo_socio != "none") && ($request->filled('tipo_socio'))) {
             switch ($request->tipo_socio) {
