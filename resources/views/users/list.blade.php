@@ -7,10 +7,10 @@
 @endif
 
 <div class="action-buttons">
-    @can('create', App\User::class) 
+    @can('create', App\User::class)
     <a class="btn btn-primary mr-2 float-left" href="{{route('users.create')}}">Adicionar sócio</a>
     @endcan
-    @can('updateAll', App\User::class) 
+    @can('updateAll', App\User::class)
     <form action="{{route('quotas.reset')}}" method="post" class="form-inline float-left mr-2">
             @csrf
             @method('PATCH')
@@ -37,7 +37,7 @@
                 </div>
                 <div class="form-group col-auto mr-2">
                     <select name="tipo_socio" class="form-control" id="inputType">
-                        <option value="none" disabled selected>Tipo de sócio</option>  
+                        <option value="none" disabled selected>Tipo de sócio</option>
                         <option value="piloto">Piloto</option>
                         <option value="nao_piloto">Não Piloto</option>
                         <option value="aeromodelista">Aeromodelista</option>
@@ -52,7 +52,7 @@
                 <div class="form-group col-auto">
                     <button type="submit" class="btn btn-success">Filtrar</button>
                 </div>
-            
+
             </div>
         </form>
     </div>
@@ -72,7 +72,7 @@
             <th>Quotas</th>
             <th>Estado</th>
             @endcan
-            
+
         </tr>
     </thead>
     <tbody>
@@ -98,7 +98,7 @@
                 @endif
                 </div>
             </td>
-            
+
             <td>
             <!-- fill with edit and delete actions -->
                 @can('update', $user)
@@ -123,7 +123,7 @@
                 @endcan
             </td>
             @can('updateAll', App\User::class)
-            <td> 
+            <td>
                 <form  action=" {{route('quota.change', ['socio'=>$user->id])}} " method="post">
                     @csrf
                     @method('PATCH')
@@ -136,7 +136,7 @@
                 </form>
             </td>
 
-            <td> 
+            <td>
                 <form  action=" {{route('ativo.change', ['socio'=>$user->id])}} " method="post">
                     @csrf
                     @method('PATCH')

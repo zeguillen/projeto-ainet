@@ -10,9 +10,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\UserUpdateRequest;
 
+use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UserStorageRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -68,23 +69,19 @@ class UserController extends Controller
     public function store(UserStorageRequest $request)
     {
         $this->authorize('create', User::class);
+
         $validated = $request->validated();
 
         $socio = new User;
         $foto = $request->file_foto;
 
-        if (!is_null($socio->foto_url) && $request->hasFile('file_foto')) {
-            Storage::disk('public')->delete('fotos/'.$socio->foto_url);
-        }
-
-        if($foto->hasFile('file_foto') && $foto->isValid()){
-            $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . $foto->hashName() . '.jpg');
+        return var_dump($request->file_foto);
+        if(is_null($foto) != true && $foto->isValid()){
+            $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension());
+            $socio->foto_url = $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension();
         }
 
         $socio->fill($request->except('foto_url', 'password'));
-        if($socio->foto_url != null){
-            $socio->foto_url = $path;
-        }
         $socio->password = Hash::make($socio->password);
         $socio->save();
 
@@ -107,23 +104,115 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, User $socio)
     {
-        $this->authorize('update', User::class);
-        $validated = $request->validated();
+        $this->authorize('update', $socio, User::class);
 
-        $foto = $request->file_foto;
+        // Admin pode alterar tudo
+        if(Auth::user()->direcao){
+            $validated = $request->validated();
 
-        if (!is_null($socio->foto_url) && $request->hasFile('file_foto')) {
-            Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+            $foto = $request->file_foto;
+
+            if(is_null($foto) != true && $foto->isValid()){
+                if (!is_null($socio->foto_url) && $request->hasFile('file_url')) {
+                    Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+                }
+                $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension());
+                $socio->foto_url = $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension();
+            }
+
+            $socio->fill($request->except('foto_url'));
+            $socio->save();
+
         }
 
-        if($request->hasFile('file_foto') && $foto->isValid()){
-            $path = Storage::putFileAs('public/fotos', $foto, $user->id . '_' . $foto->hashName() . '.jpg');
+        // User qualquer
+        if (Auth::user()->can('update', $socio, User::class)){
+            $validated = $request->validated();
+
+            $foto = $request->file_foto;
+
+            if(is_null($foto) != true && $foto->isValid()){
+                if (!is_null($socio->foto_url) && $request->hasFile('file_url')) {
+                    Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+                }
+                $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension());
+                $socio->foto_url = $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension();
+            }
+
+            $socio->fill($request->only('nome_informal', 'name', 'email', 'file_foto', 'data_nascimento', 'nif', 'telefone', 'endereco'));
+
+            $socio->save();
+
         }
 
-        $socio->fill($request->all()->except('foto_url'));
-        $socio->foto_url = $path;
-        $socio->save();
+        // Um piloto
+        if(Auth::user()->can('updatePiloto', $socio, User::class)){
+            $validated = $request->validated();
+
+            $foto = $request->file_foto;
+            $certificado = $request->file_certificado;
+            $licenca = $request->file_licenca;
+
+            // Foto
+            if(is_null($foto) != true && $foto->isValid()){
+                if (!is_null($socio->foto_url) && $request->hasFile('file_url')) {
+                    Storage::disk('public')->delete('fotos/'.$socio->foto_url);
+                }
+                $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension());
+                $socio->foto_url = $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension();
+            }
+
+            // Certificado
+            if(is_null($certificado) != true && $certificado->isValid()){
+                if (file_exists(storage_path('app/docs_piloto/certificado_'. $socio->id .'.pdf')) && $request->hasFile('file_url')) {
+                    Storage::disk('local')->delete('docs_piloto', $certificado, 'certificado_'. $socio->id . '.' . $certificado->getClientOriginalExtension());
+                }
+                $path = Storage::putFileAs('docs_piloto', $certificado, 'certificado_'. $socio->id . '.' .  $certificado->getClientOriginalExtension());
+            }
+
+            // Licença
+            if(is_null($licenca) != true && $licenca->isValid()){
+                if (file_exists(storage_path('app/docs_piloto/licenca_'. $socio->id .'.pdf')) && $request->hasFile('file_url')) {
+                    Storage::disk('local')->delete('docs_piloto', $licenca, 'licenca_'. $socio->id . '.' . $licenca->getClientOriginalExtension());
+                }
+                $path = Storage::putFileAs('docs_piloto', $licenca, 'licenca_'. $socio->id . '.' .  $licenca->getClientOriginalExtension());
+            }
+
+            // Validar Instrutor Aluno
+            if(($request->instrutor == 1) && ($request->tipo_licenca === "ALUNO-PPL(A)" || $request->tipo_licenca === "ALUNO-PU")){
+                return redirect()->back()->withErrors(['O sócio não pode ser instrutor e aluno']);
+            }
+
+            $socio->fill($request->only('nome_informal', 'name', 'email', 'file_foto', 'data_nascimento', 'nif', 'telefone', 'endereco', 'num_licenca', 'tipo_licenca', 'instrutor', 'file_licenca', 'num_certificado', 'classe_certficiado', 'validade_certificado', 'file_certificado'));
+
+            $socio->nome_informal = $request->nome_informal;
+            $socio->name = $request->name;
+            $socio->email = $request->email;
+            $socio->data_nascimento = $request->data_nascimento;
+            $socio->nif = $request->nif;
+            $socio->telefone = $request->telefone;
+            $socio->endereco = $request->endereco;
+            $socio->num_licenca = $request->num_licenca;
+            $socio->tipo_licenca = $request->tipo_licenca;
+            $socio->instrutor = $request->instrutor;
+            $socio->num_certificado = $request->num_certificado;
+            $socio->classe_certificado = $request->classe_certificado;
+            $socio->validade_certificado = $request->validade_certificado;
+
+            if($request->filled('num_licenca') || $request->filled('tipo_licenca') || $request->filled('instrutor')){
+                $socio->licenca_confirmada = 0;
+            }
+
+            if($request->filled('num_certficado') || $request->filled('classe_certificado') || $request->filled('validade_certificado')){
+                $socio->certificado_confirmado = 0;
+            }
+
+            $socio->save();
+        }
+
+
         return redirect()->route('users.index')->with('success',"Sócio atualizado com sucesso");
+
     }
 
     public function destroy(User $socio)
@@ -131,7 +220,7 @@ class UserController extends Controller
         $this->authorize('delete', User::class);
 
         $socio->delete();
-        
+
         return redirect()->route('users.index')->with('success',"Sócio eliminado com sucesso");
     }
 
@@ -160,7 +249,7 @@ class UserController extends Controller
             return response()->json(['errors' => ['Confirmation password missmatch']], 400);
         }
 
-        Auth::user()->password = Hash::make($request->password);;
+        Auth::user()->password = Hash::make($request->password);
         Auth::user()->save();
 
         return redirect()->route('home')->with('success',"Password updated");
@@ -218,23 +307,11 @@ class UserController extends Controller
     }
 
     public function certificadoPiloto(Request $request, $piloto){
-        switch($request->certificado){
-            case 'verCertificado':
-                return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
-                break;
-            case 'transferirCertificado':
-                return response()->download(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
-                break;
-        }
+        return response()->file(storage_path('app/docs_piloto/certificado_'. $piloto .'.pdf'));
     }
 
     public function licencaPiloto(Request $request, $piloto){
-        switch($request->licenca){
-            case 'verLicenca':
-                return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
-            case 'transferirLicenca':
-                return response()->download(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
-        }
+        return response()->file(storage_path('app/docs_piloto/licenca_'. $piloto .'.pdf'));
     }
 
     public function assuntosPendentes() {

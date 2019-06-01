@@ -1,6 +1,9 @@
 @extends('layouts.app')
-
 @section('content')
+
+@if ($errors->any())
+    @include('common.errors')
+@endif
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">

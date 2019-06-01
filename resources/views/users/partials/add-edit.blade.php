@@ -52,7 +52,7 @@
 @else
     <div class="form-group">
         <label for="inputNumeroSocio">Nº de sócio</label>
-        <input 
+        <input
             type="number" class="form-control"
             name="num_socio" id="inputNumeroSocio"
             placeholder="#" value="{{old('num_socio', $user->num_socio)}}"
@@ -90,43 +90,6 @@
     />
 </div>
 
-
-
-@if ($user->num_socio == null)
-    <div class="form-group">
-        <label for="inputSexo">Sexo</label>
-        <select name="sexo" id="inputSexo" class="form-control">
-            <option disabled selected> -- select an option -- </option>
-            <option value="F">Feminino</option>
-            <option value="M">Masculino</option>
-        </select>
-    </div>
-@else
-    <label>Sexo:</label>
-    <p>
-    @switch(old('Sexo',$user->sexo))
-    @case('F')
-        Feminino
-        @break
-
-    @case('M')
-        Masculino
-        @break
-    @endswitch
-    </p>
-    <br>
-@endif
-
-<div class="form-group">
-    <label for="inputDataNascimento">Data Nascimento</label>
-    <input
-        type="date" class="form-control"
-        name="data_nascimento" id="inputDataNascimento"
-        placeholder="Data Nascimento" value="{{old('DataNascimento',$user->data_nascimento)}}"
-        required
-    />
-</div>
-
 <div class="form-group">
     <label for="inputEmail">Email</label>
     <input
@@ -149,10 +112,20 @@
 
 <div class="form-group">
     <div style="max-width: 100px;">
-    @if ($user->foto_url != null)
-    <img id="profilePicture" src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
-    @endif
+        @if ($user->foto_url != null)
+        <img id="profilePicture" src="/storage/fotos/{{ $user->foto_url }}" alt="Profile Picture" width="100%">
+        @endif
     </div>
+</div>
+
+<div class="form-group">
+    <label for="inputDataNascimento">Data Nascimento</label>
+    <input
+        type="date" class="form-control"
+        name="data_nascimento" id="inputDataNascimento"
+        placeholder="Data Nascimento" value="{{old('DataNascimento',$user->data_nascimento)}}"
+        required
+    />
 </div>
 
 <div class="form-group">
@@ -162,9 +135,8 @@
         name="nif" id="inputNIF"
         placeholder="NIF" value="{{old('nif',$user->nif)}}"
         required
-    />
-</div>
-
+        />
+    </div>
 
 <div class="form-group">
     <label for="inputTelefone">Telefone</label>
@@ -188,6 +160,40 @@
     />
 </div>
 
+
+
+
+
+<div class="form-group">
+@if ($user->num_socio == null)
+    <label for="inputSexo">Sexo</label>
+    <select name="sexo" id="inputSexo" class="form-control">
+        <option disabled selected> -- select an option -- </option>
+        <option value="F" {{ old('sexo', $user->sexo) == 'F' ? 'selected' : ''}}>Feminino</option>
+        <option value="M" {{ old('sexo', $user->sexo) == 'M' ? 'selected' : ''}}>Masculino</option>
+    </select>
+@else
+    <label>Sexo:</label>
+    <p>
+        @switch(old('Sexo',$user->sexo))
+        @case('F')
+        Feminino
+        @break
+
+        @case('M')
+        Masculino
+        @break
+        @endswitch
+    </p>
+@endif
+</div>
+
+
+
+
+
+
+
 @if ($user->num_socio != null)
     <label>Estado das quotas:</label><p>{{old('Quotas',$user->quota_paga) == 1 ? 'Em dia' : 'Não pagas'}}</p>
     <br>
@@ -203,7 +209,7 @@
             <option value="1" {{ old('ativo', $user->ativo) == '1' ? "selected" : "" }}>Ativo</option>
         </select>
     </div>
-    
+
     <div class="form-group">
         <label for="inputEstadoQuotas">Estado das quotas</label>
         <select name="quota_paga" id="inputEstadoQuotas" class="form-control">
@@ -229,8 +235,9 @@
 @endif
 
 
-@can('viewPiloto', Auth::user())
-<div id="camposPiloto" style="display: none;">
+@if($user->tipo_socio == 'P')
+@can('viewPiloto', $user)
+<div id="camposPiloto">
     <h5>Informação de Piloto</h5>
 
     @if (count($user->aeronaves) > 0)
@@ -275,17 +282,37 @@
 
     <div class="form-group">
         <label>Pode dar instrução?</label>
-        @if ($user->id != null)
-        <input
-            type="text" class="form-control"
-            value="{{ old('instrutor', $user->instrutor) == 1 ? 'Sim' : 'Não' }}" disabled
-        />
-        @else
+
         <select name="instrutor" id="inputInstrutor" class="form-control">
             <option disabled selected> -- selecione uma opção --</option>
-            <option value="0">Não</option>
-            <option value="1">Sim</option>
+            <option value="0" {{old('instrutor', $user->instrutor) == '0' ? 'selected' : ''}}>Não</option>
+            <option value="1" {{old('instrutor', $user->instrutor) == '1' ? 'selected' : ''}}>Sim</option>
         </select>
+    </div>
+
+    <div class="form-group">
+        <label>Licença confirmada?</label>
+        <input
+            type="text" class="form-control"
+            value="{{ old('licenca_confirmado', $user->licenca_confirmado) == 1 ? 'Sim' : 'Não' }}"
+            disabled
+        />
+    </div>
+
+    <div class="form-group">
+        <label>Cópia Digital da Licença</label>
+        <div class="form-group">
+            <label id="inputLicenca" for="inputImage">Subir/Alterar Licença</label>
+            <input
+                type="file" class="form-control-file"
+                name="file_licenca" id="inputLicenca"
+                enctype='multipart/form-data'
+            />
+        </div>
+        @if(file_exists(storage_path('app/docs_piloto/licenca_'. $user->id .'.pdf')))
+        <a class="btn btn-primary" href="{{route('licenca.piloto', ['piloto'=>$user->id])}}">Ver licença</a>
+        @else
+        <button class="btn btn-primary disabled" disabled>Ver licença</button>
         @endif
     </div>
 
@@ -317,7 +344,7 @@
             placeholder="Validade do certificado" value="{{ old('validade_certificado', $user->validade_certificado) }}"
         />
     </div>
-    @if ($user->id != null)
+
     <div class="form-group">
         <label>Certificado confirmado?</label>
         <input
@@ -326,6 +353,23 @@
             disabled
         />
     </div>
-    @endif
+
+    <div class="form-group">
+        <label>Cópia Digital do Certificado</label>
+        <div class="form-group">
+            <label id="inputCertificado" for="inputImage">Subir/Alterar Certificado</label>
+            <input
+                type="file" class="form-control-file"
+                name="file_certificado" id="inputCertificado"
+                enctype='multipart/form-data'
+            />
+        </div>
+        @if(file_exists(storage_path('app/docs_piloto/certificado_'. $user->id .'.pdf')))
+        <a class="btn btn-primary" href="{{route('certificado.piloto', ['piloto'=>$user->id])}}">Ver certificado</a>
+        @else
+        <button class="btn btn-primary disabled" disabled>Ver certificado</button>
+        @endif
+    </div>
 </div>
 @endcan
+@endif

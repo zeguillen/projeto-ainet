@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	//password
 	Route::get('/password', 'UserController@changePassword')->name('password.change');
 	Route::patch('/password', 'UserController@savePassword')->name('password.save');
-	
+
 	//socios
 	Route::get('/socios', 'UserController@index')->name('users.index');
 	Route::get('/socios/create', 'UserController@create')->name('users.create');
@@ -34,11 +34,11 @@ Route::middleware(['auth', 'verified', 'userAtivo'])->group(function () {
 	Route::patch('/socios/reset_quotas', 'UserController@resetQuotas')->name('quotas.reset');
 	Route::patch('/socios/desativar_sem_quotas', 'UserController@desativarUsersSemQuotas')->name('users.desativar');
 	Route::patch('/socios/{socio}/ativo', 'UserController@changeAtivo')->name('ativo.change');
-	Route::get('/pilotos/{piloto}/certificado', 'UserController@CertificadoPiloto')->name('certificado.piloto');
-	Route::get('/pilotos/{piloto}/licenca', 'UserController@LicencaPiloto')->name('licenca.piloto');
+	Route::get('/pilotos/{piloto}/certificado', 'UserController@certificadoPiloto')->name('certificado.piloto');
+	Route::get('/pilotos/{piloto}/licenca', 'UserController@licencaPiloto')->name('licenca.piloto');
 
 
-	//aeronaves 
+	//aeronaves
 	Route::get('aeronaves', 'AeronaveController@index')->name('aeronaves.index');
 	Route::get('/aeronaves/create', 'AeronaveController@create')->name('aeronaves.create');
 	Route::post('/aeronaves', 'AeronaveController@store')->name('aeronaves.store');

@@ -55,8 +55,16 @@ class UserPolicy
         return false;
     }
 
-    public function acessoPendentes(User $user) 
+    public function acessoPendentes(User $user)
     {
+        return false;
+    }
+
+    public function viewDocumento(User $user, $piloto){
+        if ($user->id == $piloto){
+            return true;
+        }
+
         return false;
     }
 }
