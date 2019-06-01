@@ -53,7 +53,12 @@ class UserController extends Controller
             }
         }
 
-        $users = $query->orderBy('id', 'asc')->paginate(5);
+        if(Auth::user()->direcao) {
+            $users = $query->orderBy('id', 'asc')->paginate(12);
+        } else {
+
+            $users = $query->where('ativo', '=', 1)->orderBy('id', 'asc')->paginate(12);
+        }
         return view('users.list', compact('users'));
     }
 
@@ -118,7 +123,7 @@ class UserController extends Controller
 
     public function update(UserUpdateRequest $request, User $socio)
     {
-        $this->authorize('update', $socio, User::class);
+        $this->authorize('update', $socio);
 
         // Admin pode alterar tudo
         if(Auth::user()->direcao){
@@ -221,7 +226,7 @@ class UserController extends Controller
                 $socio->certificado_confirmado = 0;
             }
 
-
+            
             //confirmar licenca e certificado manualmente: DIRECAO
             if($request->filled('conf_licenca')) {
                 if($request->conf_licenca == "true") {
@@ -353,11 +358,11 @@ class UserController extends Controller
 
     public function reenviarEmailAtivacao(User $socio) {
         $this->authorize('updateAll', User::class);
-
+        
         if($socio->ativo) {
             return redirect()->route('users.index')->with('errors',"O Sócio já se encontra ativo");
         }
-
+        
         $socio->sendEmailVerificationNotification();
         return redirect()->route('users.index')->with('success',"Email de ativação enviado");
     }
@@ -375,7 +380,7 @@ class UserController extends Controller
     }
 
     public function autorizarPiloto(Request $request)
-    {
+    { 
         $this->authorize('updateAll', User::class);
 
         $matricula = request()->route('aeronave');
