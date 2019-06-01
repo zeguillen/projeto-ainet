@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\User;
 use App\Movimento;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Khill\Lavacharts\Lavacharts;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\MovimentoUpdateRequest;
+use App\Http\Requests\MovimentoStorageRequest;
 
 class MovimentoController extends Controller
 {
@@ -74,12 +78,31 @@ class MovimentoController extends Controller
         return view('movimentos.add', compact('movimento', 'aeronaves', 'aerodromos', 'aeronaves_pilotos', 'pilotos'));
     }
 
-    public function store(MovimentoStorageRequest $request)
+    public function store(MovimentoStorageRequest $request, User $socio)
     {
+        $this->authorize('create', $socio);
+
         $validated = $request->validated();
 
+        if($request->piloto_id == $request->instrutor_id){
+            return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
+        }
+
+        $piloto = User::findOrFail($request->piloto_id);
+
         $movimento = new Movimento;
-        $movimento->fill($request->all());
+        $movimento->fill($request->except('hora_aterragem', 'hora_descolagem', 'num_licenca_piloto', 'tipo_licenca_piloto', 'validade_certificado_piloto', 'classe_certificado_piloto', 'validade_certificado_piloto', 'confirmado'));
+        $movimento->hora_descolagem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_descolagem));
+        $movimento->hora_aterragem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_aterragem));
+
+        $movimento->num_licenca_piloto = $piloto->num_licenca;
+        $movimento->tipo_licenca_piloto = $piloto->tipo_licenca;
+        $movimento->validade_licenca_piloto = $piloto->validade_licenca;
+        $movimento->num_certificado_piloto = $piloto->num_certificado;
+        $movimento->classe_certificado_piloto = $piloto->classe_certificado;
+        $movimento->validade_certificado_piloto = $piloto->validade_certificado;
+        $movimento->confirmado = 0;
+
         $movimento->save();
 
         return redirect()->route('movimentos.index')->with('success', "Movimento criado com sucesso");
@@ -92,14 +115,30 @@ class MovimentoController extends Controller
 
         $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
         $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
-        $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto_id')->get();
         $pilotos = DB::table('users')->select('id', 'nome_informal', 'tipo_licenca')->where('tipo_socio', 'P')->get();
 
         return view('movimentos.edit', compact('movimento', 'aeronaves', 'aerodromos', 'pilotos'));
     }
 
-    public function update(Request $request, Movimento $movimento)
+    public function update(MovimentoUpdateRequest $request, Movimento $movimento)
     {
+        $validated = $request->validated();
+
+        // Validar piloto e instrutor
+        if($request->piloto_id == $request->instrutor_id){
+            return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
+        }
+
+        // Validar pilot autorizado
+
+        // Validar instrutor autorizado
+        $movimento->fill($request->except('hora_descolagem', 'hora_aterragem'));
+
+        $movimento->hora_descolagem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_descolagem));
+        $movimento->hora_aterragem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_aterragem));
+
+        $movimento->save();
+
         return redirect()->route('movimentos.index')->with('success', "Movimento successfully updated!");
     }
 

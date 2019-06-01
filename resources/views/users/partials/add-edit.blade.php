@@ -240,7 +240,7 @@
 <div id="camposPiloto">
     <h5>Informação de Piloto</h5>
 
-    @if (count($user->aeronaves) > 0)
+    @if (count($user->aeronavesPiloto) > 0)
     <table class="table table-striped">
     <thead>
         <tr>
@@ -248,7 +248,7 @@
         </tr>
     </thead>
     <tbody>
-    @foreach ($user->aeronaves as $aeronave)
+    @foreach ($user->aeronavesPiloto as $aeronave)
         <tr>
             <td>{{$aeronave->matricula}}</td>
         </tr>
@@ -298,7 +298,7 @@
             disabled
         />
     </div>
-    
+
     @can('updateAll', App\User::class)
     @if(!$user->licenca_confirmada)
     <div class="form-row form-inline  align-items-center">

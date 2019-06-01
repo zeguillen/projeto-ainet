@@ -14,7 +14,7 @@
     <label for="inputDataVoo">Data do voo</label>
     <input
         type="date" class="form-control"
-        name="DataVoo" id="inputDataVoo"
+        name="data" id="inputDataVoo"
         placeholder="Dia do voo" value="{{old('data',$movimento->data)}}"
         required
     />
@@ -24,7 +24,7 @@
     <label for="inputHoraDescolagem">Hora descolagem</label>
     <input
         type="time" class="form-control"
-        name="horaDescolagem" id="inputhoraDescolagem"
+        name="hora_descolagem" id="inputhoraDescolagem"
         value="{{ date('H:i', strtotime(old('hora_descolagem',$movimento->hora_descolagem))) }}"
         required
     />
@@ -34,7 +34,7 @@
     <label for="inputHoraAterragem">Hora aterragem</label>
     <input
         type="time" class="form-control"
-        name="horaAterragem" id="inputhoraAterragem"
+        name="hora_aterragem" id="inputhoraAterragem"
         value="{{ date('H:i', strtotime(old('hora_aterragem',$movimento->hora_aterragem))) }}"
         required
     />
@@ -54,8 +54,9 @@
 <div class="form-group">
     <label for="inputNumDiario">Nº diario</label>
     <input
-        type="text" class="form-control"
-        name="numDiario" id="inputNumDiario"
+        type="number" class="form-control"
+        name="num_diario" id="inputNumDiario"
+        min="1"
         value="{{old('num_diario',$movimento->num_diario)}}"
         required
     />
@@ -64,19 +65,26 @@
 <div class="form-group">
     <label for="inputNumServico">Nº servico</label>
     <input
-        type="text" class="form-control"
-        name="numServico" id="inputNumServico"
+        type="number" class="form-control"
+        name="num_servico" id="inputNumServico"
+        min="1"
         value="{{old('num_servico',$movimento->num_servico)}}"
         required
     />
 </div>
 
 <div class="form-group">
-    <label for="InputPilotoId">Piloto</label>
-    <select name="piloto" id="InputPilotoId" class="form-control">
+    <label for="inputPilotoId">Piloto</label>
+    <select name="piloto_id" id="inputPilotoId" class="form-control">
         <option disabled selected> -- select an option -- </option>
+        @if($movimento->piloto_id == null)
+        <option value="{{ Auth::user()->id }}" selected>{{ Auth::user()->nome_informal }}</option>
+        @endif
+
         @foreach ($pilotos as $piloto)
-        <option value="{{ old('piloto', $piloto->id) }}" {{ old('piloto', $piloto->id) == $movimento->piloto_id ? "selected" : "" }}>{{ $piloto->nome_informal }}</option>
+        @unless($piloto->id == Auth::user()->id)
+        <option value="{{ $piloto->id }}" {{ old('piloto', $movimento->piloto_id) == $piloto->id ? "selected" : "" }}>{{ $piloto->nome_informal }}</option>
+        @endunless
         @endforeach
     </select>
 </div>
@@ -95,18 +103,20 @@
     <div class="form-group">
         <label for="inputTipoInstrucao">Tipo de Instrução</label>
         <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
-            <option disabled selected> -- select an option -- </option>
+            <option disabled selected value> -- select an option -- </option>
             <option value="D" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
             <option value="S" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="inputTipoInstrucao">Instrutor</label>
-        <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
+        <label for="inputInstrutor">Instrutor</label>
+        <select name="instrutor_id" id="inputInstrutor" class="form-control">
             <option disabled selected> -- select an option -- </option>
             @foreach ($pilotos as $piloto)
-            <option value="{{ old('instrutor', $piloto->id) }}" {{ old('instrutor', $piloto->id) == $movimento->instrutor_id ? "selected" : "" }}>{{ $piloto->nome_informal }}</option>
+            @if ($piloto->tipo_licenca != 'ALUNO-PPL(A)' || $piloto->tipo_licenca != 'ALUNO-PU')
+            <option value="{{ $piloto->id }}" {{ old('instrutor', $movimento->instrutor_id) == $piloto->id ? "selected" : "" }}>{{ $piloto->nome_informal }}</option>
+            @endif
             @endforeach
         </select>
     </div>
@@ -136,7 +146,8 @@
     <label for="inputNumAterragens">Numero de aterragens</label>
     <input
         type="number" class="form-control"
-        name="numAterragens" id="inputNumAterragens"
+        name="num_aterragens" id="inputNumAterragens"
+        min="1"
         value="{{ old('num_aterragens', $movimento->num_aterragens) }}"
         required
     />
@@ -146,7 +157,8 @@
     <label for="inputNumDescolagens">Numero de descolagens</label>
     <input
         type="number" class="form-control"
-        name="numDescolagens" id="inputNumDescolagens"
+        name="num_descolagens" id="inputNumDescolagens"
+        min="1"
         value="{{ old('num_descolagens', $movimento->num_descolagens) }}"
         required
     />
@@ -156,7 +168,8 @@
     <label for="inputNumPessoas">Numero de pessoas a bordo</label>
     <input
         type="number" class="form-control"
-        name="numPessoas" id="inputNumPessoas"
+        name="num_pessoas" id="inputNumPessoas"
+        min="1"
         value="{{ old('num_pessoas', $movimento->num_pessoas) }}"
         required
     />
@@ -166,7 +179,8 @@
     <label for="inputContaHorasInicial">Conta horas inicial</label>
     <input
         type="number" class="form-control"
-        name="contaHorasInicial" id="inputContaHorasInicial"
+        name="conta_horas_inicio" id="inputContaHorasInicial"
+        min="1"
         value="{{ old('conta_horas_inicio', $movimento->conta_horas_inicio) }}"
         required
     />
@@ -176,7 +190,8 @@
     <label for="inputContaHorasFinal">Conta horas final</label>
     <input
         type="number" class="form-control"
-        name="contaHorasFinal" id="inputContaHorasFinal"
+        name="conta_horas_fim" id="inputContaHorasFinal"
+        min="1"
         value="{{ old('conta_horas_fim', $movimento->conta_horas_fim) }}"
         required
     />
@@ -186,7 +201,8 @@
     <label for="inputTempoVoo">Tempo de voo</label>
     <input
         type="number" class="form-control"
-        name="tempoVoo" id="inputTempoVoo"
+        name="tempo_voo" id="inputTempoVoo"
+        min="1"
         value="{{ old('tempo_voo', $movimento->tempo_voo) }}"
         required
     />
@@ -196,7 +212,8 @@
     <label for="inputPrecoVoo">Preco de voo</label>
     <input
         type="number" class="form-control"
-        name="precoVoo" id="inputPrecoVoo"
+        name="preco_voo" id="inputPrecoVoo"
+        min="0"
         value="{{ old('preco_voo', $movimento->preco_voo) }}"
         required
     />
@@ -204,12 +221,12 @@
 
 <div class="form-group">
     <label for="inputModoPagamento">Modo de pagamento</label>
-    <select name="type" id="inputModoPagamento" class="form-control">
+    <select name="modo_pagamento" id="inputModoPagamento" class="form-control">
         <option disabled selected> -- selecione uma opção -- </option>
-        <option value="0" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'N' ? "selected" : "" }}>Numerário</option>
-        <option value="1" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'M' ? "selected" : "" }}>Multibanco</option>
-        <option value="2" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'T' ? "selected" : "" }}>Transferência</option>
-        <option value="3" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'P' ? "selected" : "" }}>Pacote de horas</option>
+        <option value="N" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'N' ? "selected" : "" }}>Numerário</option>
+        <option value="M" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'M' ? "selected" : "" }}>Multibanco</option>
+        <option value="T" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'T' ? "selected" : "" }}>Transferência</option>
+        <option value="P" {{ old('modo_pagamento', $movimento->modo_pagamento) == 'P' ? "selected" : "" }}>Pacote de horas</option>
     </select>
 </div>
 
@@ -217,7 +234,8 @@
     <label for="inputNumRecibo">Numero de recibo</label>
     <input
         type="number" class="form-control"
-        name="numRecibo" id="inputNumRecibo"
+        name="num_recibo" id="inputNumRecibo"
+        min="1"
         value="{{ old('num_recibo', $movimento->num_recibo) }}"
         required
     />

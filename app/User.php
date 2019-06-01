@@ -14,7 +14,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use SoftDeletes;
 
     protected $fillable = [
-        'num_socio', 'nome_informal', 'name', 'sexo', 'data_nascimento', 'email', 'foto', 'nif', 'telefone', 
+        'num_socio', 'nome_informal', 'name', 'sexo', 'data_nascimento', 'email', 'foto', 'nif', 'telefone',
         'endereco', 'tipo_socio', 'quota_paga', 'ativo', 'password_inicial', 'password','direcao'
     ];
 
@@ -59,12 +59,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany('App\Movimento');
     }
 
-    public function aeronavePiloto() 
+    public function aeronavePiloto()
     {
         return $this->hasMany('App\AeronavePiloto');
     }
 
-    public function aeronaves(){
+    public function aeronavesPiloto(){
         return $this->belongsToMany('App\Aeronave', 'aeronaves_pilotos', 'piloto_id', 'matricula');
     }
 

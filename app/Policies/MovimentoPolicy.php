@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class MovimentoPolicy
 {
     use HandlesAuthorization;
-    
+
     public function before($user, $ability){
         if  ($user->direcao){
             return true;
@@ -36,7 +36,7 @@ class MovimentoPolicy
      */
     public function create(User $user)
     {
-        //
+        return $user->tipo_socio == 'P';
     }
 
     /**

@@ -6,7 +6,9 @@
     @include('common.success')
 @endif
 
+@can('create', Auth::user())
 <div class="mb-3"><a class="btn btn-primary" href="{{route('movimentos.create')}}">Adicionar movimento</a></div>
+@endcan
 @if (count($movimentos))
     <div class="form">
         <form action="{{route('movimentos.index')}}" method="get">
