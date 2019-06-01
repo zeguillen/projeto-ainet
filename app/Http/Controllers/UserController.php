@@ -260,7 +260,7 @@ class UserController extends Controller
     public function savePassword(Request $request)
     {
         $request->validate([
-            'password_old' => 'required|min:8',
+            'old_password' => 'required|min:8',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|min:8'
         ]);
