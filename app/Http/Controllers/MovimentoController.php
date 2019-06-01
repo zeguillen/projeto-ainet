@@ -69,7 +69,9 @@ class MovimentoController extends Controller
         $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
         $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
         $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto_id')->get();
-        return view('movimentos.add', compact('movimento', 'aeronaves', 'aerodromos', 'aeronaves_pilotos'));
+        $pilotos = DB::table('users')->select('id', 'nome_informal', 'tipo_licenca')->where('tipo_socio', 'P')->get();
+
+        return view('movimentos.add', compact('movimento', 'aeronaves', 'aerodromos', 'aeronaves_pilotos', 'pilotos'));
     }
 
     public function store(MovimentoStorageRequest $request)
@@ -90,8 +92,10 @@ class MovimentoController extends Controller
 
         $aeronaves = DB::table('aeronaves')->select('matricula', 'marca', 'modelo')->get();
         $aerodromos = DB::table('aerodromos')->select('code', 'nome')->get();
+        $aeronaves_pilotos = DB::table('aeronaves_pilotos')->select('matricula', 'piloto_id')->get();
+        $pilotos = DB::table('users')->select('id', 'nome_informal', 'tipo_licenca')->where('tipo_socio', 'P')->get();
 
-        return view('movimentos.edit', compact('movimento', 'aeronaves', 'aerodromos'));
+        return view('movimentos.edit', compact('movimento', 'aeronaves', 'aerodromos', 'pilotos'));
     }
 
     public function update(Request $request, Movimento $movimento)
@@ -184,14 +188,14 @@ class MovimentoController extends Controller
 
         $maxYear = 0;
         $minYear = date("Y");
-       
+
         foreach ($aeronaves_ano as $aeronave_ano) {
             if($aeronave_ano->ano > $maxYear) {
-                $maxYear = $aeronave_ano->ano;                 
+                $maxYear = $aeronave_ano->ano;
             }
             if($aeronave_ano->ano < $minYear) {
-                $minYear = $aeronave_ano->ano;         
-            }     
+                $minYear = $aeronave_ano->ano;
+            }
         }
 
         $data = [];
@@ -240,10 +244,10 @@ class MovimentoController extends Controller
 
                 $horasPilotoMesAno->addRow([date("F", mktime(0, 0, 0, $mes, 10)), $tempo_menor[0]->tempo, $tempo_piloto[0]->tempo, $tempo_maior[0]->tempo]);
 
-                array_push($pilotos_mes_ano, ["mes" => $mes, "menor" => $tempo_menor[0]->tempo, "tempo" => $tempo_piloto[0]->tempo, "maior" => $tempo_maior[0]->tempo]); 
+                array_push($pilotos_mes_ano, ["mes" => $mes, "menor" => $tempo_menor[0]->tempo, "tempo" => $tempo_piloto[0]->tempo, "maior" => $tempo_maior[0]->tempo]);
 
             }
-           
+
             \Lava::ColumnChart('HorasPilotoMesAno', $horasPilotoMesAno, [
                 'title' => 'Horas de Voo',
                 'titleTextStyle' => [
@@ -254,7 +258,7 @@ class MovimentoController extends Controller
 
             //--------------------------------------------------------
 
-        } 
+        }
 
         //quarto piloto ano
 
@@ -278,10 +282,10 @@ class MovimentoController extends Controller
 
                 $horasPilotoAno->addRow([$ano, $tempo_menor[0]->tempo, $tempo_piloto[0]->tempo, $tempo_maior[0]->tempo]);
 
-                array_push($pilotos_ano, ["ano" => $ano, "menor" => $tempo_menor[0]->tempo, "tempo" => $tempo_piloto[0]->tempo, "maior" => $tempo_maior[0]->tempo]); 
+                array_push($pilotos_ano, ["ano" => $ano, "menor" => $tempo_menor[0]->tempo, "tempo" => $tempo_piloto[0]->tempo, "maior" => $tempo_maior[0]->tempo]);
 
             }
-           
+
             \Lava::ColumnChart('HorasPilotoAno', $horasPilotoAno, [
                 'title' => 'Horas de Voo',
                 'titleTextStyle' => [
@@ -292,7 +296,7 @@ class MovimentoController extends Controller
 
             //--------------------------------------------------------
 
-        } 
+        }
 
 
         if ($request->filled('ano')) {

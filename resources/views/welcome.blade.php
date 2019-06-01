@@ -1,28 +1,20 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('title','Welcome to the Flight Club')
 
 @section('content')
 
-<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  <header class="masthead mb-auto">
-    <div class="inner">
-      <h3 class="masthead-brand">Cover</h3>
-      <nav class="nav nav-masthead justify-content-center">
-        <a class="nav-link active" href="#">Home</a>
-        <a class="nav-link" href="#">Features</a>
-        <a class="nav-link" href="#">Contact</a>
-      </nav>
+<div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card text-center">
+                    <h1 class="card-header">@yield('title')</h1>
+                    <div class="card-body">
+                    <p class="card-text">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+                    <a href="{{route('login')}}" class="btn btn-lg btn-primary">Entrar na aplicação</a>
+                    </div>
+            </div>
+        </div>
     </div>
-  </header>
-
-  <main role="main" class="inner cover">
-    <h1 class="cover-heading">Cover your page.</h1>
-    <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
-    <p class="lead">
-      <a href="{{route('login')}}" class="btn btn-lg btn-secondary">Entrar na aplicação</a>
-    </p>
-  </main>
-
 </div>
 @endsection

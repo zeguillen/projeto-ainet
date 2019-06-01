@@ -33,7 +33,7 @@ class UserStorageRequest extends FormRequest
             'sexo' => 'required|in:F,M',
             'endereco' => 'nullable|',
             'data_nascimento' => 'required|date_format:Y-m-d|before:18 years ago',
-            'email' => 'required|email|unique:users,email|regex:/^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/',
+            'email' => 'required|email|unique:users,email',
             'tipo_socio' => 'required|in:P,NP,A',
             'password' => 'required|min:8|confirmed',
             'ativo' => 'required|in:0,1',

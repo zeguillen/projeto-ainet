@@ -24,23 +24,24 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome_informal' => 'nullable|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
-            'name' => 'nullable|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
+            'num_socio' => 'sometimes|required|unique:users,num_socio',
+            'nome_informal' => 'sometimes|required|min:3|max:40|regex:/^[a-zA-ZÀ-ù\s]+$/',
+            'name' => 'sometimes|required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
             'telefone' => 'nullable|min:9|max:20',
             'direcao' => 'sometimes|required|in:0,1',
             'sexo' => 'sometimes|required|in:F,M',
-            'data_nascimento' => 'nullable|date_format:Y-m-d|before:18 years ago',
+            'endereco' => 'nullable|',
+            'data_nascimento' => 'sometimes|required|date_format:Y-m-d|before:18 years ago',
             'email' => 'nullable|email|unique:users,email,'.$this->socio->email.',email',
             'tipo_socio' => 'sometimes|required|in:P,NP,A',
             'ativo' => 'sometimes|required|in:0,1',
             'quota_paga' => 'sometimes|required|in: 0,1',
-            'aluno' => ['nullable', 'in: 0,1'],
-            'instrutor' => ['nullable', 'in: 0,1'],
-            'file_foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max: 2048',
+            'aluno' => 'nullable', 'in: 0,1',
+            'instrutor' => 'nullable', 'in: 0,1',
+            'file_foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'file_licenca' => 'nullable|mimes:pdf|max:2048',
             'file_certificado' => 'nullable|mimes:pdf|max:2048',
-            'num_socio' => 'sometimes|required|unique:users,num_socio,'.$this->socio->num_socio.'|integer|min:0',
             'num_licenca' => 'nullable|max:30|unique:users,num_licenca,'.$this->socio->num_licenca.',num_licenca',
             'num_certificado' => 'nullable|max:30|unique:users,num_certificado,'.$this->socio->num_certificado.',num_certificado',
             'tipo_licenca' => 'nullable|exists:tipos_licencas,code|max: 20',
@@ -54,8 +55,9 @@ class UserUpdateRequest extends FormRequest
 
     public function messages(){
         return [
+            'num_socio.unique' => 'O número de sócio já se encontra em uso',
             'name.regex' => 'O nome só pode conter letras e espaços',
-            'nome_informal.regex' => 'O nome só pode conter letras e espaços',
+            'nome_informal.regex' => 'O nome informal só pode conter letras e espaços',
             'nome_informal.max' => 'O nome pode ter no máximo 40 caracteres',
             'nif.min' => 'O NIF é invalido',
             'nif.max' => 'O NIF é invalido',
@@ -65,7 +67,7 @@ class UserUpdateRequest extends FormRequest
             'email.regex' => 'O email inserido não é válido',
             'file_foto.mimes' => 'O formato da foto não é válido. Formatos válidos:  jpeg, png, jpg, gif',
             'file_foto.max' => 'O tamanho máximo da foto é 2mb',
-            'file_foto.image' => 'A foto tem que ser uma imagem de formato válido',
+            'file_foto.image' => 'A foto tem que ser uma imagem',
             'file_licenca.mimes' => 'O ficheiro da licença tem que ser um PDF',
             'file_licenca.max' => 'O tamanho do ficheiro da licença só pode ser de 2mb',
             'file_certificado.mimes' => 'O ficheiro do certificado tem que ser um PDF',
@@ -76,8 +78,8 @@ class UserUpdateRequest extends FormRequest
             'num_certificado.unique' => 'O numero do certificado já existe',
             'tipo_licenca.max' => 'O tipo de licença só pode conter 20 caracteres',
             'classe_certificado.max' => 'A classe do certficiado só pode conter 20 caracteres',
-            'validade_certificado.after' => 'A data do certificado é inválida',
-            'validade_licenca.after' => 'A data da licença é inválida'
+            'validade_certificado.after' => 'A validade do certificado é inválida',
+            'validade_licenca.after' => 'A validade da licença é inválida'
         ];
     }
 }

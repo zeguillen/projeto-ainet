@@ -75,14 +75,10 @@
     <label for="InputPilotoId">Piloto</label>
     <select name="piloto" id="InputPilotoId" class="form-control">
         <option disabled selected> -- select an option -- </option>
-
+        @foreach ($pilotos as $piloto)
+        <option value="{{ old('piloto', $piloto->id) }}" {{ old('piloto', $piloto->id) == $movimento->piloto_id ? "selected" : "" }}>{{ $piloto->nome_informal }}</option>
+        @endforeach
     </select>
-    <input
-        type="text" class="form-control"
-        name="pilotoId" id="inputPilotoId"
-        value="{{ old('num_licenca_piloto', $movimento->num_licenca_piloto) }}"
-        required
-    />
 </div>
 
 <div class="form-group">
@@ -95,7 +91,7 @@
     </select>
 </div>
 
-<div id="camposInstrucao" style="display:none;">
+<div id="camposInstrucao">
     <div class="form-group">
         <label for="inputTipoInstrucao">Tipo de Instrução</label>
         <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
@@ -109,8 +105,9 @@
         <label for="inputTipoInstrucao">Instrutor</label>
         <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
             <option disabled selected> -- select an option -- </option>
-            <option value="D" {{ old('instrutor', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
-            <option value="S" {{ old('instrutor', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
+            @foreach ($pilotos as $piloto)
+            <option value="{{ old('instrutor', $piloto->id) }}" {{ old('instrutor', $piloto->id) == $movimento->instrutor_id ? "selected" : "" }}>{{ $piloto->nome_informal }}</option>
+            @endforeach
         </select>
     </div>
 </div>

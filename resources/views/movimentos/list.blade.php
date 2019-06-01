@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group col-auto">
                     <select class="form-control" name="natureza" id="inputType">
-                        <option value="none" disabled selected>Tipo de voo</option>  
+                        <option value="none" disabled selected>Tipo de voo</option>
                         <option value="treino">Treino</option>
                         <option value="instrucao">Instrução</option>
                         <option value="especial">Especial</option>
@@ -102,7 +102,7 @@
             <td>{{$movimento->instrutor_id}}</td>
             <td>{{$movimento->confirmado == 1 ? 'Sim' : 'Não'}}</td>
             <td>
-                @if ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id))
+                @if ((Auth::user()->direcao && $movimento->confirmado == 0) || ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id)))
                     <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
                         Edit
                     </a>
@@ -112,11 +112,11 @@
                     </button>
                 @endif
             </td>
-            <td>    
+            <td>
                 <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="form-inline">
                     @csrf
                     @method('DELETE')
-                    @if ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id))
+                    @if ((Auth::user()->direcao && $movimento->confirmado == 0) || ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id)))
                         <input class="btn btn-danger btn-sm" type="submit" value="Delete"/>
                     @else
                         <input class="btn btn-secondary btn-sm" type="submit" value="Delete" disabled/>
