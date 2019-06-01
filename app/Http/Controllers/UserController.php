@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use Mail;
 use App\User;
+use App\AeronavePiloto;
 use App\Mail\UserActivation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -336,6 +337,36 @@ class UserController extends Controller
         
         $socio->sendEmailVerificationNotification();
         return redirect()->route('users.index')->with('success',"Email de ativação enviado");
+    }
+
+    public function naoAutorizarPiloto(Request $request)
+    {
+        $this->authorize('updateAll', User::class);
+
+        $matricula = request()->route('aeronave');
+        $piloto = request()->route('piloto');
+
+        AeronavePiloto::where('matricula', $matricula)->where('piloto_id', $piloto)->delete();
+
+        return redirect()->route('aeronaves.pilotos', compact('matricula'))->with('success',"Piloto eliminado");
+    }
+
+    public function autorizarPiloto(Request $request)
+    { 
+        $this->authorize('updateAll', User::class);
+
+        $matricula = request()->route('aeronave');
+        $piloto = request()->route('piloto');
+
+        $aeronavePiloto = new AeronavePiloto;
+
+        $aeronavePiloto->timestamps = false;
+        $aeronavePiloto->matricula = $matricula;
+        $aeronavePiloto->piloto_id = $piloto;
+
+        $aeronavePiloto->save();
+
+        return redirect()->route('aeronaves.pilotos', compact('matricula'))->with('success',"Piloto adicionado");
     }
 
 }

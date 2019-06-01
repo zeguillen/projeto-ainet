@@ -42,6 +42,7 @@
             <td>{{$piloto->email}}</td>
             <td>{{$piloto->telefone}}</td>
             <td>{{$piloto->num_licenca}}</td>
+            @can('updateAll', App\User::class)
             @if($aut)
                 <td>
                     <form action="{{route('piloto.naoautorizar',['aeronave'=>$matricula, 'piloto'=>$piloto->id])}}" method="post" class="inline">
@@ -58,7 +59,7 @@
                     </form>
                 </td>
             @endif
-            
+            @endcan
         </tr>
     @endforeach
     </table>
