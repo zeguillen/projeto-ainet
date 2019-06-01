@@ -96,7 +96,18 @@ class MovimentoController extends Controller
         $piloto = User::findOrFail($request->piloto_id);
 
         $movimento = new Movimento;
+
         $movimento->fill($request->except('hora_aterragem', 'hora_descolagem', 'num_licenca_piloto', 'tipo_licenca_piloto', 'validade_certificado_piloto', 'classe_certificado_piloto', 'validade_certificado_piloto', 'confirmado'));
+
+        //guardar sem confirmar o movimento OU guardar e confirmar o movimento
+        switch($request->input('inputAdicionar')) {
+            case 'add':
+                $movimento->confirmado = 0;
+                break;
+            case 'confirmar':
+                $movimento->confirmado = 1;
+                break;
+        }
         $movimento->hora_descolagem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_descolagem));
         $movimento->hora_aterragem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_aterragem));
 
@@ -106,7 +117,7 @@ class MovimentoController extends Controller
         $movimento->num_certificado_piloto = $piloto->num_certificado;
         $movimento->classe_certificado_piloto = $piloto->classe_certificado;
         $movimento->validade_certificado_piloto = $piloto->validade_certificado;
-        $movimento->confirmado = 0;
+        
 
         $movimento->save();
 
