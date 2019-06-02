@@ -12,13 +12,13 @@ class Aeronave extends Model
     protected $primaryKey = 'matricula';
     public $incrementing = false;
     protected $dates = ['deleted_at'];
-    
+
     protected $fillable = [
         'matricula', 'marca', 'modelo', 'num_lugares', 'conta_horas', 'preco_hora'
     ];
 
     public function movimentosAeronave(){
-        return $this->hasMany('App\Movimento');
+        return $this->hasMany('App\Movimento', 'aeronave');
     }
 
     public function pilotos(){

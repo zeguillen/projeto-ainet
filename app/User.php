@@ -52,12 +52,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return 'Unknown';
     }
 
-
-
-    public function movimento()
+    public function movimentos()
     {
         return $this->hasMany('App\Movimento');
     }
+
 
     public function aeronavePiloto()
     {

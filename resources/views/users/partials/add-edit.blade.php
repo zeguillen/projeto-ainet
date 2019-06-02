@@ -28,8 +28,22 @@
     }
 </script>
 
-@if ($user->num_socio != null)
-<label>Número de Sócio:</label><p>{{old('>NumSocio',$user->num_socio)}}</p>
+@if ($user->num_socio == null || Auth::user()->direcao)
+<label>Número de Sócio:</label><p>{{old('NumSocio',$user->num_socio)}}</p>
+<br>
+<div class="form-group">
+    <label for="inputTipoSocio">Tipo de sócio</label>
+    <select name="tipo_socio" id="inputTipoSocio" class="form-control" onchange="changeType()">
+        <option disabled selected> -- select an option -- </option>
+        <option value="P" {{ old('tipo_socio', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
+        <option value="NP" {{ old('tipo_socio', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
+        <option value="A" {{ old('tipo_socio', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
+    </select>
+</div>
+
+@else
+
+<label>Número de Sócio:</label><p>{{old('NumSocio',$user->num_socio)}}</p>
 <br>
 
 <label>Tipo de Sócio:</label>
@@ -49,25 +63,6 @@
     @endswitch
     </p>
 <br>
-@else
-    <div class="form-group">
-        <label for="inputNumeroSocio">Nº de sócio</label>
-        <input
-            type="number" class="form-control"
-            name="num_socio" id="inputNumeroSocio"
-            placeholder="#" value="{{old('num_socio', $user->num_socio)}}"
-            required
-        />
-    </div>
-    <div class="form-group">
-        <label for="inputTipoSocio">Tipo de sócio</label>
-        <select name="tipo_socio" id="inputTipoSocio" class="form-control" onchange="changeType()">
-            <option disabled selected> -- select an option -- </option>
-            <option value="P" {{ old('tipo_socio', $user->tipo_socio) == 'P' ? "selected" : "" }}>Piloto</option>
-            <option value="NP" {{ old('tipo_socio', $user->tipo_socio) == 'NP' ? "selected" : "" }}>Não Piloto</option>
-            <option value="A" {{ old('tipo_socio', $user->tipo_socio) == 'A' ? "selected" : "" }}>Aeromodelista</option>
-        </select>
-    </div>
 @endif
 
 <div class="form-group">

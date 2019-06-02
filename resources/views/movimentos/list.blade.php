@@ -92,13 +92,13 @@
             <td>{{$movimento->id}}</td>
             <td>{{$movimento->aeronave}}</td>
             <td>{{$movimento->data}}</td>
-            <td>{{$movimento->hora_descolagem}}</td>
-            <td>{{$movimento->hora_aterragem}}</td>
+            <td>{{date('H:i A', strtotime($movimento->hora_descolagem))}}</td>
+            <td>{{date('H:i A', strtotime($movimento->hora_aterragem))}}</td>
             <td>{{$movimento->tempo_voo}}</td>
             <td>{{$movimento->naturezaToStr()}}</td>
-            <td>{{$movimento->user->nome_informal}}</td>
-            <td>{{$movimento->aerodromo_partida}}</td>
-            <td>{{$movimento->aerodromo_chegada}}</td>
+            <td>{{$movimento->aeronavePiloto->nome_informal}}</td>
+            <td>{{$movimento->aerodromoPartida->nome}}</td>
+            <td>{{$movimento->aerodromoChegada->nome}}</td>
             <td>{{$movimento->num_aterragens}}</td>
             <td>{{$movimento->num_descolagens}}</td>
             <td>{{$movimento->num_diario}}</td>
@@ -107,7 +107,11 @@
             <td>{{$movimento->conta_horas_fim}}</td>
             <td>{{$movimento->num_pessoas}}</td>
             <td>{{$movimento->tipoInstrucaoToStr() }}</td>
-            <td>{{$movimento->instrutor_id}}</td>
+            @if($movimento->instrutor_id != null)
+            <td>{{$movimento->aeronaveInstrutor->nome_informal}}</td>
+            @else
+            <td>Não tem</td>
+            @endif
             <td>{{$movimento->confirmado == 1 ? 'Sim' : 'Não'}}</td>
             <td>
                 @if ((Auth::user()->direcao && $movimento->confirmado == 0) || ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id)))

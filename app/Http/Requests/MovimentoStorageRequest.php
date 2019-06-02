@@ -58,6 +58,8 @@ class MovimentoStorageRequest extends FormRequest
             'classe_certificado_instrutor' => 'nullable',
             'validade_certificado_instrutor' => 'nullable|date|date_format:Y-m-d|after:today',
             'confirmado' =>  'sometimes|required|in:0,1',
+            'tipo_conflito' => 'sometimes|required|in:S,B',
+            'justificacao_conflito' => 'sometimes|required|min:10'
         ];
     }
 

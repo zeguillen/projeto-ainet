@@ -102,7 +102,7 @@
 <div id="camposInstrucao">
     <div class="form-group">
         <label for="inputTipoInstrucao">Tipo de Instrução</label>
-        <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
+            <select name="tipo_instrucao" id="inputTipoInstrucao" class="form-control">
             <option disabled selected value> -- select an option -- </option>
             <option value="D" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'D' ? "selected" : "" }}>Duplo Comando</option>
             <option value="S" {{ old('tipo_instrucao', $movimento->tipo_instrucao) == 'S' ? "selected" : "" }}>Solo</option>
@@ -209,13 +209,13 @@
 </div>
 
 <div class="form-group">
-    <label for="inputPrecoVoo">Preco de voo</label>
+    <label for="inputPrecoVoo">Preco do voo</label>
     <input
-        type="number" class="form-control"
+        type="number" class="form-control disabled"
         name="preco_voo" id="inputPrecoVoo"
         min="0" step="0.1"
         value="{{ old('preco_voo', $movimento->preco_voo) }}"
-        required
+        disabled
     />
 </div>
 
@@ -241,7 +241,22 @@
     />
 </div>
 
+<div class="alert alert-danger">
+    <h6 class="alert-heading" style="font-weight: bold;">Aviso importante</h6>
+    <hr>
+    <p>Podem haver conflitos no conta-horas inicial e final. Certifique-se de que os valores estejam corretos. Caso o conflito persista, selecione seu tipo e justifique.</p>
+</div>
+
 <div class="form-group">
-    <label for="inputObservacoes">Observações</label>
-    <textarea name="observacoes" id="inputObservacoes" cols="30" rows="10" class="form-control">{{ old('observacoes', $movimento->observacoes) }}</textarea>
+    <label for="inputTipoConflito">Tipo de Conflito</label>
+    <select name="tipo_conflito" id="inputTipoConflito" class="form-control">
+        <option disabled value selected>-- selecione uma opção --</option>
+        <option value="S" {{ old('tipo_conflito', $movimento->tipo_conflito) == 'S' ? 'selected' : '' }}>Sobreposição</option>
+        <option value="B" {{ old('tipo_conflito', $movimento->tipo_conflito) == 'B' ? 'selected' : '' }}>Buraco</option>
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="inputJustificacao">Justificação</label>
+<textarea name="justificacao_conflito" id="inputJustificacao" class="form-control" cols="30" rows="10">{{ old('justificacao_conflito', $movimento->justificacao_conflito)}}</textarea>
 </div>

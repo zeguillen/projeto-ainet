@@ -57,7 +57,7 @@ class UserController extends Controller
         }
 
         if(Auth::user()->direcao) {
-            
+
             if(($request->estado_socio != "none") && ($request->filled('estado_socio'))){
                 switch($request->estado_socio) {
                     case 'ativo':
@@ -81,7 +81,7 @@ class UserController extends Controller
             }
 
             $users = $query->orderBy('id', 'asc')->paginate(12);
-            
+
         } else {
             $users = $query->where('ativo', '=', 1)->orderBy('id', 'asc')->paginate(12);
         }
@@ -107,7 +107,6 @@ class UserController extends Controller
         $socio = new User;
         $foto = $request->file_foto;
 
-        return var_dump($request->file_foto);
         if(is_null($foto) != true && $foto->isValid()){
             $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension());
             $socio->foto_url = $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension();
@@ -164,7 +163,6 @@ class UserController extends Controller
                 $path = Storage::putFileAs('public/fotos', $foto, $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension());
                 $socio->foto_url = $socio->id . '_' . 'profile_photo' . '.' . $foto->getClientOriginalExtension();
             }
-
             $socio->fill($request->except('foto_url'));
             $socio->save();
 
@@ -252,7 +250,7 @@ class UserController extends Controller
                 $socio->certificado_confirmado = 0;
             }
 
-            
+
             //confirmar licenca e certificado manualmente: DIRECAO
             if($request->filled('conf_licenca')) {
                 if($request->conf_licenca == "true") {
@@ -278,7 +276,14 @@ class UserController extends Controller
     {
         $this->authorize('delete', User::class);
 
-        $socio->delete();
+        $movimentosP = User::findOrFail($socio->id)->movimentosPiloto;
+        $movimentosI = User::findOrFail($socio->id)->movimentosInstrutor;
+
+        if((count($movimentosP) > 0) || (count($movimentosI) > 0)){
+            $socio->delete();
+        }else{
+            $socio->forceDelete();
+        }
 
         return redirect()->route('users.index')->with('success',"Sócio eliminado com sucesso");
     }
@@ -384,11 +389,11 @@ class UserController extends Controller
 
     public function reenviarEmailAtivacao(User $socio) {
         $this->authorize('updateAll', User::class);
-        
+
         if($socio->ativo) {
             return redirect()->route('users.index')->with('errors',"O Sócio já se encontra ativo");
         }
-        
+
         $socio->sendEmailVerificationNotification();
         return redirect()->route('users.index')->with('success',"Email de ativação enviado");
     }
@@ -406,7 +411,7 @@ class UserController extends Controller
     }
 
     public function autorizarPiloto(Request $request)
-    { 
+    {
         $this->authorize('updateAll', User::class);
 
         $matricula = request()->route('aeronave');

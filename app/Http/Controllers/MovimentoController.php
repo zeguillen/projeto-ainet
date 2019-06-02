@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\User;
+use App\Aeronave;
 use App\Movimento;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -107,9 +108,20 @@ class MovimentoController extends Controller
             }
         }
 
+        if($request->instrutor_id != null){
+            $instrutor = User::find($request->instrutor_id);
+
+            // Verifica se o instrutor esta autorizado
+            foreach($instrutor->aeronavesPiloto as $aeronavePiloto){
+                if(($request->aeronave != $aeronavePiloto->pivot->matricula) && ($piloto->id != $aeronavePiloto->pivot->piloto_id)){
+                    return redirect()->back()->withErrors(['O instrutor selecionado não se encontra autorizado para pilotar a aeronave selecionada']);
+                }
+            }
+        }
+
         $movimento = new Movimento;
 
-        $movimento->fill($request->except('hora_aterragem', 'hora_descolagem', 'num_licenca_piloto', 'tipo_licenca_piloto', 'validade_certificado_piloto', 'classe_certificado_piloto', 'validade_certificado_piloto', 'confirmado'));
+        $movimento->fill($request->except('preco_voo', 'hora_aterragem', 'hora_descolagem', 'num_licenca_piloto', 'tipo_licenca_piloto', 'validade_certificado_piloto', 'classe_certificado_piloto', 'validade_certificado_piloto', 'confirmado'));
 
         //guardar sem confirmar o movimento OU guardar e confirmar o movimento
         switch($request->input('inputAdicionar')) {
@@ -120,6 +132,16 @@ class MovimentoController extends Controller
                 $movimento->confirmado = 1;
                 break;
         }
+
+        $aeronaves_valores = DB::select('select * from aeronaves_valores where matricula = :matricula', ['matricula' => $request->aeronave]);
+        $total_horas = $request->conta_horas_fim - $request->conta_horas_inicio;
+
+        foreach($aeronaves_valores as $aeronave_valor){
+            if($aeronave_valor->unidade_conta_horas >= $total_horas){
+                $movimento->preco_voo = $aeronave_valor->preco;
+            }
+        }
+
         $movimento->hora_descolagem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_descolagem));
         $movimento->hora_aterragem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_aterragem));
 
@@ -150,43 +172,68 @@ class MovimentoController extends Controller
 
     public function update(MovimentoUpdateRequest $request, Movimento $movimento)
     {
+        $this->authorize('update', Auth::user(), $movimento);
+
         $validated = $request->validated();
 
-        if($request->piloto_id != null){
-            $piloto = User::findOrFail($request->piloto_id);
+        if($request->aeronave != null){
+            $aeronave = Aeronave::findOrFail($request->aeronave);
         }
 
+
+        // IMPLEMENTAR NO CREATE
         // Validar piloto e instrutor
         if($request->piloto_id == $request->instrutor_id){
             return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
         }
 
-        if($request->piloto_id == $request->instrutor_id){
-            return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
+        if($request->piloto_id != null){
+            $piloto = User::findOrFail($request->piloto_id);
+
+            // Verificar se o piloto esta autorizado para a aeronave
+            foreach($piloto->aeronavesPiloto as $aeronavePiloto){
+                if(($request->aeronave != $aeronavePiloto->pivot->matricula) && ($request->piloto_id != $aeronavePiloto->pivot->piloto_id)){
+                    return redirect()->back()->withErrors(['O piloto selecionado não se encontra autorizado para pilotar a aeronave selecionada.']);
+                }
+            }
         }
 
-        // Verificar se o piloto esta autorizado para a aeronave
-        foreach($piloto->aeronavesPiloto()->where('piloto_id', '==', $request->piloto_id) as $aeronavePiloto){
-            if(($request->aeronave == $aeronavePiloto->pivot->matricula) && ($piloto->id == $aeronavePiloto->pivot->piloto_id)){
-                break;
-            }else{
-                return redirect()->back()->withErrors(['O piloto selecionado não se encontra autorizado para pilotar a aeronave selecionada']);
+
+        if($request->instrutor_id != null){
+            $instrutor = User::find($request->instrutor_id);
+
+            // Verifica se o instrutor esta autorizado
+            foreach($instrutor->aeronavesPiloto as $aeronavePiloto){
+                if(($request->aeronave != $aeronavePiloto->pivot->matricula) && ($piloto->id != $aeronavePiloto->pivot->piloto_id)){
+                    return redirect()->back()->withErrors(['O piloto selecionado não se encontra autorizado para pilotar a aeronave selecionada']);
+                }
             }
         }
 
         //guardar sem confirmar o movimento OU guardar e confirmar o movimento
         switch($request->input('gravar')) {
             case 'guardar':
-                $movimento->fill($request->except('hora_descolagem', 'hora_aterragem'));
+                $movimento->fill($request->except('hora_descolagem', 'hora_aterragem', 'preco_voo'));
                 break;
             case 'confirmar':
-                $movimento->fill($request->except('hora_descolagem', 'hora_aterragem', 'confirmado'));
+                $movimento->fill($request->except('hora_descolagem', 'hora_aterragem', 'preco_voo', 'confirmado'));
                 $movimento->confirmado = 1;
                 break;
         }
 
         $movimento->hora_descolagem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_descolagem));
         $movimento->hora_aterragem = date('Y-m-d H:i', strtotime($request->data .' '.$request->hora_aterragem));
+
+        $aeronaves_valores = DB::select('select * from aeronaves_valores where matricula = :matricula', ['matricula' => $request->aeronave]);
+
+        $total_horas = $request->conta_horas_fim - $request->conta_horas_inicio;
+
+        foreach($aeronaves_valores as $aeronave_valor){
+            if($aeronave_valor->unidade_conta_horas >= $total_horas){
+                $movimento->preco_voo = $aeronave_valor->preco;
+            }
+        }
+
 
         $movimento->save();
 
@@ -195,6 +242,8 @@ class MovimentoController extends Controller
 
     public function destroy(Movimento $movimento)
     {
+        $this->authorize('delete', Auth::user(), $movimento);
+
         $movimento = Movimento::findOrFail($movimento->id);
 
         if($movimento->confirmado) {

@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Aeronave;
 use App\AeronavePiloto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AeronaveUpdateRequest;
 use App\Http\Requests\AeronaveStorageRequest;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\DB;
 
 
 class AeronaveController extends Controller
@@ -33,8 +35,10 @@ class AeronaveController extends Controller
      */
     public function create()
     {
+        $this->authorize('view', Aeronave::class);
         $aeronave = new Aeronave;
-        return view('aeronaves.add', compact('aeronave'));
+        $aeronaves_valores = DB::table('aeronaves_valores')->select('matricula', 'unidade_conta_horas', 'minutos', 'preco')->get();
+        return view('aeronaves.add', compact('aeronave', 'aeronaves_valores'));
     }
 
     /**
@@ -45,10 +49,12 @@ class AeronaveController extends Controller
      */
     public function store(AeronaveStorageRequest $request)
     {
+        $this->authorize('create', User::class);
+
         $aeronave = new Aeronave;
 
         $validated = $request->validated();
-        
+
         $aeronave->fill($request->all());
         $aeronave->save();
 
@@ -63,8 +69,11 @@ class AeronaveController extends Controller
      */
     public function edit(Aeronave $aeronave)
     {
-        // authorize
-        return view('aeronaves.edit', compact('aeronave'));
+        $this->authorize('view', $aeronave);
+
+        $aeronaves_valores = DB::table('aeronaves_valores')->select('matricula', 'unidade_conta_horas', 'minutos', 'preco')->paginate(10);
+
+        return view('aeronaves.edit', compact('aeronave', 'aeronaves_valores'));
     }
 
     /**
@@ -76,8 +85,10 @@ class AeronaveController extends Controller
      */
     public function update(AeronaveUpdateRequest $request, Aeronave $aeronave)
     {
+        $this->authorize('update', $aeronave);
+
         $validated = $request->validated();
- 
+
         $aeronave->fill($request->all());
         $aeronave->save();
 
@@ -92,10 +103,11 @@ class AeronaveController extends Controller
      */
     public function destroy(Aeronave $aeronave)
     {
-        // PERGUNTAR
-        $movimentos = Aeronave::findOrFail($aeronave->matricula)->movimentos;
+        $this->authorize('delete', $aeronave);
 
-        if($movimentos > 0){
+        $movimentos = Aeronave::findOrFail($aeronave->matricula)->movimentosAeronave;
+
+        if(count($movimentos) > 0){
             $aeronave->delete(); //soft delete
         }else{
             $aeronave->forceDelete(); // permanent delete
@@ -104,8 +116,10 @@ class AeronaveController extends Controller
         return redirect()->route('aeronaves.index')->with('success', 'Aeronave apagada com sucesso');
     }
 
-    public function pilotosAutorizados(Request $request) 
-    {   
+    public function pilotosAutorizados(Request $request, User $socio)
+    {
+        $this->authorize('view', $socio);
+
         $matricula = request()->route('aeronave');
 
         $autorizados = DB::table('aeronaves_pilotos')->select('piloto_id')->where('matricula', $matricula);
@@ -113,7 +127,7 @@ class AeronaveController extends Controller
         $pilotos= DB::table('users')->where('tipo_socio', $type)->whereIn('id', $autorizados)->paginate(10);
 
         $aut = 1;
-        
+
         if($request->filled('autorizado')) {
             if($request->autorizado == "false") {
                 $autorizados = DB::table('aeronaves_pilotos')->select('piloto_id')->where('matricula', $matricula);
