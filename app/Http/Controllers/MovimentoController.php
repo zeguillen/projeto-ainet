@@ -89,7 +89,11 @@ class MovimentoController extends Controller
 
         $validated = $request->validated();
         $piloto = User::findOrFail($request->piloto_id);
-        $instrutor = User::findOrFail($request->instrutor_id);
+
+        // Se houver instrutor
+        if($request->natureza == 'I'){
+            $instrutor = User::findOrFail($request->instrutor_id);
+        }
 
         // Verificar piloto e instrutor
         if($request->piloto_id == $request->instrutor_id){
@@ -98,11 +102,10 @@ class MovimentoController extends Controller
 
         // Verificar se o piloto esta autorizado para a aeronave
         foreach($piloto->aeronavesPiloto as $aeronavePiloto){
-            if(($request->aeronave != $aeronavePiloto->matricula) && ($piloto->id != $aeronavePiloto->piloto_id)){
+            if(($request->aeronave != $aeronavePiloto->pivot->matricula) && ($piloto->id != $aeronavePiloto->pivot->piloto_id)){
                 return redirect()->back()->withErrors(['O piloto selecionado não se encontra autorizado para pilotar a aeronave selecionada']);
             }
         }
-
 
         $movimento = new Movimento;
 
@@ -126,7 +129,7 @@ class MovimentoController extends Controller
         $movimento->num_certificado_piloto = $piloto->num_certificado;
         $movimento->classe_certificado_piloto = $piloto->classe_certificado;
         $movimento->validade_certificado_piloto = $piloto->validade_certificado;
-        
+
 
         $movimento->save();
 
@@ -149,14 +152,27 @@ class MovimentoController extends Controller
     {
         $validated = $request->validated();
 
+        if($request->piloto_id != null){
+            $piloto = User::findOrFail($request->piloto_id);
+        }
+
         // Validar piloto e instrutor
         if($request->piloto_id == $request->instrutor_id){
             return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
         }
 
-        // Validar pilot autorizado
+        if($request->piloto_id == $request->instrutor_id){
+            return redirect()->back()->withErrors(['O instrutor e o piloto não podem ser iguais']);
+        }
 
-        // Validar instrutor autorizado
+        // Verificar se o piloto esta autorizado para a aeronave
+        foreach($piloto->aeronavesPiloto()->where('piloto_id', '==', $request->piloto_id) as $aeronavePiloto){
+            if(($request->aeronave == $aeronavePiloto->pivot->matricula) && ($piloto->id == $aeronavePiloto->pivot->piloto_id)){
+                break;
+            }else{
+                return redirect()->back()->withErrors(['O piloto selecionado não se encontra autorizado para pilotar a aeronave selecionada']);
+            }
+        }
 
         //guardar sem confirmar o movimento OU guardar e confirmar o movimento
         switch($request->input('gravar')) {
@@ -174,7 +190,7 @@ class MovimentoController extends Controller
 
         $movimento->save();
 
-        return redirect()->route('movimentos.index')->with('success', "Movimento successfully updated!");
+        return redirect()->route('movimentos.index')->with('success', "Movimento autalizado com sucesso!");
     }
 
     public function destroy(Movimento $movimento)

@@ -77,7 +77,7 @@
     <label for="inputPilotoId">Piloto</label>
     <select name="piloto_id" id="inputPilotoId" class="form-control">
         <option disabled selected> -- select an option -- </option>
-        @if($movimento->piloto_id == null)
+        @if($movimento->piloto_id == null || $movimento->piloto_id)
         <option value="{{ Auth::user()->id }}" selected>{{ Auth::user()->nome_informal }}</option>
         @endif
 
