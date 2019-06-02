@@ -29,8 +29,10 @@
 </script>
 
 @if ($user->num_socio == null || Auth::user()->direcao)
-<label>Número de Sócio:</label><p>{{old('NumSocio',$user->num_socio)}}</p>
-<br>
+<div class="form-group">
+    <label for="inputNumSocio">Numero de socio</label>
+<input type="nun" min="0" class="form-control" name="num_socio" id="inputNumSocio" placeholder="#" value="{{ old('num_socio', $user->num_socio)}}" required>
+</div>
 <div class="form-group">
     <label for="inputTipoSocio">Tipo de sócio</label>
     <select name="tipo_socio" id="inputTipoSocio" class="form-control" onchange="changeType()">

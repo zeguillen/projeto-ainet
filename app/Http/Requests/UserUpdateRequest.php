@@ -24,7 +24,7 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'num_socio' => 'sometimes|required|unique:users,'.$this->socio->num_socio.',num_socio',
+            'num_socio' => 'sometimes|required|unique:users,num_socio,'.$this->socio->num_socio.',num_socio',
             'nome_informal' => 'sometimes|required|min:3|max:40|regex:/^[0-9a-zA-ZÀ-ù\s]+$/',
             'name' => 'sometimes|required|min:3|regex:/^[a-zA-ZÀ-ù\s]+$/',
             'nif' => 'nullable|min:9|max:9',
@@ -33,7 +33,7 @@ class UserUpdateRequest extends FormRequest
             'sexo' => 'sometimes|required|in:F,M',
             'endereco' => 'nullable|',
             'data_nascimento' => 'sometimes|required|date_format:Y-m-d|before:18 years ago',
-            'email' => 'sometimes|required|email|unique:users,'.$this->socio->email.',email',
+            'email' => 'sometimes|required|email|unique:users,email,'.$this->socio->email.',email',
             'tipo_socio' => 'sometimes|required|in:P,NP,A',
             'ativo' => 'sometimes|required|in:0,1',
             'quota_paga' => 'sometimes|required|in: 0,1',
@@ -43,7 +43,7 @@ class UserUpdateRequest extends FormRequest
             'file_licenca' => 'nullable|mimes:pdf|max:2048',
             'file_certificado' => 'nullable|mimes:pdf|max:2048',
             'num_licenca' => 'nullable|max:30|unique:users,num_licenca,'.$this->socio->num_licenca.',num_licenca',
-            'num_certificado' => 'nullable|max:30|unique:users,'.$this->socio->num_certificado.',num_certificado',
+            'num_certificado' => 'nullable|max:30|unique:users,num_certificado,'.$this->socio->num_certificado.',num_certificado',
             'tipo_licenca' => 'nullable|exists:tipos_licencas,code|max: 20',
             'classe_certificado' => 'nullable|exists:classes_certificados,code|max: 20',
             'licenca_confirmada' => 'nullable|in:0,1',
