@@ -177,7 +177,7 @@ class MovimentoController extends Controller
         return redirect()->route('movimentos.index')->with('success', "Movimento successfully updated!");
     }
 
-    public function destroy(Request $movimento)
+    public function destroy(Movimento $movimento)
     {
         $movimento = Movimento::findOrFail($movimento->id);
 

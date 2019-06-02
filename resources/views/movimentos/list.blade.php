@@ -111,7 +111,7 @@
             <td>{{$movimento->confirmado == 1 ? 'Sim' : 'Não'}}</td>
             <td>
                 @if ((Auth::user()->direcao && $movimento->confirmado == 0) || ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id)))
-                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['id'=>$movimento->id])}}">
+                    <a class="btn btn-primary btn-sm" href="{{route('movimentos.edit',['movimento'=>$movimento->id])}}">
                         Edit
                     </a>
                 @else
@@ -121,7 +121,7 @@
                 @endif
             </td>
             <td>
-                <form action="{{route('movimentos.destroy',['id'=>$movimento->id])}}" method="post" class="form-inline">
+                <form action="{{route('movimentos.destroy',['movimento'=>$movimento->id])}}" method="post" class="form-inline">
                     @csrf
                     @method('DELETE')
                     @if ((Auth::user()->direcao && $movimento->confirmado == 0) || ($movimento->confirmado == 0 && ($movimento->piloto_id == Auth::user()->id || $movimento->instrutor_id == Auth::user()->id)))
