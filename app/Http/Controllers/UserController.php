@@ -57,9 +57,32 @@ class UserController extends Controller
         }
 
         if(Auth::user()->direcao) {
-            $users = $query->orderBy('id', 'asc')->paginate(12);
-        } else {
+            
+            if(($request->estado_socio != "none") && ($request->filled('estado_socio'))){
+                switch($request->estado_socio) {
+                    case 'ativo':
+                        $query->where('ativo', '=', 1);
+                        break;
+                    case 'nao_ativo':
+                        $query->where('ativo', '=', 0);
+                        break;
+                }
+            }
 
+            if(($request->quotas != "none") && ($request->filled('quotas'))){
+                switch($request->quotas) {
+                    case 'pagas':
+                        $query->where('quota_paga', '=', 1);
+                        break;
+                    case 'nao_pagas':
+                        $query->where('quota_paga', '=', 0);
+                        break;
+                }
+            }
+
+            $users = $query->orderBy('id', 'asc')->paginate(12);
+            
+        } else {
             $users = $query->where('ativo', '=', 1)->orderBy('id', 'asc')->paginate(12);
         }
         return view('users.list', compact('users'));

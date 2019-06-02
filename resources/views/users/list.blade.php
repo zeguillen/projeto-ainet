@@ -47,11 +47,27 @@
                     </select>
                 </div>
                 <div class="form-group form-check form-check-inline col-auto">
-                    <label class="mr-2">Pertece á Direção?</label>
+                    <label class="mr-2">Pertece à Direção?</label>
                     <input type="radio" name="direcao" class="form-check-input" id="inputEDirecaoSim" value="true"><label for="inputEDirecaoSim" class="mr-2">Sim</label>
                     <input type="radio" name="direcao" class="form-check-input" id="inputEDirecaoNao" value="false"><label for="inputEDirecaoNao">Não</label>
                 </div>
+                @can('updateAll', App\User::class)
+                <div class="form-group col-auto mr-2">
+                    <select name="estado_socio" class="form-control" id="inputType">
+                        <option value="none" disabled selected>Estado do Sócio</option>
+                        <option value="ativo">Sócio Ativo</option>
+                        <option value="nao_ativo">Sócio Não Ativo</option>
+                    </select>
+                </div>
 
+                <div class="form-group col-auto mr-2">
+                    <select name="quotas" class="form-control" id="inputType">
+                        <option value="none" disabled selected>Quotas</option>
+                        <option value="pagas">Quotas Pagas</option>
+                        <option value="nao_pagas">Quotas Por Pagar</option>
+                    </select>
+                </div>
+                @endcan
                 <div class="form-group col-auto">
                     <button type="submit" class="btn btn-success">Filtrar</button>
                 </div>
